@@ -1,24 +1,41 @@
-button {
-    border:0;
-    background-color: $clr1;
-    color:whitesmoke;
-    padding: 5px 10px;
-    margin: 5px;
-    cursor: pointer;
-}
+// button {
+//     border: 0;
+//     background-color: $clr1;
+//     color: whitesmoke;
+//     padding: 5px 10px;
+//     margin: 5px;
+//     cursor: pointer;
+// }
 
-form > * {
+form>* {
     display: block;
-    width: 200px;
+    // width: 200px;
     margin: 10px 0px;
 }
 
+form{
+    button {
+        font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif ;
+        font-size: rem(14px);
+        background-color: var(--ds-background-brand-bold,#0079bf);
+        border: none;
+        box-shadow: none;
+        color: var(--ds-text-inverse,#fff);
+        cursor: pointer;
+        height: 32px;
+        border-radius: 3px;
+        width: fit-content;
+        padding: 4px 12px;
+    }
+}
+
 .btn-link {
-    border:0;
+    border: 0;
     background-color: transparent;
     text-decoration: underline;
     transition: .5s;
 }
+
 .btn-link:hover {
     background-color: $clr1;
     transform: scale(1.1);

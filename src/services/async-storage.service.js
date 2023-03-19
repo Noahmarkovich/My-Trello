@@ -29,6 +29,7 @@ function post(entityType, newEntity) {
     })
 }
 
+
 function put(entityType, updatedEntity) {
     updatedEntity = JSON.parse(JSON.stringify(updatedEntity))    
     return query(entityType).then(entities => {

@@ -1,7 +1,7 @@
 
 import { storageService } from './async-storage.service.js'
 import { utilService } from './util.service.js'
-import { userService } from './user.service.js'
+// import { userService } from './user.service.js'
 
 const STORAGE_KEY = 'board'
 
@@ -43,7 +43,7 @@ async function save(board) {
         savedCar = await storageService.put(STORAGE_KEY, board)
     } else {
         // Later, owner is set by the backend
-        board.owner = userService.getLoggedinUser()
+        // board.owner = userService.getLoggedinUser()
         savedCar = await storageService.post(STORAGE_KEY, board)
     }
     return savedCar
@@ -56,7 +56,7 @@ async function addCarMsg(carId, txt) {
 
     const msg = {
         id: utilService.makeId(),
-        by: userService.getLoggedinUser(),
+        // by: userService.getLoggedinUser(),
         txt
     }
     board.msgs.push(msg)

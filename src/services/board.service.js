@@ -17,7 +17,10 @@ export const boardService = {
     addCarMsg,
     saveGroup,
     getEmptyTask,
-    saveTask
+    saveTask,
+    removeGroup,
+    removeTask,
+    queryTask
 }
 window.cs = boardService
 
@@ -36,14 +39,44 @@ async function query(filterBy = { txt: '' }) {
     return board
 }
 
-function getById(boardId) {
+async function getById(boardId) {
     return storageService.get(STORAGE_KEY, boardId)
     // return httpService.get(`board/${carId}`)
 }
 
+async function queryTask(taskId, groupId, boardId){
+    const board = await getById(boardId)
+    const groupIdx = board.groups.findIndex(group=> group.id === groupId)
+    const group = board.groups[groupIdx]
+    const task = board.groups[groupIdx].tasks.find(task=> task.id === taskId)
+    // console.log(task);
+    return {task, group}
+}
+
+
+
 async function remove(carId) {
     // await storageService.remove(STORAGE_KEY, carId)
     return httpService.delete(`board/${carId}`)
+}
+async function removeGroup(groupId, boardId) {
+    let board = await getById(boardId)
+    const groupIdx = board.groups.findIndex(group=> group.id === groupId)
+    board.groups.splice(groupIdx, 1 )
+    return save(board)
+    // await storageService.remove(STORAGE_KEY, carId)
+    // return httpService.delete(`board/${carId}`)
+}
+async function removeTask(taskId, groupId, boardId) {
+    let board = await getById(boardId)
+    const groupIdx = board.groups.findIndex(group=> group.id === groupId)
+    const taskIdx = board.groups[groupIdx].tasks.findIndex(task=> task.id === taskId)
+    console.log(taskIdx);
+    board.groups[groupIdx].tasks.splice(taskIdx, 1 )
+    console.log(board)
+    return save(board)
+    // await storageService.remove(STORAGE_KEY, carId)
+    // return httpService.delete(`board/${carId}`)
 }
 async function save(board) {
     var savedBoard

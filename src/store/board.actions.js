@@ -39,12 +39,27 @@ export async function loadBoard() {
 
 }
 
-export async function removeCar(carId) {
+export async function removeGroup(groupId, boardId) {
     try {
-        await carService.remove(carId)
-        store.dispatch(getActionRemoveCar(carId))
+        const savedBoard = await boardService.removeGroup(groupId, boardId)
+        store.dispatch({
+            type: UPDATE_BOARD,
+            savedBoard
+        })
     } catch (err) {
         console.log('Cannot remove board', err)
+        throw err
+    }
+}
+export async function removeTask(taskId, groupId, boardId) {
+    try {
+        const savedBoard = await boardService.removeTask(taskId, groupId, boardId)
+        store.dispatch({
+            type: UPDATE_BOARD,
+            savedBoard
+        })
+    } catch (err) {
+        console.log('Cannot remove task', err)
         throw err
     }
 }

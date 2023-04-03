@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { loadCars, updateCar, removeCar, addToCart, loadBoard , addGroup, removeGroup } from '../store/board.actions.js'
+import { loadCars, updateCar, removeCar, addToCart, loadBoard, addGroup, removeGroup } from '../store/board.actions.js'
 
 import { boardService } from '../services/board.service.js'
 
@@ -34,17 +34,17 @@ export function BoardIndex() {
 
 
 
-    if (!boards || boards.length===0) return <div>loading</div>
+    if (!boards || boards.length === 0) return <div>loading</div>
     return (
         <div className='board-index'>
             <div className='board-header'>
-            <h4 className='board-title'>{boards[0].title}</h4>
+                <h4 className='board-title'>{boards[0].title}</h4>
             </div>
             <main className='board-content'>
-                <BoardList onRemoveGroup={onRemoveGroup} groups={boards[0].groups} boardId={boards[0]._id} setIsNewGroupOpen={setIsNewGroupOpen}/>
+                <BoardList onRemoveGroup={onRemoveGroup} groups={boards[0].groups} boardId={boards[0]._id} setIsNewGroupOpen={setIsNewGroupOpen} board={boards[0]} />
                 {!isNewGroupOpen && <div className='new-group' onClick={() => { setIsNewGroupOpen(true) }}><span className='plus-icon'><FiPlus /></span> <span>Add another list</span></div>}
-            {isNewGroupOpen && <GroupEdit setIsNewGroupOpen={setIsNewGroupOpen} boardId={boards[0]._id} group={null}/> }
-            <Outlet/>
+                {isNewGroupOpen && <GroupEdit setIsNewGroupOpen={setIsNewGroupOpen} boardId={boards[0]._id} group={null} />}
+                <Outlet />
             </main>
         </div>
     )

@@ -1,3 +1,44 @@
-.task-sidebar{
-    flex: 0.25;
+.task-sidebar {
+    flex: 0.27;
+    padding: 0 16px 8px 8px;
+
+
+    h1 {
+        color: var(--ds-text-subtle, #5e6c84);
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .sidebar-btn {
+        background-color: var(--ds-background-neutral, #091e420a);
+        border: none;
+        border-radius: 3px;
+        color: rgb(23 43 77 / 77%);
+        cursor: pointer;
+        display: block;
+        height: 32px;
+        margin-top: 8px;
+        max-width: 300px;
+        width: fit-content;
+        // overflow: hidden;
+        padding: 6px 12px;
+        position: relative;
+        text-align: left;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        &:hover {
+            background-color: var(--ds-background-neutral-hovered, #091e4214);
+        }
+
+        //     text-overflow: ellipsis;
+        //     transition-duration: 85ms;
+        //     transition-property: background-color, border-color, box-shadow;
+        //     transition-timing-function: ease;
+        //     -webkit-user-select: none;
+        //     user-select: none;
+        //     white-space: nowrap;
+    }
 }

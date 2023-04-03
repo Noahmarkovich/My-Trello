@@ -1,0 +1,22 @@
+.create-labels {
+
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 7px;
+    margin-bottom: 8px;
+
+    .label-color-option {
+        border-radius: 3px;
+        width: 100%;
+        cursor: pointer;
+        border: 2px transparent solid;
+        height: 32px;
+
+        &:hover {
+            filter: saturate(85%) brightness(85%);
+        }
+    }
+
+
+
+}

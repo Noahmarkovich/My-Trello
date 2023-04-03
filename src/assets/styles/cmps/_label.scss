@@ -1,0 +1,26 @@
+.label-color-container {
+    height: 32px;
+    width: 100%;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover {
+        filter: saturate(85%) brightness(85%);
+    }
+
+    .circle-in-label {
+        // background-color: darken(40%);
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        margin: 8px;
+    }
+
+    .label-title {
+        font-size: 14px;
+    }
+
+
+}

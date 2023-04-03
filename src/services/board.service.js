@@ -20,7 +20,10 @@ export const boardService = {
     saveTask,
     removeGroup,
     removeTask,
-    queryTask
+    queryTask,
+    saveLabel,
+    newLabels,
+    getEmptyChecklist
 }
 window.cs = boardService
 
@@ -44,13 +47,13 @@ async function getById(boardId) {
     // return httpService.get(`board/${carId}`)
 }
 
-async function queryTask(taskId, groupId, boardId){
+async function queryTask(taskId, groupId, boardId) {
     const board = await getById(boardId)
-    const groupIdx = board.groups.findIndex(group=> group.id === groupId)
+    const groupIdx = board.groups.findIndex(group => group.id === groupId)
     const group = board.groups[groupIdx]
-    const task = board.groups[groupIdx].tasks.find(task=> task.id === taskId)
+    const task = board.groups[groupIdx].tasks.find(task => task.id === taskId)
     // console.log(task);
-    return {task, group}
+    return { task, group }
 }
 
 
@@ -61,18 +64,18 @@ async function remove(carId) {
 }
 async function removeGroup(groupId, boardId) {
     let board = await getById(boardId)
-    const groupIdx = board.groups.findIndex(group=> group.id === groupId)
-    board.groups.splice(groupIdx, 1 )
+    const groupIdx = board.groups.findIndex(group => group.id === groupId)
+    board.groups.splice(groupIdx, 1)
     return save(board)
     // await storageService.remove(STORAGE_KEY, carId)
     // return httpService.delete(`board/${carId}`)
 }
 async function removeTask(taskId, groupId, boardId) {
     let board = await getById(boardId)
-    const groupIdx = board.groups.findIndex(group=> group.id === groupId)
-    const taskIdx = board.groups[groupIdx].tasks.findIndex(task=> task.id === taskId)
+    const groupIdx = board.groups.findIndex(group => group.id === groupId)
+    const taskIdx = board.groups[groupIdx].tasks.findIndex(task => task.id === taskId)
     console.log(taskIdx);
-    board.groups[groupIdx].tasks.splice(taskIdx, 1 )
+    board.groups[groupIdx].tasks.splice(taskIdx, 1)
     console.log(board)
     return save(board)
     // await storageService.remove(STORAGE_KEY, carId)
@@ -95,8 +98,8 @@ async function save(board) {
 async function saveGroup(newGroup, boardId) {
     let board = await getById(boardId)
     if (newGroup.id) {
-        const groupIdx = board.groups.findIndex(group=> group.id === newGroup.id)
-        board.groups.splice(groupIdx, 1 , newGroup)
+        const groupIdx = board.groups.findIndex(group => group.id === newGroup.id)
+        board.groups.splice(groupIdx, 1, newGroup)
         // savedGroup = await storageService.put(STORAGE_KEY, newGroup)
         // savedCar = await httpService.put(`board/${board._id}`, board)
 
@@ -105,30 +108,43 @@ async function saveGroup(newGroup, boardId) {
         newGroup.archivedAt = Date.now()
         newGroup.id = utilService.makeId()
         board.groups.push(newGroup)
-        
+
         // savedGroup = await storageService.postGroup(STORAGE_KEY, newGroup, 'groups')
         // savedCar = await httpService.post('board', board)
     }
     return save(board)
 }
-async function saveTask(newTask,groupId, boardId) {
+async function saveTask(newTask, groupId, boardId) {
     let board = await getById(boardId)
-    const groupIdx = board.groups.findIndex(group=> group.id === groupId)
+    const groupIdx = board.groups.findIndex(group => group.id === groupId)
     if (newTask.id) {
-        const taskIdx = board.groups[groupIdx].tasks.findIndex(task=> task.id === newTask.id)
-        board.groups[groupIdx].tasks.splice(taskIdx, 1 , newTask)
+        const taskIdx = board.groups[groupIdx].tasks.findIndex(task => task.id === newTask.id)
+        board.groups[groupIdx].tasks.splice(taskIdx, 1, newTask)
         // savedCar = await httpService.put(`board/${board._id}`, board)
 
     } else {
         newTask.archivedAt = Date.now()
         newTask.id = utilService.makeId()
         board.groups[groupIdx].tasks.push(newTask)
-        
+
         // savedCar = await httpService.post('board', board)
     }
     return save(board)
 }
 
+async function saveLabel(savedLabel, boardId) {
+    let board = await getById(boardId)
+
+    if (savedLabel.id) {
+        const labelIdx = board.labels.findIndex(label => label.id === savedLabel.id)
+        board.labels.splice(labelIdx, 1, savedLabel)
+    } else {
+        savedLabel.id = utilService.makeId()
+        board.labels.push(savedLabel)
+        // savedCar = await httpService.post('board', board)
+    }
+    return save(board)
+}
 
 
 async function addCarMsg(carId, txt) {
@@ -147,139 +163,251 @@ function getEmptyGroup() {
     }
 }
 
-function getEmptyTask(){
-    return{
+function getEmptyChecklist() {
+    return {
+        "id": "",
+        "title": "Checklist",
+        "todos": []
+
+    }
+}
+
+function getEmptyTask() {
+    return {
         "id": "",
         "title": "",
         "archivedAt": "",
     }
 }
 
+
+function newLabels() {
+    return [
+        {
+            "id": "",
+            "title": "",
+            "name": "light green",
+            "colorDark": "#B7DDB0",
+            "colorLight": "#EEF6EC"
+        },
+        {
+            "id": "",
+            "title": "",
+            "name": "light yellow",
+            "colorDark": "#F5EA92",
+            "colorLight": "#FDF4E7"
+        },
+        {
+            "id": "",
+            "title": "",
+            "name": "light orange",
+            "colorDark": "#FAD29C",
+            "colorLight": "#FDF4E7"
+        },
+        {
+            "id": "",
+            "title": "",
+            "name": "light red",
+            "colorDark": "#EFB3AB",
+            "colorLight": "#FBEDEB"
+        },
+        {
+            "id": "",
+            "title": "",
+            "name": "light purple",
+            "colorDark": "#DFC0EB",
+            "colorLight": "#F7F0FA"
+        },
+        {
+            "id": "",
+            "title": "",
+            "name": "green",
+            "colorDark": "#7BC86C",
+            "colorLight": "#D6ECD2"
+        },
+        {
+            "id": "",
+            "title": "",
+            "name": "yellow",
+            "colorDark": "#F5DD29",
+            "colorLight": "#FAF3C0"
+        },
+        {
+            "id": "",
+            "title": "",
+            "name": "orange",
+            "colorDark": "#FFAF3F",
+            "colorLight": "#FCE6C6"
+        },
+        {
+            "id": "",
+            "title": "",
+            "name": "red",
+            "colorDark": "#EF7564",
+            "colorLight": "#F5D3CE"
+        },
+        {
+            "id": "",
+            "title": "",
+            "name": "purple",
+            "colorDark": "#CD8DE5",
+            "colorLight": "#EDDBF4"
+        },
+
+    ]
+}
+
 function _createBoards() {
     let boards = utilService.loadFromStorage(STORAGE_KEY);
-    if (!boards || boards.length===0) {
+    if (!boards || boards.length === 0) {
         boards =
-        [{
-            "_id": "b101",
-            "title": "Robot dev proj",
-            "isStarred": false,
-            "archivedAt": 1589983468418,
-            "createdBy": {
-                "_id": "u101",
-                "fullname": "Abi Abambi",
-                "imgUrl": "http://some-img"
-            },
-            "style": {},
-            "labels": [
-                {
-                    "id": "l101",
-                    "title": "Done",
-                    "color": "#61bd4f"
-                },
-                {
-                    "id": "l102",
-                    "title": "Progress",
-                    "color": "#61bd33"
-                }
-            ],
-            "members": [
-                {
+            [{
+                "_id": "b101",
+                "title": "Robot dev proj",
+                "isStarred": false,
+                "archivedAt": 1589983468418,
+                "createdBy": {
                     "_id": "u101",
-                    "fullname": "Tal Tarablus",
-                    "imgUrl": "https://www.google.com"
-                }
-            ],
-            "groups": [
-                {
-                    "id": "g101",
-                    "title": "Group 1",
-                    "archivedAt": 1589983468418,
-                    "tasks": [
-                        {
-                            "id": "c101",
-                            "title": "Replace logo"
-                        },
-                        {
-                            "id": "c102",
-                            "title": "Add Samples"
-                        }
-                    ],
-                    "style": {}
+                    "fullname": "Abi Abambi",
+                    "imgUrl": "http://some-img"
                 },
-                {
-                    "id": "g102",
-                    "title": "Group 2",
-                    "tasks": [
-                        {
-                            "id": "c103",
-                            "title": "Do that",
-                            "archivedAt": 1589983468418,
-                        },
-                        {
-                            "id": "c104",
-                            "title": "Help me",
-                            "description": "description",
-                            "comments": [
-                                {
-                                    "id": "ZdPnm",
-                                    "txt": "also @yaronb please CR this",
-                                    "createdAt": 1590999817436,
-                                    "byMember": {
-                                        "_id": "u101",
-                                        "fullname": "Tal Tarablus",
-                                        "imgUrl": "http://res.cloudinary.com/shaishar9/image/upload/v1590850482/j1glw3c9jsoz2py0miol.jpg"
-                                    }
-                                }
-                            ],
-                            "checklists": [
-                                {
-                                    "id": "YEhmF",
-                                    "title": "Checklist",
-                                    "todos": [
-                                        {
-                                            "id": "212jX",
-                                            "title": "To Do 1",
-                                            "isDone": false
-                                        }
-                                    ]
-                                }
-                            ],
-                            "memberIds": ["u101"],
-                            "labelIds": ["l101", "l102"],
-                            "dueDate": 16156215211,
-                            "byMember": {
-                                "_id": "u101",
-                                "username": "Tal",
-                                "fullname": "Tal Tarablus",
-                                "imgUrl": "http://res.cloudinary.com/shaishar9/image/upload/v1590850482/j1glw3c9jsoz2py0miol.jpg"
-                            },
-                            "style": {
-                                "bgColor": "#26de81"
-                            }
-                        }
-                    ],
-                    "style": {}
-                }
-            ],
-            "activities": [
-                {
-                    "id": "a101",
-                    "txt": "Changed Color",
-                    "createdAt": 154514,
-                    "byMember": {
-                        "_id": "u101",
-                        "fullname": "Abi Abambi",
-                        "imgUrl": "http://some-img"
+                "style": {},
+                "labels": [
+                    {
+                        "id": "l101",
+                        "title": "Done",
+                        "name": "green",
+                        "colorDark": "#7BC86C",
+                        "colorLight": "#D6ECD2"
                     },
-                    "task": {
-                        "id": "c101",
-                        "title": "Replace Logo"
-                    }
-                }
-            ],
+                    {
+                        "id": "l102",
+                        "title": "Progress",
+                        "name": "yellow",
+                        "colorDark": "#F5DD29",
+                        "colorLight": "#FAF3C0"
+                    },
+                    {
+                        "id": "l103",
+                        "title": "",
+                        "name": "orange",
+                        "colorDark": "#FFAF3F",
+                        "colorLight": "#FCE6C6"
+                    },
+                    {
+                        "id": "l104",
+                        "title": "",
+                        "name": "red",
+                        "colorDark": "#EF7564",
+                        "colorLight": "#F5D3CE"
+                    },
+                    {
+                        "id": "l105",
+                        "title": "",
+                        "name": "purple",
+                        "colorDark": "#CD8DE5",
+                        "colorLight": "#EDDBF4"
+                    },
 
-            "cmpsOrder": ["status-picker", "member-picker", "date-picker"]
-        }]
+                ],
+                "members": [
+                    {
+                        "_id": "u101",
+                        "fullname": "Tal Tarablus",
+                        "imgUrl": "https://www.google.com"
+                    }
+                ],
+                "groups": [
+                    {
+                        "id": "g101",
+                        "title": "Group 1",
+                        "archivedAt": 1589983468418,
+                        "tasks": [
+                            {
+                                "id": "c101",
+                                "title": "Replace logo"
+                            },
+                            {
+                                "id": "c102",
+                                "title": "Add Samples"
+                            }
+                        ],
+                        "style": {}
+                    },
+                    {
+                        "id": "g102",
+                        "title": "Group 2",
+                        "tasks": [
+                            {
+                                "id": "c103",
+                                "title": "Do that",
+                                "archivedAt": 1589983468418,
+                            },
+                            {
+                                "id": "c104",
+                                "title": "Help me",
+                                "description": "description",
+                                "comments": [
+                                    {
+                                        "id": "ZdPnm",
+                                        "txt": "also @yaronb please CR this",
+                                        "createdAt": 1590999817436,
+                                        "byMember": {
+                                            "_id": "u101",
+                                            "fullname": "Tal Tarablus",
+                                            "imgUrl": "http://res.cloudinary.com/shaishar9/image/upload/v1590850482/j1glw3c9jsoz2py0miol.jpg"
+                                        }
+                                    }
+                                ],
+                                "checklists": [
+                                    {
+                                        "id": "YEhmF",
+                                        "title": "Checklist",
+                                        "todos": [
+                                            {
+                                                "id": "212jX",
+                                                "title": "To Do 1",
+                                                "isDone": false
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "memberIds": ["u101"],
+                                "labelIds": ["l101", "l102"],
+                                "dueDate": 16156215211,
+                                "byMember": {
+                                    "_id": "u101",
+                                    "username": "Tal",
+                                    "fullname": "Tal Tarablus",
+                                    "imgUrl": "http://res.cloudinary.com/shaishar9/image/upload/v1590850482/j1glw3c9jsoz2py0miol.jpg"
+                                },
+                                "style": {
+                                    "bgColor": "#26de81"
+                                }
+                            }
+                        ],
+                        "style": {}
+                    }
+                ],
+                "activities": [
+                    {
+                        "id": "a101",
+                        "txt": "Changed Color",
+                        "createdAt": 154514,
+                        "byMember": {
+                            "_id": "u101",
+                            "fullname": "Abi Abambi",
+                            "imgUrl": "http://some-img"
+                        },
+                        "task": {
+                            "id": "c101",
+                            "title": "Replace Logo"
+                        }
+                    }
+                ],
+
+                "cmpsOrder": ["status-picker", "member-picker", "date-picker"]
+            }]
         utilService.saveToStorage(STORAGE_KEY, boards);
     }
 }

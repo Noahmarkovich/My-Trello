@@ -1,6 +1,6 @@
 import { carService } from "../services/board.service.local.js";
 import { store } from './store.js'
-import { ADD_CAR, ADD_GROUP, ADD_TO_CART, CLEAR_CART, REMOVE_CAR, REMOVE_FROM_CART, SET_BOARD, UNDO_REMOVE_CAR, UPDATE_BOARD} from "./board.reducer.js";
+import { ADD_CAR, ADD_GROUP, ADD_TO_CART, CLEAR_CART, REMOVE_CAR, REMOVE_FROM_CART, SET_BOARD, UNDO_REMOVE_CAR, UPDATE_BOARD } from "./board.reducer.js";
 import { boardService } from "../services/board.service.js";
 
 // Action Creators:
@@ -106,19 +106,35 @@ export async function addTask(newTask, groupId, boardId) {
     }
 }
 
-// export function updateCar(board) {
-//     return carService.save(board)
-//         .then(savedCar => {
-//             console.log('Updated Board:', savedCar)
-//             store.dispatch(getActionUpdateCar(savedCar))
-//             return savedCar
-//         })
-//         .catch(err => {
-//             console.log('Cannot save board', err)
-//             throw err
-//         })
-// }
+export async function saveLabel(label, boardId) {
+    try {
+        const savedBoard = await boardService.saveLabel(label, boardId)
+        store.dispatch({
+            type: UPDATE_BOARD,
+            savedBoard
+        })
+        return savedBoard
 
+    } catch (err) {
+        console.log('Cannot save board', err)
+        throw err
+    }
+}
+
+export async function saveChecklist(checkList, boardId) {
+    try {
+        const savedBoard = await boardService.saveLabel(label, boardId)
+        store.dispatch({
+            type: UPDATE_BOARD,
+            savedBoard
+        })
+        return savedBoard
+
+    } catch (err) {
+        console.log('Cannot save board', err)
+        throw err
+    }
+}
 // export function addToCart(board) {
 //     store.dispatch({
 //         type: ADD_TO_CART,
@@ -146,7 +162,7 @@ export async function addTask(newTask, groupId, boardId) {
 // }
 
 
-// Demo for Optimistic Mutation 
+// Demo for Optimistic Mutation
 // (IOW - Assuming the server call will work, so updating the UI first)
 // export function onRemoveCarOptimistic(carId) {
 //     store.dispatch({

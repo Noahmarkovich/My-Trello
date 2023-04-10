@@ -11,6 +11,7 @@ import { GoPlus } from 'react-icons/go';
 import { TaskSideBar } from "./task-sidebar"
 import { Label } from "./label"
 import { Labels } from "./labels"
+import { TaskChecklist } from "./task-checklist"
 
 
 export function TaskPreview() {
@@ -23,7 +24,7 @@ export function TaskPreview() {
 
     useEffect(() => {
         loadTask(taskId, groupId, boards[0]._id)
-    }, [])
+    }, [boards])
 
     async function loadTask(taskId, groupId, boardId) {
         try {
@@ -57,7 +58,7 @@ export function TaskPreview() {
         navigate(`/board`)
 
     }
-    console.log(currTask);
+
     if (!currTask || !currGroup) return <div>loading...</div>
     return <section className="dark-screen">
         <div className="task-preview">
@@ -92,8 +93,11 @@ export function TaskPreview() {
                 </section>
             }
             <main className="main-task-preview">
-                <TaskDescription currTask={currTask} onEditTask={onEditTask} handleChange={handleChange} />
-                <TaskSideBar board={boards[0]} currTask={currTask} />
+                <div className="middle">
+                    <TaskDescription currTask={currTask} onEditTask={onEditTask} handleChange={handleChange} />
+                    {currTask.checklists && <TaskChecklist currTask={currTask} groupId={groupId} boardId={boards[0]._id} />}
+                </div>
+                <TaskSideBar board={boards[0]} currTask={currTask} currGroup={currGroup} />
             </main>
         </div>
     </section>

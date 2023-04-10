@@ -93,6 +93,7 @@ export async function addGroup(newGroup, boardId) {
 export async function addTask(newTask, groupId, boardId) {
     try {
         const savedBoard = await boardService.saveTask(newTask, groupId, boardId)
+        console.log(savedBoard);
         // console.log('Added Group', savedGroup)
         // board.groups.push(savedGroup)
         store.dispatch({
@@ -121,9 +122,9 @@ export async function saveLabel(label, boardId) {
     }
 }
 
-export async function saveChecklist(checkList, boardId) {
+export async function saveChecklist(checkList, task, currGroup, boardId) {
     try {
-        const savedBoard = await boardService.saveLabel(label, boardId)
+        const savedBoard = await boardService.saveChecklist(checkList, task, currGroup, boardId)
         store.dispatch({
             type: UPDATE_BOARD,
             savedBoard

@@ -1,0 +1,96 @@
+.task-checklist {
+    padding: 0 8px 8px 16px;
+
+    .checklist-title {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+
+        .checklist-icon {
+            font-size: rem(22px);
+            opacity: 0.9;
+        }
+    }
+
+    .checklist-progress {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+        .percentage {
+            color: var(--ds-text-subtle, #5e6c84);
+            font-size: 11px;
+
+        }
+
+        .checklist-progress-bar {
+            background: var(--ds-background-neutral, #091e4214);
+            border-radius: 4px;
+            clear: both;
+            height: 8px;
+            // margin: 0 0 0 40px;
+            // overflow: hidden;
+            // position: relative;
+            width: 100%;
+        }
+    }
+
+    .todos {
+        min-height: 8px;
+
+        .todo {
+            display: flex;
+            align-items: center;
+            font-size: rem(14px);
+            padding: 6px 0;
+            border-radius: 4px;
+            clear: both;
+            cursor: pointer;
+            transform-origin: left bottom;
+            transition-duration: .3s;
+            transition-property: transform, opacity, height, padding, margin, background-color;
+            transition-timing-function: ease-in;
+
+            &:hover {
+                background-color: var(--ds-background-neutral, #091e420a);
+            }
+
+            &.checked {
+                text-decoration: line-through;
+            }
+
+            .todo-input {
+                width: auto;
+                height: fit-content;
+                box-shadow: none;
+                margin-right: 16px;
+                background-color: #ebecf0;
+                box-shadow: inset 0 0 0 2px #dfe1e6;
+                // border: none;
+                height: 1rem;
+                width: 1rem;
+                border-radius: 3px;
+
+                &:focus {
+                    box-shadow: inset 0 0 0 2px #0079bf;
+                    background-color: #0079bf;
+                }
+
+                &:checked {
+                    box-shadow: inset 0 0 0 2px #0079bf;
+                    background-color: #0079bf;
+                }
+            }
+        }
+
+    }
+
+    .add {
+        margin: 8px 0;
+        margin-left: 30px;
+    }
+}

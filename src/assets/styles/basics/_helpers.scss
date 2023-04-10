@@ -48,6 +48,10 @@
     &.align-center {
         align-items: center;
     }
+
+    &.justify-space-between {
+        justify-content: space-between;
+    }
 }
 
 .plus-icon {
@@ -90,4 +94,26 @@
     &:hover {
         background-color: rgba(9, 30, 66, 0.08);
     }
+}
+
+.gray-btn {
+    background-color: var(--ds-background-neutral, #091e420a);
+    border: none;
+    border-radius: 3px;
+    color: rgb(23 43 77);
+    cursor: pointer;
+    display: block;
+    height: 32px;
+    width: fit-content;
+    padding: 6px 12px;
+    text-align: left;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", Ubuntu, Droid Sans, Helvetica Neue, sans-serif;
+
+    &:hover {
+        background-color: var(--ds-background-neutral-hovered, #091e4214);
+    }
+}
+
+.full-width {
+    width: 100%;
 }

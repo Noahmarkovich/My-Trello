@@ -69,6 +69,12 @@
 
         .main-task-preview {
             display: flex;
+
+            .middle {
+                display: flex;
+                flex-direction: column;
+                flex: 0.9 1
+            }
         }
 
         .label-preview {

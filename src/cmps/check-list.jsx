@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { GrClose } from "react-icons/gr";
 import { boardService } from "../services/board.service";
+import { saveChecklist } from "../store/board.actions";
 
-export function CheckList({ board, currTask, setSidebarAction }) {
+export function CheckList({ board, currTask, setSidebarAction, currGroup }) {
 
     const [checklistToEdit, setChecklistToEdit] = useState(boardService.getEmptyChecklist())
     const [taskToEdit, setTaskToEdit] = useState(currTask)
@@ -16,7 +17,7 @@ export function CheckList({ board, currTask, setSidebarAction }) {
     async function onAddChecklist(ev) {
         ev.preventDefault()
         try {
-            // taskToEdit['checklists']
+            await saveChecklist(checklistToEdit, currTask, currGroup, board._id)
 
         } catch (err) {
             console.log(err)

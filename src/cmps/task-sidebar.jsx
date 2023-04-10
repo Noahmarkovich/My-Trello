@@ -4,7 +4,7 @@ import { Labels } from "./labels"
 import { TbCheckbox } from 'react-icons/tb';
 import { CheckList } from "./check-list";
 
-export function TaskSideBar({ board, currTask }) {
+export function TaskSideBar({ board, currTask, currGroup }) {
 
 
     const [sidebarAction, setSidebarAction] = useState(null)
@@ -20,6 +20,6 @@ export function TaskSideBar({ board, currTask }) {
             <span>Checklist</span>
         </button>
         {sidebarAction === 'labels' && <Labels board={board} currTask={currTask} setSidebarAction={setSidebarAction} comesFrom={'sideBar'} />}
-        {sidebarAction === 'check-list' && <CheckList board={board} currTask={currTask} setSidebarAction={setSidebarAction} />}
+        {sidebarAction === 'check-list' && <CheckList board={board} currTask={currTask} setSidebarAction={setSidebarAction} currGroup={currGroup} />}
     </section>
 }

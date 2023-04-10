@@ -23,7 +23,9 @@ export const boardService = {
     queryTask,
     saveLabel,
     newLabels,
-    getEmptyChecklist
+    getEmptyChecklist,
+    saveChecklist,
+    getEmptyTodo
 }
 window.cs = boardService
 
@@ -74,9 +76,7 @@ async function removeTask(taskId, groupId, boardId) {
     let board = await getById(boardId)
     const groupIdx = board.groups.findIndex(group => group.id === groupId)
     const taskIdx = board.groups[groupIdx].tasks.findIndex(task => task.id === taskId)
-    console.log(taskIdx);
     board.groups[groupIdx].tasks.splice(taskIdx, 1)
-    console.log(board)
     return save(board)
     // await storageService.remove(STORAGE_KEY, carId)
     // return httpService.delete(`board/${carId}`)
@@ -145,6 +145,23 @@ async function saveLabel(savedLabel, boardId) {
     }
     return save(board)
 }
+async function saveChecklist(checkList, currTask, currGroup, boardId) {
+    let board = await getById(boardId)
+    const groupIdx = board.groups.findIndex(group => group.id === currGroup.id)
+    const taskIdx = board.groups[groupIdx].tasks.findIndex(task => task.id === currTask.id)
+    if (currTask.checklists && checkList.id) {
+        // const labelIdx = board.labels.findIndex(label => label.id === savedLabel.id)
+        // board.labels.splice(labelIdx, 1, savedLabel
+    } else if (currTask.checklists) {
+        checkList.id = utilService.makeId()
+        currTask.checklists.push(checkList)
+    } else {
+        checkList.id = utilService.makeId()
+        currTask['checklists'] = [checkList]
+    }
+    board.groups[groupIdx].tasks.splice(taskIdx, 1, currTask)
+    return save(board)
+}
 
 
 async function addCarMsg(carId, txt) {
@@ -177,6 +194,13 @@ function getEmptyTask() {
         "id": "",
         "title": "",
         "archivedAt": "",
+    }
+}
+function getEmptyTodo() {
+    return {
+        "id": "",
+        "title": "",
+        "isDone": false,
     }
 }
 

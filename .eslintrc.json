@@ -16,6 +16,8 @@
     "rules": {
         "react/react-in-jsx-scope": "off",
         "curly": "error",
+        "newline-before-return": "error",
+        "react/prop-types": 0,
         "prettier/prettier": [
             "error",
             {

@@ -76,6 +76,7 @@ export async function addGroup(newGroup, boardId) {
       type: UPDATE_BOARD,
       savedBoard
     });
+
     return savedBoard;
   } catch (err) {
     console.log('Cannot add GROUP', err);
@@ -92,6 +93,7 @@ export async function addTask(newTask, groupId, boardId) {
       type: UPDATE_BOARD,
       savedBoard
     });
+
     return savedBoard;
   } catch (err) {
     console.log('Cannot add GROUP', err);
@@ -106,6 +108,7 @@ export async function saveLabel(label, boardId) {
       type: UPDATE_BOARD,
       savedBoard
     });
+
     return savedBoard;
   } catch (err) {
     console.log('Cannot save board', err);
@@ -119,6 +122,7 @@ export async function saveTodo(todo, checkList, task, groupId, boardId) {
       type: UPDATE_BOARD,
       savedBoard
     });
+
     return savedBoard;
   } catch (err) {
     console.log('Cannot save board', err);
@@ -133,6 +137,7 @@ export async function saveChecklist(checkList, task, currGroup, boardId) {
       type: UPDATE_BOARD,
       savedBoard
     });
+
     return savedBoard;
   } catch (err) {
     console.log('Cannot save board', err);

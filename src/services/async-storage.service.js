@@ -8,6 +8,7 @@ export const storageService = {
 
 function query(entityType, delay = 150) {
   var entities = JSON.parse(localStorage.getItem(entityType)) || [];
+
   return new Promise((resolve) => setTimeout(() => resolve(entities), delay));
 }
 
@@ -17,6 +18,7 @@ function get(entityType, entityId) {
     if (!entity) {
       throw new Error(`Get failed, cannot find entity with id: ${entityId} in: ${entityType}`);
     }
+
     return entity;
   });
 }
@@ -24,15 +26,18 @@ function get(entityType, entityId) {
 function post(entityType, newEntity) {
   newEntity = JSON.parse(JSON.stringify(newEntity));
   newEntity._id = _makeId();
+
   return query(entityType).then((entities) => {
     entities.push(newEntity);
     _save(entityType, entities);
+
     return newEntity;
   });
 }
 
 function put(entityType, updatedEntity) {
   updatedEntity = JSON.parse(JSON.stringify(updatedEntity));
+
   return query(entityType).then((entities) => {
     const idx = entities.findIndex((entity) => entity._id === updatedEntity._id);
     if (idx < 0) {
@@ -42,6 +47,7 @@ function put(entityType, updatedEntity) {
     }
     entities.splice(idx, 1, updatedEntity);
     _save(entityType, entities);
+
     return updatedEntity;
   });
 }
@@ -69,5 +75,6 @@ function _makeId(length = 5) {
   for (var i = 0; i < length; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   }
+
   return text;
 }

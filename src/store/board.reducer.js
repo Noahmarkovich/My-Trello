@@ -35,5 +35,6 @@ export function boardReducer(state = initialState, action) {
       break;
     default:
   }
+
   return newState;
 }

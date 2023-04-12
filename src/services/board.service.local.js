@@ -23,6 +23,7 @@ async function query(filterBy = { txt: '', price: 0 }) {
   if (filterBy.price) {
     cars = cars.filter((board) => board.price <= filterBy.price);
   }
+
   return cars;
 }
 
@@ -44,6 +45,7 @@ async function save(board) {
     // board.owner = userService.getLoggedinUser()
     savedCar = await storageService.post(STORAGE_KEY, board);
   }
+
   return savedCar;
 }
 

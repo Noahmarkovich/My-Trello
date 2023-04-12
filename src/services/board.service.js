@@ -41,6 +41,7 @@ async function query(filterBy = { txt: '' }) {
   // if (filterBy.price) {
   //     cars = cars.filter(board => board.price <= filterBy.price)
   // }
+
   return board;
 }
 
@@ -55,6 +56,7 @@ async function queryTask(taskId, groupId, boardId) {
   const group = board.groups[groupIdx];
   const task = board.groups[groupIdx].tasks.find((task) => task.id === taskId);
   // console.log(task);
+
   return { task, group };
 }
 
@@ -66,6 +68,7 @@ async function removeGroup(groupId, boardId) {
   let board = await getById(boardId);
   const groupIdx = board.groups.findIndex((group) => group.id === groupId);
   board.groups.splice(groupIdx, 1);
+
   return save(board);
   // await storageService.remove(STORAGE_KEY, carId)
   // return httpService.delete(`board/${carId}`)
@@ -75,6 +78,7 @@ async function removeTask(taskId, groupId, boardId) {
   const groupIdx = board.groups.findIndex((group) => group.id === groupId);
   const taskIdx = board.groups[groupIdx].tasks.findIndex((task) => task.id === taskId);
   board.groups[groupIdx].tasks.splice(taskIdx, 1);
+
   return save(board);
   // await storageService.remove(STORAGE_KEY, carId)
   // return httpService.delete(`board/${carId}`)
@@ -87,6 +91,7 @@ async function removeChecklist(checklist, taskId, groupId, boardId) {
     (checkList) => checkList.id === checklist.id
   );
   board.groups[groupIdx].tasks[taskIdx].checklists.splice(checklistIdx, 1);
+
   return save(board);
   // await storageService.remove(STORAGE_KEY, carId)
   // return httpService.delete(`board/${carId}`)
@@ -102,6 +107,7 @@ async function save(board) {
     savedBoard = await storageService.post(STORAGE_KEY, board);
     // savedCar = await httpService.post('board', board)
   }
+
   return savedBoard;
 }
 async function saveGroup(newGroup, boardId) {
@@ -120,6 +126,7 @@ async function saveGroup(newGroup, boardId) {
     // savedGroup = await storageService.postGroup(STORAGE_KEY, newGroup, 'groups')
     // savedCar = await httpService.post('board', board)
   }
+
   return save(board);
 }
 async function saveTask(newTask, groupId, boardId) {
@@ -136,6 +143,7 @@ async function saveTask(newTask, groupId, boardId) {
 
     // savedCar = await httpService.post('board', board)
   }
+
   return save(board);
 }
 
@@ -150,6 +158,7 @@ async function saveLabel(savedLabel, boardId) {
     board.labels.push(savedLabel);
     // savedCar = await httpService.post('board', board)
   }
+
   return save(board);
 }
 
@@ -168,6 +177,7 @@ async function saveChecklist(checkList, currTask, currGroup, boardId) {
     currTask['checklists'] = [checkList];
   }
   board.groups[groupIdx].tasks.splice(taskIdx, 1, currTask);
+
   return save(board);
 }
 async function saveTodo(currTodo, checkList, currTask, groupId, boardId) {
@@ -187,11 +197,13 @@ async function saveTodo(currTodo, checkList, currTask, groupId, boardId) {
   }
   board.groups[groupIdx].tasks[taskIdx].checklists.splice(checklistIdx, 1, checkList);
   // board.groups[groupIdx].tasks.splice(taskIdx, 1, currTask)
+
   return save(board);
 }
 
 async function addCarMsg(carId, txt) {
   const savedMsg = await httpService.post(`board/${carId}/msg`, { txt });
+
   return savedMsg;
 }
 

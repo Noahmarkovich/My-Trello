@@ -4,14 +4,13 @@ import { useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 import { BoardList } from '../components/board-list.jsx';
 import { GroupEdit } from '../components/group-edit.jsx';
-import { boardService } from '../services/board.service.js';
 import { loadBoard, removeGroup } from '../store/board.actions.js';
 
 export function BoardPage() {
   const boards = useSelector((storeState) => storeState.boardModule.boards);
   const activeBoard = boards[0];
   const [isNewGroupOpen, setIsNewGroupOpen] = useState(false);
-  const [newGroup, setNewGroup] = useState(boardService.getEmptyGroup());
+  // const [newGroup, setNewGroup] = useState(boardService.getEmptyGroup());
 
   useEffect(() => {
     loadBoard();
@@ -19,6 +18,7 @@ export function BoardPage() {
 
   async function onRemoveGroup(ev, groupId) {
     ev.stopPropagation();
+
     try {
       await removeGroup(groupId, activeBoard._id);
     } catch (err) {
@@ -29,6 +29,7 @@ export function BoardPage() {
   if (!boards || boards.length === 0) {
     return <div>loading</div>;
   }
+
   return (
     <div className="board-index">
       <div className="board-header">

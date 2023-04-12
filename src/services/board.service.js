@@ -25,7 +25,9 @@ export const boardService = {
     newLabels,
     getEmptyChecklist,
     saveChecklist,
-    getEmptyTodo
+    getEmptyTodo,
+    saveTodo,
+    removeChecklist
 }
 window.cs = boardService
 
@@ -77,6 +79,16 @@ async function removeTask(taskId, groupId, boardId) {
     const groupIdx = board.groups.findIndex(group => group.id === groupId)
     const taskIdx = board.groups[groupIdx].tasks.findIndex(task => task.id === taskId)
     board.groups[groupIdx].tasks.splice(taskIdx, 1)
+    return save(board)
+    // await storageService.remove(STORAGE_KEY, carId)
+    // return httpService.delete(`board/${carId}`)
+}
+async function removeChecklist(checklist, taskId, groupId, boardId) {
+    let board = await getById(boardId)
+    const groupIdx = board.groups.findIndex(group => group.id === groupId)
+    const taskIdx = board.groups[groupIdx].tasks.findIndex(task => task.id === taskId)
+    const checklistIdx = board.groups[groupIdx].tasks[taskIdx].checklists.findIndex(checkList => checkList.id === checklist.id)
+    board.groups[groupIdx].tasks[taskIdx].checklists.splice(checklistIdx, 1)
     return save(board)
     // await storageService.remove(STORAGE_KEY, carId)
     // return httpService.delete(`board/${carId}`)
@@ -145,6 +157,7 @@ async function saveLabel(savedLabel, boardId) {
     }
     return save(board)
 }
+
 async function saveChecklist(checkList, currTask, currGroup, boardId) {
     let board = await getById(boardId)
     const groupIdx = board.groups.findIndex(group => group.id === currGroup.id)
@@ -160,6 +173,24 @@ async function saveChecklist(checkList, currTask, currGroup, boardId) {
         currTask['checklists'] = [checkList]
     }
     board.groups[groupIdx].tasks.splice(taskIdx, 1, currTask)
+    return save(board)
+}
+async function saveTodo(currTodo, checkList, currTask, groupId, boardId) {
+    let board = await getById(boardId)
+    const groupIdx = board.groups.findIndex(group => group.id === groupId)
+    const taskIdx = board.groups[groupIdx].tasks.findIndex(task => task.id === currTask.id)
+    const checklistIdx = board.groups[groupIdx].tasks[taskIdx].checklists.findIndex(checklist => checklist.id === checkList.id)
+    if (currTodo.id) {
+        const todoIdx = checkList.todos.findIndex(todo => todo.id === currTodo.id)
+        // board.groups[groupIdx].tasks.splice(taskIdx, 1, newTask)
+        checkList.todos.splice(todoIdx, 1, currTodo)
+
+    } else {
+        currTodo.id = utilService.makeId()
+        checkList.todos.push(currTodo)
+    }
+    board.groups[groupIdx].tasks[taskIdx].checklists.splice(checklistIdx, 1, checkList)
+    // board.groups[groupIdx].tasks.splice(taskIdx, 1, currTask)
     return save(board)
 }
 

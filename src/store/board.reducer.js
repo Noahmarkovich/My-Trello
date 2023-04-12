@@ -17,7 +17,6 @@ const initialState = {
 export function boardReducer(state = initialState, action) {
     var newState = state
     var boards
-    var cart
     switch (action.type) {
         case SET_BOARD:
             newState = { ...state, boards: action.boards }
@@ -28,10 +27,6 @@ export function boardReducer(state = initialState, action) {
             newState = { ...state, boards, lastRemovedCar }
             break
         case UPDATE_BOARD:
-            // console.log(state)
-            // newState = { ...state, boards: {
-            //     ...state.boards, 
-            //     groups : [...state.boards.groups, action.newGroup]}}
             boards = state.boards.map(board => (board._id === action.savedBoard._id) ? action.savedBoard : board)
             newState = { ...state, boards }
             break

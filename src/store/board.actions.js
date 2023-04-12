@@ -63,6 +63,18 @@ export async function removeTask(taskId, groupId, boardId) {
         throw err
     }
 }
+export async function removeChecklist(checklist, taskId, groupId, boardId) {
+    try {
+        const savedBoard = await boardService.removeChecklist(checklist, taskId, groupId, boardId)
+        store.dispatch({
+            type: UPDATE_BOARD,
+            savedBoard
+        })
+    } catch (err) {
+        console.log('Cannot remove task', err)
+        throw err
+    }
+}
 
 // export async function addBoard(board) {
 //     try {
@@ -110,6 +122,20 @@ export async function addTask(newTask, groupId, boardId) {
 export async function saveLabel(label, boardId) {
     try {
         const savedBoard = await boardService.saveLabel(label, boardId)
+        store.dispatch({
+            type: UPDATE_BOARD,
+            savedBoard
+        })
+        return savedBoard
+
+    } catch (err) {
+        console.log('Cannot save board', err)
+        throw err
+    }
+}
+export async function saveTodo(todo, checkList, task, groupId, boardId) {
+    try {
+        const savedBoard = await boardService.saveTodo(todo, checkList, task, groupId, boardId)
         store.dispatch({
             type: UPDATE_BOARD,
             savedBoard

@@ -43,6 +43,8 @@ registerRoute(
 
     return true;
   },
+
+  // eslint-disable-next-line no-undef
   createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html')
 );
 
@@ -56,8 +58,8 @@ registerRoute(
     plugins: [
       // Ensure that once this runtime cache reaches a maximum size the
       // least-recently used images are removed.
-      new ExpirationPlugin({ maxEntries: 50 }),
-    ],
+      new ExpirationPlugin({ maxEntries: 50 })
+    ]
   })
 );
 

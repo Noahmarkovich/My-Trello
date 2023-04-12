@@ -1,66 +1,72 @@
-import { useEffect, useState } from "react"
-import x from '../assets/img/x.svg'
-import { boardService } from "../services/board.service"
-import { addGroup } from "../store/board.actions"
+import { useEffect, useState } from 'react';
+import x from '../assets/img/x.svg';
+import { boardService } from '../services/board.service';
+import { addGroup } from '../store/board.actions';
 
-export function GroupEdit({setIsNewGroupOpen, boardId, group, setGroupId}){
+export function GroupEdit({ boardId, group, onClose }) {
+  const [newGroup, setNewGroup] = useState(boardService.getEmptyGroup());
 
-    const [newGroup, setNewGroup] = useState(boardService.getEmptyGroup())
-
-    useEffect(() => {
-        if (!group) return
-        setNewGroup(group)
-    }, [])
-
-    async function onAddGroup(ev){
-        ev.preventDefault()
-        try{
-            const savedGroup = await addGroup(newGroup, boardId)
-            setNewGroup(boardService.getEmptyGroup())
-            // setIsNewGroupOpen(false)
-        }catch (err) {
-        console.log(err)
-    }  
+  useEffect(() => {
+    if (!group) {
+      return;
     }
-    async function onEditGroup(ev){
-        ev.preventDefault()
-        try{
-            const savedGroup = await addGroup(newGroup, boardId)
-            setGroupId(null)
-            // setNewGroup(boardService.getEmptyGroup())
-            // setIsNewGroupOpen(false)
-        }catch (err) {
-        console.log(err)
-    }  
-    }
+    setNewGroup(group);
+  }, []);
 
-    function handleChange({target}){
-        const { value, name: field } = target
-        setNewGroup((prevGroup) => ({ ...prevGroup, [field]: value }))
-        
+  async function onAddGroup(ev) {
+    ev.preventDefault();
+    try {
+      await addGroup(newGroup, boardId);
+      setNewGroup(boardService.getEmptyGroup());
+      // setIsNewGroupOpen(false)
+    } catch (err) {
+      console.log(err);
     }
-
-    function closeForm(){
-        setIsNewGroupOpen(false)
-        setNewGroup(boardService.getEmptyGroup())
+  }
+  async function onEditGroup(ev) {
+    ev.preventDefault();
+    try {
+      await addGroup(newGroup, boardId);
+      onClose();
+      // setNewGroup(boardService.getEmptyGroup())
+      // setIsNewGroupOpen(false)
+    } catch (err) {
+      console.log(err);
     }
+  }
 
-    
-    return <div className='group-preview'>
-    <form onSubmit={(ev) =>  {group? onEditGroup(ev) : onAddGroup(ev)}}>
+  function handleChange({ target }) {
+    const { value, name: field } = target;
+    setNewGroup((prevGroup) => ({ ...prevGroup, [field]: value }));
+  }
+
+  function closeForm() {
+    onClose();
+    setNewGroup(boardService.getEmptyGroup());
+  }
+
+  return (
+    <div className="group-preview">
+      <form
+        onSubmit={(ev) => {
+          group ? onEditGroup(ev) : onAddGroup(ev);
+        }}>
         <input
-            type="text"
-            name="title"
-            value={newGroup.title}
-            placeholder="Enter list title..."
-            onChange={handleChange}
-            required
-            autoFocus
+          type="text"
+          name="title"
+          value={newGroup.title}
+          placeholder="Enter list title..."
+          onChange={handleChange}
+          required
+          autoFocus
         />
-        { !group && <div className='buttons-container'>
+        {!group && (
+          <div className="buttons-container">
             <button>Add list</button>
             <img onClick={closeForm} className="icon delete" src={x} />
-        </div>}
-    </form>
-</div>
+          </div>
+        )}
+      </form>
+    </div>
+  );
 }

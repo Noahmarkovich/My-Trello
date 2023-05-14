@@ -66,6 +66,18 @@ export async function removeChecklist(checklist, taskId, groupId, boardId) {
     throw err;
   }
 }
+export async function removeTodo(todoId, checklistId, taskId, groupId, boardId) {
+  try {
+    const savedBoard = await boardService.removeTodo(todoId, checklistId, taskId, groupId, boardId);
+    store.dispatch({
+      type: UPDATE_BOARD,
+      savedBoard
+    });
+  } catch (err) {
+    console.log('Cannot remove task', err);
+    throw err;
+  }
+}
 
 export async function addGroup(newGroup, boardId) {
   try {
@@ -86,9 +98,6 @@ export async function addGroup(newGroup, boardId) {
 export async function addTask(newTask, groupId, boardId) {
   try {
     const savedBoard = await boardService.saveTask(newTask, groupId, boardId);
-    console.log(savedBoard);
-    // console.log('Added Group', savedGroup)
-    // board.groups.push(savedGroup)
     store.dispatch({
       type: UPDATE_BOARD,
       savedBoard
@@ -104,6 +113,20 @@ export async function addTask(newTask, groupId, boardId) {
 export async function saveLabel(label, boardId) {
   try {
     const savedBoard = await boardService.saveLabel(label, boardId);
+    store.dispatch({
+      type: UPDATE_BOARD,
+      savedBoard
+    });
+
+    return savedBoard;
+  } catch (err) {
+    console.log('Cannot save board', err);
+    throw err;
+  }
+}
+export async function saveActivity(activity, boardId) {
+  try {
+    const savedBoard = await boardService.saveActivity(activity, boardId);
     store.dispatch({
       type: UPDATE_BOARD,
       savedBoard

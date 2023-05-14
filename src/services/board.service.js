@@ -25,9 +25,16 @@ export const boardService = {
   saveChecklist,
   getEmptyTodo,
   saveTodo,
-  removeChecklist
+  removeChecklist,
+  removeTodo,
+  getEmptyActivity,
+  saveActivity
 };
 window.cs = boardService;
+
+function getGroupIdx(board, groupId) {
+  return board.groups.findIndex((group) => group.id === groupId);
+}
 
 async function query(filterBy = { txt: '' }) {
   console.log(filterBy);
@@ -52,7 +59,7 @@ async function getById(boardId) {
 
 async function queryTask(taskId, groupId, boardId) {
   const board = await getById(boardId);
-  const groupIdx = board.groups.findIndex((group) => group.id === groupId);
+  const groupIdx = getGroupIdx(board, groupId);
   const group = board.groups[groupIdx];
   const task = board.groups[groupIdx].tasks.find((task) => task.id === taskId);
   // console.log(task);
@@ -66,7 +73,7 @@ async function remove(carId) {
 }
 async function removeGroup(groupId, boardId) {
   let board = await getById(boardId);
-  const groupIdx = board.groups.findIndex((group) => group.id === groupId);
+  const groupIdx = getGroupIdx(board, groupId);
   board.groups.splice(groupIdx, 1);
 
   return save(board);
@@ -75,7 +82,7 @@ async function removeGroup(groupId, boardId) {
 }
 async function removeTask(taskId, groupId, boardId) {
   let board = await getById(boardId);
-  const groupIdx = board.groups.findIndex((group) => group.id === groupId);
+  const groupIdx = getGroupIdx(board, groupId);
   const taskIdx = board.groups[groupIdx].tasks.findIndex((task) => task.id === taskId);
   board.groups[groupIdx].tasks.splice(taskIdx, 1);
 
@@ -85,12 +92,28 @@ async function removeTask(taskId, groupId, boardId) {
 }
 async function removeChecklist(checklist, taskId, groupId, boardId) {
   let board = await getById(boardId);
-  const groupIdx = board.groups.findIndex((group) => group.id === groupId);
+  const groupIdx = getGroupIdx(board, groupId);
   const taskIdx = board.groups[groupIdx].tasks.findIndex((task) => task.id === taskId);
   const checklistIdx = board.groups[groupIdx].tasks[taskIdx].checklists.findIndex(
     (checkList) => checkList.id === checklist.id
   );
   board.groups[groupIdx].tasks[taskIdx].checklists.splice(checklistIdx, 1);
+
+  return save(board);
+  // await storageService.remove(STORAGE_KEY, carId)
+  // return httpService.delete(`board/${carId}`)
+}
+async function removeTodo(todoId, checklistId, taskId, groupId, boardId) {
+  let board = await getById(boardId);
+  const groupIdx = getGroupIdx(board, groupId);
+  const taskIdx = board.groups[groupIdx].tasks.findIndex((task) => task.id === taskId);
+  const checklistIdx = board.groups[groupIdx].tasks[taskIdx].checklists.findIndex(
+    (checkList) => checkList.id === checklistId
+  );
+  const todoIdx = board.groups[groupIdx].tasks[taskIdx].checklists[checklistIdx].todos.findIndex(
+    (todo) => todo.id === todoId
+  );
+  board.groups[groupIdx].tasks[taskIdx].checklists[checklistIdx].todos.splice(todoIdx, 1);
 
   return save(board);
   // await storageService.remove(STORAGE_KEY, carId)
@@ -131,7 +154,7 @@ async function saveGroup(newGroup, boardId) {
 }
 async function saveTask(newTask, groupId, boardId) {
   let board = await getById(boardId);
-  const groupIdx = board.groups.findIndex((group) => group.id === groupId);
+  const groupIdx = getGroupIdx(board, groupId);
   if (newTask.id) {
     const taskIdx = board.groups[groupIdx].tasks.findIndex((task) => task.id === newTask.id);
     board.groups[groupIdx].tasks.splice(taskIdx, 1, newTask);
@@ -161,6 +184,21 @@ async function saveLabel(savedLabel, boardId) {
 
   return save(board);
 }
+async function saveActivity(savedActivity, boardId) {
+  let board = await getById(boardId);
+
+  // if (savedLabel.id) {
+  //   const labelIdx = board.labels.findIndex((label) => label.id === savedLabel.id);
+  //   board.labels.splice(labelIdx, 1, savedLabel);
+  // } else {
+  savedActivity.id = utilService.makeId();
+  savedActivity.createdAt = Date.now();
+  board.activities.unshift(savedActivity);
+  // savedCar = await httpService.post('board', board)
+  // }
+
+  return save(board);
+}
 
 async function saveChecklist(checkList, currTask, currGroup, boardId) {
   let board = await getById(boardId);
@@ -182,7 +220,7 @@ async function saveChecklist(checkList, currTask, currGroup, boardId) {
 }
 async function saveTodo(currTodo, checkList, currTask, groupId, boardId) {
   let board = await getById(boardId);
-  const groupIdx = board.groups.findIndex((group) => group.id === groupId);
+  const groupIdx = getGroupIdx(board, groupId);
   const taskIdx = board.groups[groupIdx].tasks.findIndex((task) => task.id === currTask.id);
   const checklistIdx = board.groups[groupIdx].tasks[taskIdx].checklists.findIndex(
     (checklist) => checklist.id === checkList.id
@@ -237,6 +275,22 @@ function getEmptyTodo() {
     id: '',
     title: '',
     isDone: false
+  };
+}
+function getEmptyActivity() {
+  return {
+    id: '',
+    txt: '',
+    createdAt: '',
+    byMember: {
+      _id: '',
+      fullname: '',
+      imgUrl: ''
+    },
+    task: {
+      id: '',
+      title: ''
+    }
   };
 }
 

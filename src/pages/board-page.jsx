@@ -50,7 +50,12 @@ export function BoardPage() {
           />
         )}
         {isNewGroupOpen && (
-          <GroupEdit setIsNewGroupOpen={setIsNewGroupOpen} boardId={activeBoard._id} group={null} />
+          <GroupEdit
+            setIsNewGroupOpen={setIsNewGroupOpen}
+            boardId={activeBoard._id}
+            group={null}
+            onClose={() => setIsNewGroupOpen(false)}
+          />
         )}
         <Outlet />
       </main>

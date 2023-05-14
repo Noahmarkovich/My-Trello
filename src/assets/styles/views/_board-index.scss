@@ -21,6 +21,43 @@
 
         }
 
+        .group-icons{
+            display: flex;
+            gap: 12px;
+
+            .checklist-preview{
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                color: #5e6c84;
+                padding: 4px;
+                margin-bottom: 4px;
+                margin-right: 4px;
+                
+    
+                &.complete{
+                    background-color: #61bd4f;
+                    color: white;
+                    
+                    border-radius: 3px;
+                    width: fit-content;
+    
+                    .checklist-icon{
+                        color:white;
+                        stroke-width: 3px;
+                    }
+                    
+                }
+                span{
+                    font-size: rem(12px);
+                }
+                .checklist-icon{
+                    color: #5e6c84;
+                }
+    
+            }
+        }
+
         .group-preview {
             height: fit-content;
             background-color: #ebecf0;

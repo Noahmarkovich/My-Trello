@@ -73,7 +73,14 @@
             .middle {
                 display: flex;
                 flex-direction: column;
-                flex: 0.9 1
+                flex: 0.9 1;
+
+                .date-btn{
+                    display: flex;
+                    gap: 4px;
+                    font-size: 14px;
+                    align-items: center;
+                }
             }
         }
 

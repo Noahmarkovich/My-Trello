@@ -1,0 +1,43 @@
+.task-activity{
+    padding: 0 8px 8px 16px;
+
+    .activity-title{
+        display: flex;
+        align-items: center;
+        font-size: 1rem;
+        font-weight: 600;
+        gap: 12px;
+        margin-bottom: 6px;
+        .activity-icon{
+            stroke-width: 0.2px;
+        }
+    }
+    .activity-container{
+        display: flex;
+        gap: 6px;
+        padding: 8px 0;
+        align-items: center;
+        .activity-txt-container {
+            font-size: rem(14px);
+
+            .bold-name{
+                font-weight: 700;
+                margin-right: 5px;
+            }
+
+            .created-at{
+                font-size: rem(12px);
+
+                span{
+                    margin: 0 2px;
+                }
+            }
+        }
+        .activity-avatar{
+            height: rem(32px);
+            width: rem(32px);
+            border-radius: 50%;
+            background-color: #E34935;
+        }
+    }
+}

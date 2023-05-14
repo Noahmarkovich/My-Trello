@@ -33,16 +33,14 @@
             border-radius: 4px;
             clear: both;
             height: 8px;
-            // margin: 0 0 0 40px;
-            // overflow: hidden;
-            // position: relative;
             width: 100%;
 
             .progress-bar {
                 background-color: #5ba4cf;
                 height: 8px;
-                border-top-left-radius: 4px;
-                border-bottom-left-radius: 4px;
+                border-radius: 4px ;
+                // border-top-left-radius: 4px;
+                // border-bottom-left-radius: 4px;
             }
         }
 
@@ -63,6 +61,7 @@
             transition-duration: .3s;
             transition-property: transform, opacity, height, padding, margin, background-color;
             transition-timing-function: ease-in;
+            position: relative;
 
             &:hover {
                 background-color: var(--ds-background-neutral, #091e420a);
@@ -92,6 +91,73 @@
                 &:checked {
                     box-shadow: inset 0 0 0 2px #0079bf;
                     background-color: #0079bf;
+                }
+            }
+        }
+
+        .actions{
+            opacity: 0;
+
+            &:hover{
+                opacity: 1;
+            }
+        }
+
+        .actions-menu {
+            position: absolute;
+            z-index: 50;
+            background: var(--ds-surface-overlay, #fff);
+            border-radius: 3px;
+            box-shadow: var(--ds-shadow-overlay, 0 8px 16px -4px rgba(9, 30, 66, 0.2509803922), 0 0 0 1px var(--ds-border, rgba(9, 30, 66, 0.0784313725)));
+            width: 304px;
+            top: 45px;
+            right: -275px;
+
+            .title {
+                border-bottom: 1px solid var(--ds-border, #091e4221);
+                color: var(--ds-text-subtle, #5e6c84);
+                line-height: 40px;
+                margin: 0 12px;
+                overflow: hidden;
+                padding: 0 32px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                z-index: 1;
+                text-align: center;
+
+            }
+
+            .action {
+                color: var(--ds-text, inherit);
+                cursor: pointer;
+                font-weight: 400;
+                padding: 6px 12px;
+
+                &:hover {
+                    background-color: var(--ds-background-neutral-hovered, #091e420a);
+                }
+            }
+        }
+
+        .checkbox-container{
+            display: flex;
+            width: 100%;
+
+            .checklist-edit{
+                margin: 0;
+                width: 100%;
+
+
+                textarea{
+                    overflow: hidden;
+                    overflow-wrap: break-word;
+                    resize: none;
+                    background: white;
+                    border-color: #091e4221;
+                    box-shadow: inset 0 0 0 1px #091e4221;
+                    margin: 0;
+                    width: 100%;
+                    min-height: 56px;
                 }
             }
         }

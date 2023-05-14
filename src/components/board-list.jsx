@@ -65,7 +65,7 @@ export function BoardList({ onRemoveGroup, groups, boardId, board }) {
             <TaskEdit
               setNewTaskGroupId={setNewTaskGroupId}
               setTaskId={setTaskId}
-              groupId={group.id}
+              group={group}
               boardId={boardId}
               task={null}
               onRemoveTask={onRemoveTask}

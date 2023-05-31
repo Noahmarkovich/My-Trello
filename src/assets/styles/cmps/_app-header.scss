@@ -1,5 +1,5 @@
 .app-header {
-    background-color: $clr4;
+    background-color:  hsl(215,90%,32.7%);
     padding: 6px 4px;
 
 
@@ -46,6 +46,15 @@
                 background-color: rgba(0, 0, 0, 0.2);
                 color: white;
                 border-radius: 0.2rem;
+            }
+        }
+
+        .create-btn{
+            color: white;
+            background-color: var(--ds-background-neutral-hovered, rgba(9, 30, 66, 0.0784313725));
+
+            &:hover{
+                background-color: rgba(0, 0, 0, 0.2);
             }
         }
 

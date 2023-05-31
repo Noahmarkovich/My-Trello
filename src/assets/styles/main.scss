@@ -16,6 +16,7 @@
 @import "views/about-us";
 @import "views/home-page";
 @import "views/board-index";
+@import "views/workspaces";
 @import "views/review-app";
 @import "views/user-details";
 
@@ -35,5 +36,7 @@
 @import "cmps/check-list";
 @import "cmps/label";
 @import "cmps/create-label";
+@import "cmps/board-preview";
 @import "cmps/user-msg";
 @import "cmps/shopping-cart";
+@import "cmps/create-board";

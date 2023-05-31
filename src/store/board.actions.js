@@ -19,10 +19,36 @@ export function getActionAddGroup(newGroup) {
 export async function loadBoard() {
   try {
     const boards = await boardService.query();
-    console.log('Cars from DB:', boards);
+    // console.log('Cars from DB:', boards);
     store.dispatch({
       type: SET_BOARD,
       boards
+    });
+  } catch (err) {
+    console.log('Cannot load board', err);
+    throw err;
+  }
+}
+export async function markStarred(isStarred, boardId) {
+  try {
+    const savedBoard = await boardService.markStarred(isStarred, boardId);
+
+    store.dispatch({
+      type: UPDATE_BOARD,
+      savedBoard
+    });
+  } catch (err) {
+    console.log('Cannot load board', err);
+    throw err;
+  }
+}
+export async function updateBoard(field, value, boardId) {
+  try {
+    const savedBoard = await boardService.updateBoard(field, value, boardId);
+
+    store.dispatch({
+      type: UPDATE_BOARD,
+      savedBoard
     });
   } catch (err) {
     console.log('Cannot load board', err);
@@ -98,6 +124,20 @@ export async function addGroup(newGroup, boardId) {
 export async function addTask(newTask, groupId, boardId) {
   try {
     const savedBoard = await boardService.saveTask(newTask, groupId, boardId);
+    store.dispatch({
+      type: UPDATE_BOARD,
+      savedBoard
+    });
+
+    return savedBoard;
+  } catch (err) {
+    console.log('Cannot add GROUP', err);
+    throw err;
+  }
+}
+export async function switchPlace(taskIdx, groupIdx, currParams, boardId) {
+  try {
+    const savedBoard = await boardService.switchPlace(taskIdx, groupIdx, currParams, boardId);
     store.dispatch({
       type: UPDATE_BOARD,
       savedBoard

@@ -1,0 +1,19 @@
+.board-preview{
+
+    height: 6rem;
+    background-image: linear-gradient(to bottom right, hsla(215,90%,37.7%,0.9) ,#00aecc);
+    border-radius: 3px;
+    padding: 8px;
+    cursor: pointer;
+
+    &:hover{
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .preview-title{
+        font-size: 1rem;
+        font-weight: 700;
+        color: $preview-title;
+        word-wrap: break-word;
+    }
+}

@@ -25,6 +25,7 @@ export function TaskPreview() {
   const [currTask, setCurrTask] = useState(null);
   const [currGroup, setCurrGroup] = useState(null);
   const [previewAction, setPreviewAction] = useState(null);
+  const { boardId } = useParams();
 
   useEffect(() => {
     loadTask(taskId, groupId, boards[0]._id);
@@ -58,7 +59,7 @@ export function TaskPreview() {
   }
 
   function closePreview() {
-    navigate(`/board`);
+    navigate(`/board/${boardId}`);
   }
 
   if (!currTask || !currGroup) {

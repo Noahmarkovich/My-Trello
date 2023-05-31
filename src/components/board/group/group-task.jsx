@@ -15,7 +15,10 @@ export function GroupTask({
   onRemoveTask,
   labels,
   shouldExpandLabel,
-  onLabelClick
+  onLabelClick,
+  onDragStart,
+  onDragEnter,
+  checkClassName
 }) {
   const [isEditMode, setIsEditMode] = useState(false);
 
@@ -56,10 +59,10 @@ export function GroupTask({
   return (
     <div
       draggable
-      onDrag={() => console.log('drag')}
-      onDragEnd={() => console.log('end drag')}
+      onDragStart={onDragStart}
+      onDragEnter={onDragEnter}
       onClick={onClick}
-      className="task"
+      className={checkClassName}
       key={task.id}>
       {labels && (
         <div className="small-labels">

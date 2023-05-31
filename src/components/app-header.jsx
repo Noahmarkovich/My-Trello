@@ -2,8 +2,11 @@ import { NavLink } from 'react-router-dom';
 import routes from '../routes';
 
 import { FiChevronDown } from 'react-icons/fi';
+import { useState } from 'react';
+import { CreateBoard } from './create-board';
 
 export function AppHeader() {
+  const [isCreate, setIsCreate] = useState(false);
   // const user = useSelector(storeState => storeState.userModule.user)
 
   // async function onLogin(credentials) {
@@ -43,6 +46,10 @@ export function AppHeader() {
             <FiChevronDown />
           </div>
         ))}
+        <button onClick={() => setIsCreate(true)} className="gray-btn create-btn">
+          Create
+        </button>
+        {isCreate && <CreateBoard />}
       </nav>
     </header>
   );

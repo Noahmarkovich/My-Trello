@@ -14,11 +14,6 @@ const routes = [
     label: 'Workspace'
   }
   // {
-  //     path: 'review',
-  //     component: <ReviewIndex />,
-  //     label: 'Recent'
-  // },
-  // {
   //     path: 'chat',
   //     component: <ChatApp />,
   //     label: `Chat`

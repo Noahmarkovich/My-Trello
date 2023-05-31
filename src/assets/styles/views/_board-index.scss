@@ -1,15 +1,58 @@
 .board-index {
-    background-color: linear-gradient(to bottom, $clr4, #0000 80px, #83838381);
-    padding: 10px;
+    
+    background-image: linear-gradient(to bottom right, hsla(215,90%,37.7%,0.9) ,#00aecc);
+    min-height: 95vh;
+    > * {
+        padding: 0 10px;
 
+        &.board-header {
+            padding: 0 ;
+        }
+    }
     .board-header {
 
-        padding: 8px 4px 4px 12px;
+        padding-left: 14px;
+        margin-bottom: 15px;
+        background-color: #0000003d;
+        display: flex;
+        align-items: center;
+        padding: 12px 10px 12px 16px;
+        gap: 5px;
 
+    
         .board-title {
             font-size: rem(18px);
             font-weight: 700;
-            padding: 0 12px;
+            color: #ffffff;
+            width:fit-content;
+            background: none;
+            padding: 2px 10px;
+            line-height: 32px;
+            margin: 0;
+
+            &:focus{
+                color: #172b4d;
+                background-color: white;
+                &:hover{
+                    background-color: white
+                }
+            }
+            &:hover{
+                background-color: rgba(9, 30, 66, 0.08)
+            }
+        }
+
+        .star-icon{
+            font-size: 1.1rem;
+            stroke: white;
+
+            &:hover{
+                fill: white;
+            }
+
+            &.full{
+                fill: white;
+            }
         }
     }
 
@@ -133,7 +176,8 @@
                     }
                 }
             }
-
+            
+           
             .task {
                 padding: 6px 8px 2px;
                 background-color: white;
@@ -144,11 +188,9 @@
                 margin-bottom: 8px;
                 max-width: 300px;
                 position: relative;
-
-                // display: flex;
-                // justify-content: space-between;
-                // align-items: center;
-
+                
+                
+              
 
                 &:hover {
                     background-color: #f4f5f7;
@@ -256,6 +298,14 @@
                 }
 
             }
+           
+            .current-drag{
+                background-color:  rgba(9, 30, 66, 0.0784313725);
+                opacity: 0;
+                // background-color: black;
+                // color:  rgba(9, 30, 66, 0);
+
+            }
 
             input {
                 font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -297,6 +347,11 @@
             display: flex;
             // align-items: center;
             margin-left: 4px;
+            color : white; 
+
+            &:hover{
+                background-color:#A6C5E229;
+            }
         }
     }
 

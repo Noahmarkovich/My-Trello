@@ -28,7 +28,10 @@ export const boardService = {
   removeChecklist,
   removeTodo,
   getEmptyActivity,
-  saveActivity
+  saveActivity,
+  switchPlace,
+  markStarred,
+  updateBoard
 };
 window.cs = boardService;
 
@@ -80,6 +83,20 @@ async function removeGroup(groupId, boardId) {
   // await storageService.remove(STORAGE_KEY, carId)
   // return httpService.delete(`board/${carId}`)
 }
+
+async function markStarred(isStarred, boardId) {
+  let board = await getById(boardId);
+  board.isStarred = isStarred;
+
+  return save(board);
+}
+async function updateBoard(field, value, boardId) {
+  let board = await getById(boardId);
+  board[field] = value;
+
+  return save(board);
+}
+
 async function removeTask(taskId, groupId, boardId) {
   let board = await getById(boardId);
   const groupIdx = getGroupIdx(board, groupId);
@@ -166,6 +183,17 @@ async function saveTask(newTask, groupId, boardId) {
 
     // savedCar = await httpService.post('board', board)
   }
+
+  return save(board);
+}
+async function switchPlace(taskIdx, groupIdx, currParams, boardId) {
+  let board = await getById(boardId);
+  // console.log(board.groups[currParams.groupIdx]);
+  board.groups[groupIdx].tasks.splice(
+    taskIdx,
+    0,
+    board.groups[currParams.groupIdx].tasks.splice(currParams.taskIdx, 1)[0]
+  );
 
   return save(board);
 }

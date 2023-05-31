@@ -1,0 +1,27 @@
+.workspaces{
+    padding-top: 40px;
+    max-width: 1000px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+
+    .board-type-header{
+        font-weight: 700;
+        line-height: 24px;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .board-title-icon{
+            font-size: 1.3rem;
+        }
+    }
+    .board-list{
+        display: grid;
+         grid-template-columns: repeat(auto-fit, 200px);
+         gap: 10px;
+        
+    }
+}

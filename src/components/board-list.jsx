@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { removeTask } from '../store/board.actions';
+import { removeTask, switchPlace } from '../store/board.actions';
 import { GroupPreviewTitle } from './board/group/group-preview-title';
 import { GroupTask } from './board/group/group-task';
 import { TaskEdit } from './task-edit';
@@ -12,6 +12,9 @@ export function BoardList({ onRemoveGroup, groups, boardId, board }) {
   const [, setTaskId] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isOpenSmallLabel, setIsOpenSmallLabel] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragTask = useRef();
+  const dragNode = useRef();
 
   function openAdd(groupId) {
     setIsMenuOpen(false);
@@ -32,17 +35,55 @@ export function BoardList({ onRemoveGroup, groups, boardId, board }) {
   }
   function openPreview(ev, taskId, groupId) {
     ev.stopPropagation();
-    navigate(`/board/${groupId}/${taskId}`);
+    navigate(`/board/${boardId}/${groupId}/${taskId}`);
+  }
+
+  function handelDragStart(ev, params) {
+    dragTask.current = params;
+    dragNode.current = ev.target;
+    dragNode.current.addEventListener('dragend', handelDragEnd);
+    setTimeout(() => {
+      setIsDragging(true);
+    }, 0);
+  }
+  function handelDragEnd() {
+    setIsDragging(false);
+    dragNode.current.removeEventListener('dragend', handelDragEnd);
+    dragTask.current = null;
+    dragNode.current = null;
+  }
+
+  async function handelDragEnter(ev, params) {
+    if (ev.target !== dragNode.current) {
+      try {
+        await switchPlace(params.taskIdx, params.groupIdx, dragTask.current, boardId);
+        dragTask.current = params;
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }
+
+  function getStyles(params) {
+    const currTask = dragTask.current;
+    if (currTask.groupIdx === params.groupIdx && currTask.taskIdx === params.taskIdx) {
+      return 'current-drag task';
+    }
+
+    return 'task';
   }
 
   return (
     <div className="board-list">
-      {groups.map((group) => (
+      {groups.map((group, groupIdx) => (
         <div className="group-preview" key={group.id}>
           <GroupPreviewTitle boardId={boardId} group={group} openActionMenu={openActionMenu} />
-          {group.tasks.map((task) => (
+          {group.tasks.map((task, taskIdx) => (
             <GroupTask
               key={task.id}
+              onDragStart={(ev) => handelDragStart(ev, { groupIdx, taskIdx })}
+              // onDragEnd={handelDragEnd}
+              onDragEnter={isDragging ? (ev) => handelDragEnter(ev, { groupIdx, taskIdx }) : null}
               onClick={(ev) => openPreview(ev, task.id, group.id)}
               task={task}
               boardId={boardId}
@@ -59,6 +100,7 @@ export function BoardList({ onRemoveGroup, groups, boardId, board }) {
               labels={task.labelIds
                 ?.map((labelId) => board.labels.find((label) => label.id === labelId))
                 .filter((label) => !!label)}
+              checkClassName={isDragging ? getStyles({ groupIdx, taskIdx }) : 'task'}
             />
           ))}
           {newTaskGroupId === group.id && !isMenuOpen ? (

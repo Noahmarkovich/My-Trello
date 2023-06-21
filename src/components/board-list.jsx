@@ -6,7 +6,7 @@ import { GroupPreviewTitle } from './board/group/group-preview-title';
 import { GroupTask } from './board/group/group-task';
 import { TaskEdit } from './task-edit';
 
-export function BoardList({ onRemoveGroup, groups, boardId, board }) {
+export function BoardList({ onRemoveGroup, groups, boardId, board, setActiveBoard }) {
   const navigate = useNavigate();
   const [newTaskGroupId, setNewTaskGroupId] = useState(null);
   const [, setTaskId] = useState(null);
@@ -28,7 +28,8 @@ export function BoardList({ onRemoveGroup, groups, boardId, board }) {
 
   async function onRemoveTask(taskId, groupId, boardId) {
     try {
-      await removeTask(taskId, groupId, boardId);
+      const updatedBoard = await removeTask(taskId, groupId, boardId);
+      setActiveBoard(updatedBoard);
     } catch (err) {
       console.log(err);
     }
@@ -56,7 +57,13 @@ export function BoardList({ onRemoveGroup, groups, boardId, board }) {
   async function handelDragEnter(ev, params) {
     if (ev.target !== dragNode.current) {
       try {
-        await switchPlace(params.taskIdx, params.groupIdx, dragTask.current, boardId);
+        const updatedBoard = await switchPlace(
+          params.taskIdx,
+          params.groupIdx,
+          dragTask.current,
+          boardId
+        );
+        setActiveBoard(updatedBoard);
         dragTask.current = params;
       } catch (err) {
         console.log(err);
@@ -77,7 +84,12 @@ export function BoardList({ onRemoveGroup, groups, boardId, board }) {
     <div className="board-list">
       {groups.map((group, groupIdx) => (
         <div className="group-preview" key={group.id}>
-          <GroupPreviewTitle boardId={boardId} group={group} openActionMenu={openActionMenu} />
+          <GroupPreviewTitle
+            boardId={boardId}
+            group={group}
+            openActionMenu={openActionMenu}
+            setActiveBoard={setActiveBoard}
+          />
           {group.tasks.map((task, taskIdx) => (
             <GroupTask
               key={task.id}
@@ -97,10 +109,11 @@ export function BoardList({ onRemoveGroup, groups, boardId, board }) {
                 ev.stopPropagation();
                 setIsOpenSmallLabel(!isOpenSmallLabel);
               }}
-              labels={task.labelIds
+              labels={task?.labelIds
                 ?.map((labelId) => board.labels.find((label) => label.id === labelId))
                 .filter((label) => !!label)}
               checkClassName={isDragging ? getStyles({ groupIdx, taskIdx }) : 'task'}
+              setActiveBoard={setActiveBoard}
             />
           ))}
           {newTaskGroupId === group.id && !isMenuOpen ? (
@@ -111,6 +124,7 @@ export function BoardList({ onRemoveGroup, groups, boardId, board }) {
               boardId={boardId}
               task={null}
               onRemoveTask={onRemoveTask}
+              setActiveBoard={setActiveBoard}
             />
           ) : (
             <div onClick={() => openAdd(group.id)} className="add-task">

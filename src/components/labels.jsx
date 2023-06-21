@@ -9,15 +9,26 @@ import edit from '../assets/img/edit.svg';
 import { CreateLabel } from './create-label';
 import { boardService } from '../services/board.service';
 
-export function Labels({ board, currTask, setSidebarAction }) {
+export function Labels({ board, currTask, setSidebarAction, setActiveBoard }) {
   const [taskToEdit, setTaskToEdit] = useState(currTask);
   const { groupId } = useParams();
   const [isCreateLabel, setIsCreateLabel] = useState(false);
   const [currLabel, setCurrLabel] = useState(null);
 
   useEffect(() => {
-    addTask(taskToEdit, groupId, board._id);
+    onMarkLabel();
+    // addTask(taskToEdit, groupId, board._id);
   }, [taskToEdit]);
+
+  async function onMarkLabel() {
+    try {
+      const updatedBoard = await addTask(taskToEdit, groupId, board._id);
+      console.log(updatedBoard);
+      setActiveBoard(updatedBoard);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   async function handleChange({ target }) {
     const { name: field, id } = target;
@@ -43,16 +54,20 @@ export function Labels({ board, currTask, setSidebarAction }) {
     ev.preventDefault();
 
     try {
-      await saveLabel(currLabel, board._id);
+      const updatedBoard = await saveLabel(currLabel, board._id);
+      setActiveBoard(updatedBoard);
       // if (taskToEdit.labelIds) {
-      //     setTaskToEdit((prevTask) => ({ ...prevTask, ['labelIds']: [...prevTask.labelIds, currLabel.id] }))
-      // } else setTaskToEdit((prevTask) => ({ ...prevTask, ['labelIds']: [currLabel.id] }))
+      //   setTaskToEdit((prevTask) => ({
+      //     ...prevTask,
+      //     ['labelIds']: [...prevTask.labelIds, currLabel.id]
+      //   }));
+      // } else {
+      //   setTaskToEdit((prevTask) => ({ ...prevTask, ['labelIds']: [currLabel.id] }));
+      // }
     } catch (err) {
       console.log(err);
     }
   }
-
-  console.log(currLabel);
 
   return (
     <section className="labels">

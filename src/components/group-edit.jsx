@@ -3,7 +3,7 @@ import x from '../assets/img/x.svg';
 import { boardService } from '../services/board.service';
 import { addGroup } from '../store/board.actions';
 
-export function GroupEdit({ boardId, group, onClose }) {
+export function GroupEdit({ boardId, group, onClose, setActiveBoard }) {
   const [newGroup, setNewGroup] = useState(boardService.getEmptyGroup());
 
   useEffect(() => {
@@ -16,7 +16,8 @@ export function GroupEdit({ boardId, group, onClose }) {
   async function onAddGroup(ev) {
     ev.preventDefault();
     try {
-      await addGroup(newGroup, boardId);
+      const updatedBoard = await addGroup(newGroup, boardId);
+      setActiveBoard(updatedBoard);
       setNewGroup(boardService.getEmptyGroup());
       // setIsNewGroupOpen(false)
     } catch (err) {
@@ -26,7 +27,8 @@ export function GroupEdit({ boardId, group, onClose }) {
   async function onEditGroup(ev) {
     ev.preventDefault();
     try {
-      await addGroup(newGroup, boardId);
+      const updatedBoard = await addGroup(newGroup, boardId);
+      setActiveBoard(updatedBoard);
       onClose();
       // setNewGroup(boardService.getEmptyGroup())
       // setIsNewGroupOpen(false)

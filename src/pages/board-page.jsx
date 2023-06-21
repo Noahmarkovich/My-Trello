@@ -5,17 +5,29 @@ import { Outlet, useParams } from 'react-router-dom';
 import { BoardList } from '../components/board-list.jsx';
 import { AddAnotherListButton } from '../components/board/add-another-list-button.jsx';
 import { GroupEdit } from '../components/group-edit.jsx';
-import { loadBoard, removeGroup, updateBoard } from '../store/board.actions.js';
+import { boardService } from '../services/board.service.js';
+import { loadBoards, removeGroup, updateBoard } from '../store/board.actions.js';
 
 export function BoardPage() {
   const boards = useSelector((storeState) => storeState.boardModule.boards);
-  const activeBoard = boards[0];
-  const [isNewGroupOpen, setIsNewGroupOpen] = useState(false);
-  const [currBoard, setCurrBoard] = useState(boards[0]);
   const { boardId } = useParams();
+  const [activeBoard, setActiveBoard] = useState(null);
+  const [isNewGroupOpen, setIsNewGroupOpen] = useState(false);
+  // const [currBoard, setCurrBoard] = useState(null);
+
   useEffect(() => {
-    loadBoard();
+    loadBoards();
+    loadCurrBoard();
   }, []);
+
+  async function loadCurrBoard() {
+    try {
+      const currBoard = await boardService.getById(boardId);
+      setActiveBoard(currBoard);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   async function onRemoveGroup(ev, groupId) {
     ev.stopPropagation();
@@ -31,7 +43,8 @@ export function BoardPage() {
     try {
       const isStarred = activeBoard.isStarred;
       // await markStarred(!isStarred, boardId);
-      await updateBoard('isStarred', !isStarred, boardId);
+      const board = await updateBoard('isStarred', !isStarred, boardId);
+      setActiveBoard(board);
     } catch (err) {
       console.log(err);
     }
@@ -43,35 +56,40 @@ export function BoardPage() {
 
   function handleChange({ target }) {
     const { value, name: field } = target;
-    setCurrBoard((prevBoard) => ({ ...prevBoard, [field]: value }));
+    setActiveBoard((prevBoard) => ({ ...prevBoard, [field]: value }));
   }
 
   async function onUpdateTitle(ev) {
     ev.preventDefault();
     try {
-      const updatedTitle = currBoard.title;
+      const updatedTitle = activeBoard.title;
       await updateBoard('title', updatedTitle, boardId);
     } catch (err) {
       console.log(err);
     }
   }
 
+  console.log(activeBoard);
   if (!activeBoard) {
     return <div>loading</div>;
   }
 
   return (
-    <div className="board-index">
+    <div
+      style={{
+        backgroundImage: activeBoard.style.background
+      }}
+      className="board-index">
       <div className="board-header">
         <form onSubmit={(ev) => onUpdateTitle(ev)}>
           <input
             className="board-title"
             type="text"
             name="title"
-            placeholder={currBoard.title}
-            value={currBoard.title}
+            placeholder={activeBoard.title}
+            value={activeBoard.title}
             onChange={handleChange}
-            style={{ width: currBoard.title.length * 11 + 'px' }}
+            style={{ width: activeBoard.title.length * 11 + 'px' }}
           />
         </form>
         <button onClick={onMarkStarred} className="clean-btn">
@@ -85,6 +103,7 @@ export function BoardPage() {
           boardId={boardId}
           setIsNewGroupOpen={setIsNewGroupOpen}
           board={activeBoard}
+          setActiveBoard={setActiveBoard}
         />
         {!isNewGroupOpen && (
           <AddAnotherListButton
@@ -99,9 +118,10 @@ export function BoardPage() {
             boardId={boardId}
             group={null}
             onClose={() => setIsNewGroupOpen(false)}
+            setActiveBoard={setActiveBoard}
           />
         )}
-        <Outlet />
+        <Outlet context={[setActiveBoard]} />
       </main>
     </div>
   );

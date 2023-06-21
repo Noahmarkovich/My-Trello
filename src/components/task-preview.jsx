@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import { boardService } from '../services/board.service';
 import { addTask, saveActivity } from '../store/board.actions';
 
@@ -26,14 +26,26 @@ export function TaskPreview() {
   const [currGroup, setCurrGroup] = useState(null);
   const [previewAction, setPreviewAction] = useState(null);
   const { boardId } = useParams();
+  const [currBoard, setCurrBoard] = useState(null);
+  const [setActiveBoard] = useOutletContext();
 
   useEffect(() => {
-    loadTask(taskId, groupId, boards[0]._id);
+    loadCurrBoard();
+    loadTask(taskId, groupId, boardId);
   }, [boards]);
+
+  async function loadCurrBoard() {
+    try {
+      const currBoard = await boardService.getById(boardId);
+      setCurrBoard(currBoard);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   async function loadTask(taskId, groupId) {
     try {
-      const { task, group } = await boardService.queryTask(taskId, groupId, boards[0]._id);
+      const { task, group } = await boardService.queryTask(taskId, groupId, boardId);
       setCurrTask(task);
       setCurrGroup(group);
     } catch (err) {
@@ -49,7 +61,8 @@ export function TaskPreview() {
   async function onEditTask(ev) {
     ev.preventDefault();
     try {
-      await addTask(currTask, currGroup.id, boards[0]._id);
+      const updatedBoard = await addTask(currTask, currGroup.id, boardId);
+      setActiveBoard(updatedBoard);
       // setTaskId(null)
       // setNewTask(boardService.getEmptyTask())
       // setIsNewGroupOpen(false)
@@ -78,7 +91,7 @@ export function TaskPreview() {
         ['txt']: `marked the due date incomplete`,
         ['task']: { id: currTask.id, title: currTask.title }
       };
-      addTask(updatedTask, groupId, boards[0]._id);
+      addTask(updatedTask, groupId, boardId._id);
     } else {
       updatedTask = {
         ...currTask,
@@ -90,8 +103,9 @@ export function TaskPreview() {
       };
     }
     try {
-      await addTask(updatedTask, groupId, boards[0]._id);
-      await saveActivity(activity, boards[0]._id);
+      await addTask(updatedTask, groupId, boardId);
+      const updatedBoard = await saveActivity(activity, boardId);
+      setActiveBoard(updatedBoard);
     } catch (err) {
       console.log(err);
     }
@@ -116,7 +130,7 @@ export function TaskPreview() {
             <div className="label">
               {' '}
               {currTask.labelIds.map((labelId) => {
-                const label = boards[0].labels.find((label) => label.id === labelId);
+                const label = currBoard.labels.find((label) => label.id === labelId);
 
                 return <Label label={label} comesFrom={'preview'} key={label.id} />;
               })}
@@ -126,7 +140,13 @@ export function TaskPreview() {
             </div>
             {previewAction === 'label' && (
               <div className="labels-from-preview">
-                <Labels board={boards[0]} currTask={currTask} setSidebarAction={setPreviewAction} />
+                <Labels
+                  board={currBoard}
+                  currTask={currTask}
+                  setSidebarAction={setPreviewAction}
+                  setCurrBoard={setCurrBoard}
+                  setActiveBoard={setActiveBoard}
+                />
               </div>
             )}
           </section>
@@ -142,13 +162,23 @@ export function TaskPreview() {
               handleChange={handleChange}
             />
             {currTask.checklists && (
-              <TaskChecklist currTask={currTask} groupId={groupId} boardId={boards[0]._id} />
+              <TaskChecklist
+                currTask={currTask}
+                groupId={groupId}
+                boardId={currBoard._id}
+                setActiveBoard={setActiveBoard}
+              />
             )}
-            {boards[0].activities.map((activity) => activity.task.id === taskId) && (
-              <TaskActivity board={boards[0]} taskId={taskId} />
+            {currBoard.activities.map((activity) => activity.task.id === taskId) && (
+              <TaskActivity board={currBoard} taskId={taskId} />
             )}
           </div>
-          <TaskSideBar board={boards[0]} currTask={currTask} currGroup={currGroup} />
+          <TaskSideBar
+            board={currBoard}
+            currTask={currTask}
+            currGroup={currGroup}
+            setActiveBoard={setActiveBoard}
+          />
         </main>
       </div>
     </section>

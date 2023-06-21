@@ -1,10 +1,89 @@
 .create-board{
     width: 304px;
-    position: relative;
+    position: absolute;
+    left: 205px;
+    top: 50px;
     background-color: var(--ds-surface-overlay, #ffffff);
     border-radius: 3px;
     box-shadow: var(--ds-shadow-overlay, 0 8px 16px -4px rgba(9, 30, 66, 0.25), 0 0 0 1px rgba(9, 30, 66, 0.08));
     margin-top: 8px;
-    right: 60px;
-    top: 40px;
+    color: #172b4d;
+
+    .create-board-header{
+        
+        h2{
+            font-size: 14px;
+            line-height: 20px;
+            font-weight: 400;
+            border-bottom: 1px solid var(--ds-border, rgba(9, 30, 66, 0.13));
+            color:  #5e6c84;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .exit-btn-clean {
+            position: absolute;
+            top: 13px;
+            left: 90%;
+            border: none;
+            background: none;
+            font-size: 12px;
+            cursor: pointer;
+
+            &:hover {
+
+                .exit {
+                    path {
+                        stroke: black;
+                    }
+                }
+            }
+    }
+}
+
+    .main-create-board{
+
+        padding: 0 12px 12px;
+
+        .background-preview{
+            border-radius: 0.1875rem;
+            box-shadow: 0 7px 15px rgba(0,0,0,.15);
+            display: flex;
+            height: 120px;
+            justify-content: center;
+            margin: 10px auto;
+            width: 200px;
+            padding: 10px;
+    }
+        .board-title{
+            color:  #5e6c84;
+            font-size: 12px;
+            line-height: 16px;
+            font-weight: 700;
+
+            span{
+                color: red;
+            }
+            }
+
+        
+        .background-picker{
+
+            margin: 20px 0;
+            .background-options{
+        
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+        
+                .background-option{
+                    width: 40px;
+                    height: 32px;
+                    border-radius: 3px;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+    
 }

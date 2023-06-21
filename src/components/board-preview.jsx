@@ -1,6 +1,11 @@
-export function BoardPreview({ board }) {
+export function BoardPreview({ board, onClick }) {
   return (
-    <section className="board-preview">
+    <section
+      style={{
+        backgroundImage: board.style.background
+      }}
+      onClick={onClick}
+      className="board-preview">
       <div className="preview-title">{board.title}</div>
     </section>
   );

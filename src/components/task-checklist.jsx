@@ -6,7 +6,7 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import { BsThreeDots } from 'react-icons/bs';
 import { saveActivity } from '../store/board.actions';
 
-export function TaskChecklist({ currTask, groupId, boardId }) {
+export function TaskChecklist({ currTask, groupId, boardId, setActiveBoard }) {
   // const [taskToEdit, setTaskToEdit] = useState(currTask);
   const [checkListId, setCheckListId] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -59,7 +59,8 @@ export function TaskChecklist({ currTask, groupId, boardId }) {
     }
     try {
       await addTask(updatedTask, groupId, boardId);
-      await saveActivity(activity, boardId);
+      const updatedBoard = await saveActivity(activity, boardId);
+      setActiveBoard(updatedBoard);
     } catch (err) {
       console.log(err);
     }
@@ -73,7 +74,8 @@ export function TaskChecklist({ currTask, groupId, boardId }) {
         ['task']: { id: currTask.id, title: currTask.title }
       };
       await saveActivity(activity, boardId);
-      await removeChecklist(checklist, currTask.id, groupId, boardId);
+      const updatedBoard = await removeChecklist(checklist, currTask.id, groupId, boardId);
+      setActiveBoard(updatedBoard);
     } catch (err) {
       console.log(err);
     }
@@ -81,7 +83,8 @@ export function TaskChecklist({ currTask, groupId, boardId }) {
 
   async function deleteTodo(ev, todoId, checklistId) {
     ev.stopPropagation();
-    await removeTodo(todoId, checklistId, currTask.id, groupId, boardId);
+    const updatedBoard = await removeTodo(todoId, checklistId, currTask.id, groupId, boardId);
+    setActiveBoard(updatedBoard);
   }
 
   // console.log(currTask);

@@ -1,12 +1,31 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import routes from '../routes';
 
 import { FiChevronDown } from 'react-icons/fi';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CreateBoard } from './create-board';
+import { boardService } from '../services/board.service';
 
 export function AppHeader() {
   const [isCreate, setIsCreate] = useState(false);
+  const [activeBoard, setActiveBoard] = useState(null);
+  const boardId = useLocation().pathname.split('/')[2];
+
+  useEffect(() => {
+    if (boardId) {
+      loadCurrBoard();
+    }
+  }, [boardId]);
+
+  async function loadCurrBoard() {
+    try {
+      const currBoard = await boardService.getById(boardId);
+      setActiveBoard(currBoard);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   // const user = useSelector(storeState => storeState.userModule.user)
 
   // async function onLogin(credentials) {
@@ -35,7 +54,17 @@ export function AppHeader() {
   // }
 
   return (
-    <header className="app-header">
+    <header
+      style={
+        activeBoard
+          ? {
+              backgroundColor: activeBoard.style.header
+            }
+          : {
+              backgroundColor: ' hsl(215,90%,32.7%)'
+            }
+      }
+      className="app-header">
       <nav>
         <img className="logo" src="https://a.trellocdn.com/prgb/assets/d947df93bc055849898e.gif" />
         {routes.map((route) => (
@@ -49,7 +78,7 @@ export function AppHeader() {
         <button onClick={() => setIsCreate(true)} className="gray-btn create-btn">
           Create
         </button>
-        {isCreate && <CreateBoard />}
+        {isCreate && <CreateBoard onClose={() => setIsCreate(false)} />}
       </nav>
     </header>
   );

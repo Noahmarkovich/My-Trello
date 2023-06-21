@@ -3,7 +3,15 @@ import { boardService } from '../services/board.service';
 import x from '../assets/img/x.svg';
 import { addTask, saveActivity } from '../store/board.actions';
 
-export function TaskEdit({ setNewTaskGroupId, setTaskId, group, boardId, task, onRemoveTask }) {
+export function TaskEdit({
+  setNewTaskGroupId,
+  setTaskId,
+  group,
+  boardId,
+  task,
+  onRemoveTask,
+  setActiveBoard
+}) {
   const [newTask, setNewTask] = useState(boardService.getEmptyTask());
 
   useEffect(() => {
@@ -23,7 +31,8 @@ export function TaskEdit({ setNewTaskGroupId, setTaskId, group, boardId, task, o
         ['txt']: `added this card to ${group.title}`,
         ['task']: { id: savedTask.id, title: savedTask.title }
       };
-      await saveActivity(activity, boardId);
+      const updatedBoard = await saveActivity(activity, boardId);
+      setActiveBoard(updatedBoard);
       setNewTask(boardService.getEmptyTask());
       // setIsNewGroupOpen(false)
     } catch (err) {
@@ -33,7 +42,8 @@ export function TaskEdit({ setNewTaskGroupId, setTaskId, group, boardId, task, o
   async function onEditTask(ev) {
     ev.preventDefault();
     try {
-      await addTask(newTask, group.id, boardId);
+      const updatedBoard = await addTask(newTask, group.id, boardId);
+      setActiveBoard(updatedBoard);
       setTaskId(null);
       // setNewTask(boardService.getEmptyTask())
       // setIsNewGroupOpen(false)
@@ -75,7 +85,6 @@ export function TaskEdit({ setNewTaskGroupId, setTaskId, group, boardId, task, o
           />
         </div>
       </form>
-      {/* </div> */}
     </div>
   );
 }

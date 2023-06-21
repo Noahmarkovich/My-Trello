@@ -1,6 +1,6 @@
 export const SET_BOARD = 'SET_BOARD';
 export const REMOVE_CAR = 'REMOVE_CAR';
-export const ADD_CAR = 'ADD_CAR';
+export const ADD_BOARD = 'ADD_BOARD';
 export const ADD_GROUP = 'ADD_GROUP';
 export const ADD_TO_CART = 'ADD_TO_CART';
 export const CLEAR_CART = 'CLEAR_CART';
@@ -21,10 +21,14 @@ export function boardReducer(state = initialState, action) {
     case SET_BOARD:
       newState = { ...state, boards: action.boards };
       break;
-    case REMOVE_CAR: {
-      const lastRemovedCar = state.boards.find((boards) => boards._id === action.carId);
-      boards = state.boards.filter((boards) => boards._id !== action.carId);
-      newState = { ...state, boards, lastRemovedCar };
+    // case REMOVE_CAR: {
+    //   const lastRemovedCar = state.boards.find((boards) => boards._id === action.carId);
+    //   boards = state.boards.filter((boards) => boards._id !== action.carId);
+    //   newState = { ...state, boards, lastRemovedCar };
+    //   break;
+    // }
+    case ADD_BOARD: {
+      newState = { ...state, boards: [...state.boards, action.board] };
       break;
     }
     case UPDATE_BOARD:

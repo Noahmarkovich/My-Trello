@@ -1,5 +1,5 @@
 import { boardService } from '../services/board.service.js';
-import { ADD_GROUP, REMOVE_CAR, SET_BOARD, UPDATE_BOARD } from './board.reducer.js';
+import { ADD_GROUP, REMOVE_CAR, SET_BOARD, UPDATE_BOARD, ADD_BOARD } from './board.reducer.js';
 import { store } from './store.js';
 
 // Action Creators:
@@ -16,13 +16,26 @@ export function getActionAddGroup(newGroup) {
   };
 }
 
-export async function loadBoard() {
+export async function loadBoards() {
   try {
     const boards = await boardService.query();
     // console.log('Cars from DB:', boards);
     store.dispatch({
       type: SET_BOARD,
       boards
+    });
+  } catch (err) {
+    console.log('Cannot load board', err);
+    throw err;
+  }
+}
+export async function addBoard(newBoard) {
+  try {
+    const board = await boardService.save(newBoard);
+    console.log(board);
+    store.dispatch({
+      type: ADD_BOARD,
+      board
     });
   } catch (err) {
     console.log('Cannot load board', err);
@@ -50,6 +63,8 @@ export async function updateBoard(field, value, boardId) {
       type: UPDATE_BOARD,
       savedBoard
     });
+
+    return savedBoard;
   } catch (err) {
     console.log('Cannot load board', err);
     throw err;
@@ -63,6 +78,8 @@ export async function removeGroup(groupId, boardId) {
       type: UPDATE_BOARD,
       savedBoard
     });
+
+    return savedBoard;
   } catch (err) {
     console.log('Cannot remove board', err);
     throw err;
@@ -75,6 +92,8 @@ export async function removeTask(taskId, groupId, boardId) {
       type: UPDATE_BOARD,
       savedBoard
     });
+
+    return savedBoard;
   } catch (err) {
     console.log('Cannot remove task', err);
     throw err;
@@ -87,6 +106,8 @@ export async function removeChecklist(checklist, taskId, groupId, boardId) {
       type: UPDATE_BOARD,
       savedBoard
     });
+
+    return savedBoard;
   } catch (err) {
     console.log('Cannot remove task', err);
     throw err;
@@ -99,6 +120,8 @@ export async function removeTodo(todoId, checklistId, taskId, groupId, boardId) 
       type: UPDATE_BOARD,
       savedBoard
     });
+
+    return savedBoard;
   } catch (err) {
     console.log('Cannot remove task', err);
     throw err;

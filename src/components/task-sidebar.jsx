@@ -13,7 +13,7 @@ const SideBarActions = {
   Dates: 'dates'
 };
 
-export function TaskSideBar({ board, currTask, currGroup }) {
+export function TaskSideBar({ board, currTask, currGroup, setActiveBoard }) {
   const [sidebarAction, setSidebarAction] = useState(null);
 
   async function addDueDate(value) {
@@ -31,18 +31,20 @@ export function TaskSideBar({ board, currTask, currGroup }) {
     };
     try {
       await addTask(updatedTask, currGroup.id, board._id);
-      await saveActivity(activity, board._id);
+      const updatedBoard = await saveActivity(activity, board._id);
+      setActiveBoard(updatedBoard);
     } catch (err) {
       console.log(err);
     }
   }
 
-  function removeChecked(value) {
+  async function removeChecked(value) {
     const updatedTask = {
       ...currTask,
       isComplete: value
     };
-    addTask(updatedTask, currGroup.id, board._id);
+    const updatedBoard = await addTask(updatedTask, currGroup.id, board._id);
+    setActiveBoard(updatedBoard);
   }
 
   return (
@@ -79,6 +81,7 @@ export function TaskSideBar({ board, currTask, currGroup }) {
           // onClose={() => setSidebarAction(null)}
           setSidebarAction={setSidebarAction}
           comesFrom={'sideBar'}
+          setActiveBoard={setActiveBoard}
         />
       )}
       {sidebarAction === SideBarActions.Checklist && (
@@ -88,6 +91,7 @@ export function TaskSideBar({ board, currTask, currGroup }) {
           // onClose={() => setSidebarAction(null)}
           setSidebarAction={setSidebarAction}
           currGroup={currGroup}
+          setActiveBoard={setActiveBoard}
         />
       )}
       {sidebarAction === SideBarActions.Dates && (
@@ -97,6 +101,7 @@ export function TaskSideBar({ board, currTask, currGroup }) {
           currTask={currTask}
           removeChecked={removeChecked}
           // onClose={() => setSidebarAction(null)}
+          setActiveBoard={setActiveBoard}
         />
       )}
     </section>

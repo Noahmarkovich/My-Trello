@@ -18,7 +18,8 @@ export function GroupTask({
   onLabelClick,
   onDragStart,
   onDragEnter,
-  checkClassName
+  checkClassName,
+  setActiveBoard
 }) {
   const [isEditMode, setIsEditMode] = useState(false);
 
@@ -94,6 +95,7 @@ export function GroupTask({
           boardId={boardId}
           task={task}
           onRemoveTask={onRemoveTask}
+          setActiveBoard={setActiveBoard}
         />
       ) : (
         <span className="task-title">{task.title}</span>

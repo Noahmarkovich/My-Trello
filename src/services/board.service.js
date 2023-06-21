@@ -31,7 +31,8 @@ export const boardService = {
   saveActivity,
   switchPlace,
   markStarred,
-  updateBoard
+  updateBoard,
+  getEmptyBoard
 };
 window.cs = boardService;
 
@@ -321,6 +322,59 @@ function getEmptyActivity() {
     }
   };
 }
+function getEmptyBoard() {
+  return {
+    _id: '',
+    title: '',
+    isStarred: false,
+    archivedAt: '',
+    createdBy: {},
+    style: {
+      header: 'rgb(11, 80, 175)',
+      background: "url('https://a.trellocdn.com/prgb/assets/d106776cb297f000b1f4.svg')"
+    },
+    labels: [
+      {
+        id: 'l101',
+        title: '',
+        name: 'green',
+        colorDark: '#7BC86C',
+        colorLight: '#D6ECD2'
+      },
+      {
+        id: 'l102',
+        title: '',
+        name: 'yellow',
+        colorDark: '#F5DD29',
+        colorLight: '#FAF3C0'
+      },
+      {
+        id: 'l103',
+        title: '',
+        name: 'orange',
+        colorDark: '#FFAF3F',
+        colorLight: '#FCE6C6'
+      },
+      {
+        id: 'l104',
+        title: '',
+        name: 'red',
+        colorDark: '#EF7564',
+        colorLight: '#F5D3CE'
+      },
+      {
+        id: 'l105',
+        title: '',
+        name: 'purple',
+        colorDark: '#CD8DE5',
+        colorLight: '#EDDBF4'
+      }
+    ],
+    members: [],
+    groups: [],
+    activities: []
+  };
+}
 
 function newLabels() {
   return [
@@ -411,7 +465,10 @@ function _createBoards() {
           fullname: 'Abi Abambi',
           imgUrl: 'http://some-img'
         },
-        style: {},
+        style: {
+          header: 'rgb(11, 80, 175)',
+          background: "url('https://a.trellocdn.com/prgb/assets/d106776cb297f000b1f4.svg')"
+        },
         labels: [
           {
             id: 'l101',

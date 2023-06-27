@@ -41,7 +41,10 @@
                 background-color: rgba(9, 30, 66, 0.08)
             }
         }
-
+        .star{
+            display: flex;
+            align-self: end;
+        }
         .star-icon{
             font-size: 1.1rem;
             stroke: white;
@@ -64,6 +67,24 @@
 
         }
 
+        .dark-screen{
+            background: #0009;
+            bottom: 0;
+            left: 0;
+            position: fixed;
+            right: 0;
+            top: 0;
+            z-index: 50;
+
+            
+        }
+        .edit-mode{
+            position: absolute;
+            z-index: 20;
+            left: 0px;
+            top: -10px;
+            width: 260px;
+        }
         .group-icons{
             display: flex;
             gap: 12px;
@@ -208,6 +229,7 @@
                         cursor: pointer;
                         top: 4px;
                         position: absolute;
+                        display: block;
 
                         &:hover {
                             visibility: visible;
@@ -227,7 +249,7 @@
 
 
                 .edit {
-                    opacity: 0;
+                    display: none;
                 }
 
                 .small-labels {

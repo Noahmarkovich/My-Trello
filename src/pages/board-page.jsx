@@ -33,7 +33,8 @@ export function BoardPage() {
     ev.stopPropagation();
 
     try {
-      await removeGroup(groupId, boardId);
+      const updatedBoard = await removeGroup(groupId, boardId);
+      setActiveBoard(updatedBoard);
     } catch (err) {
       console.log(err);
     }
@@ -89,10 +90,10 @@ export function BoardPage() {
             placeholder={activeBoard.title}
             value={activeBoard.title}
             onChange={handleChange}
-            style={{ width: activeBoard.title.length * 11 + 'px' }}
+            style={{ width: activeBoard.title.length * 13 + 'px' }}
           />
         </form>
-        <button onClick={onMarkStarred} className="clean-btn">
+        <button onClick={onMarkStarred} className="clean-btn star">
           <HiOutlineStar className={activeBoard.isStarred ? 'star-icon full' : 'star-icon'} />
         </button>
       </div>

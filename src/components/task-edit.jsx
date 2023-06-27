@@ -10,7 +10,8 @@ export function TaskEdit({
   boardId,
   task,
   onRemoveTask,
-  setActiveBoard
+  setActiveBoard,
+  closeEdit
 }) {
   const [newTask, setNewTask] = useState(boardService.getEmptyTask());
 
@@ -45,6 +46,7 @@ export function TaskEdit({
       const updatedBoard = await addTask(newTask, group.id, boardId);
       setActiveBoard(updatedBoard);
       setTaskId(null);
+      closeEdit();
       // setNewTask(boardService.getEmptyTask())
       // setIsNewGroupOpen(false)
     } catch (err) {
@@ -63,6 +65,7 @@ export function TaskEdit({
   }
 
   return (
+    // <div className={newTask.id && 'dark-screen'}>
     <div className="task-edit">
       <form onSubmit={newTask.id ? onEditTask : onAddTask}>
         <div className="task-composer">
@@ -78,13 +81,16 @@ export function TaskEdit({
         </div>
         <div className="buttons-container">
           <button onClick={(ev) => ev.stopPropagation()}>{newTask.id ? 'Save' : 'Add card'}</button>
-          <img
-            onClick={newTask.id ? () => onRemoveTask(newTask.id, group.id, boardId) : closeForm}
-            className="icon delete"
-            src={x}
-          />
+          {!newTask.id && (
+            <img
+              onClick={newTask.id ? () => onRemoveTask(newTask.id, group.id, boardId) : closeForm}
+              className="icon delete"
+              src={x}
+            />
+          )}
         </div>
       </form>
     </div>
+    // </div>
   );
 }

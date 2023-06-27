@@ -87,27 +87,34 @@ export function GroupTask({
           })}
         </div>
       )}
-      {isEditMode ? (
-        <TaskEdit
-          setNewTaskGroupId={setNewTaskGroupId}
-          setTaskId={setTaskId}
-          groupId={group.id}
-          boardId={boardId}
-          task={task}
-          onRemoveTask={onRemoveTask}
-          setActiveBoard={setActiveBoard}
-        />
-      ) : (
-        <span className="task-title">{task.title}</span>
+      <div className={isEditMode && 'dark-screen'}>
+        {isEditMode ? (
+          <div className="edit-mode">
+            <TaskEdit
+              setNewTaskGroupId={setNewTaskGroupId}
+              setTaskId={setTaskId}
+              group={group}
+              boardId={boardId}
+              task={task}
+              onRemoveTask={onRemoveTask}
+              setActiveBoard={setActiveBoard}
+              closeEdit={() => setIsEditMode(false)}
+            />
+          </div>
+        ) : (
+          <span className="task-title">{task.title}</span>
+        )}
+      </div>
+      {!isEditMode && (
+        <button
+          onClick={(ev) => {
+            ev.stopPropagation();
+            setIsEditMode(true);
+          }}
+          className="edit">
+          <MdOutlineModeEditOutline />
+        </button>
       )}
-      <button
-        onClick={(ev) => {
-          ev.stopPropagation();
-          setIsEditMode(true);
-        }}
-        className="edit">
-        <MdOutlineModeEditOutline />
-      </button>
       <div className="group-icons">
         {task.dueDate && (
           <div className={task.isComplete ? 'checklist-preview complete' : 'checklist-preview'}>

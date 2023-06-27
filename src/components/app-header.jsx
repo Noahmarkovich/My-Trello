@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import routes from '../routes';
 
 import { FiChevronDown } from 'react-icons/fi';
@@ -10,6 +10,8 @@ export function AppHeader() {
   const [isCreate, setIsCreate] = useState(false);
   const [activeBoard, setActiveBoard] = useState(null);
   const boardId = useLocation().pathname.split('/')[2];
+  const pathname = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (boardId) {
@@ -53,7 +55,7 @@ export function AppHeader() {
   //     }
   // }
 
-  return (
+  return pathname.pathname !== '/' ? (
     <header
       style={
         activeBoard
@@ -66,7 +68,14 @@ export function AppHeader() {
       }
       className="app-header">
       <nav>
-        <img className="logo" src="https://a.trellocdn.com/prgb/assets/d947df93bc055849898e.gif" />
+        <img
+          onClick={() => {
+            navigate(`/`);
+            setActiveBoard(null);
+          }}
+          className="logo"
+          src="https://a.trellocdn.com/prgb/assets/d947df93bc055849898e.gif"
+        />
         {routes.map((route) => (
           <div className="nav-container" key={route.path}>
             <NavLink key={route.path} to={route.path}>
@@ -81,5 +90,7 @@ export function AppHeader() {
         {isCreate && <CreateBoard onClose={() => setIsCreate(false)} />}
       </nav>
     </header>
+  ) : (
+    <div></div>
   );
 }

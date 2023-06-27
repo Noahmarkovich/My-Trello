@@ -1,5 +1,6 @@
 // import { HomePage } from './pages/home-page.jsx'
-import { BoardPage } from './pages/board-page.jsx';
+
+import { Workspaces } from './pages/workspaces.jsx';
 
 // Routes accesible from the main navigation (in AppHeader)
 const routes = [
@@ -9,9 +10,9 @@ const routes = [
   //     label: 'Home 🏠',
   // },
   {
-    path: 'board',
-    component: <BoardPage />,
-    label: 'Workspace'
+    path: 'workspaces',
+    component: <Workspaces />,
+    label: 'Workspaces'
   }
   // {
   //     path: 'chat',

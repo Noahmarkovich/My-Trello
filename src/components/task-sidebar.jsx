@@ -13,7 +13,7 @@ const SideBarActions = {
   Dates: 'dates'
 };
 
-export function TaskSideBar({ board, currTask, currGroup, setActiveBoard }) {
+export function TaskSideBar({ board, currTask, currGroup, setActiveBoard, user }) {
   const [sidebarAction, setSidebarAction] = useState(null);
 
   async function addDueDate(value) {
@@ -27,7 +27,8 @@ export function TaskSideBar({ board, currTask, currGroup, setActiveBoard }) {
         day: 'numeric'
       })}
           `,
-      ['task']: { id: currTask.id, title: currTask.title }
+      ['task']: { id: currTask.id, title: currTask.title },
+      ['byMember']: { _id: user._id, fullName: user.fullName, avatar: user.avatar }
     };
     try {
       await addTask(updatedTask, currGroup.id, board._id);
@@ -92,6 +93,7 @@ export function TaskSideBar({ board, currTask, currGroup, setActiveBoard }) {
           setSidebarAction={setSidebarAction}
           currGroup={currGroup}
           setActiveBoard={setActiveBoard}
+          user={user}
         />
       )}
       {sidebarAction === SideBarActions.Dates && (

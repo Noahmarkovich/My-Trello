@@ -9,6 +9,7 @@ import { boardService } from '../services/board.service.js';
 import { loadBoards, removeGroup, updateBoard } from '../store/board.actions.js';
 
 export function BoardPage() {
+  const user = useSelector((storeState) => storeState.userModule.user);
   const boards = useSelector((storeState) => storeState.boardModule.boards);
   const { boardId } = useParams();
   const [activeBoard, setActiveBoard] = useState(null);
@@ -105,6 +106,7 @@ export function BoardPage() {
           setIsNewGroupOpen={setIsNewGroupOpen}
           board={activeBoard}
           setActiveBoard={setActiveBoard}
+          user={user}
         />
         {!isNewGroupOpen && (
           <AddAnotherListButton

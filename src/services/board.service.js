@@ -314,7 +314,7 @@ function getEmptyActivity() {
     byMember: {
       _id: '',
       fullname: '',
-      imgUrl: ''
+      avatar: ''
     },
     task: {
       id: '',

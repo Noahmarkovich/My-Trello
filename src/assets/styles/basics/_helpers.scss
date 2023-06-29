@@ -117,3 +117,19 @@
 .full-width {
     width: 100%;
 }
+
+.avatar{
+    border-radius: 50%;
+    height: 2rem;
+    width: 2rem;
+    background-color: red;
+    color: white;
+    text-transform: uppercase;
+    // font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // padding-top: 2px;
+
+}

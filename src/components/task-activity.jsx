@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { RxActivityLog } from 'react-icons/rx';
 
-export function TaskActivity({ board, taskId }) {
+export function TaskActivity({ board, taskId, user }) {
   const [isOnHide, setIsOnHide] = useState(false);
+
+  console.log(user);
 
   return (
     <section className="task-activity">
@@ -21,9 +23,22 @@ export function TaskActivity({ board, taskId }) {
             if (activity.task.id === taskId) {
               return (
                 <li className="activity-container" key={activity.id}>
-                  <div className="activity-avatar"></div>
+                  <div
+                    style={
+                      activity.byMember &&
+                      activity.byMember.avatar && {
+                        backgroundColor: activity.byMember.avatar.color
+                      }
+                    }
+                    className="avatar">
+                    {activity.byMember && activity.byMember.avatar
+                      ? activity.byMember.avatar.initials
+                      : ' NM'}
+                  </div>
                   <div className="activity-txt-container">
-                    <span className="bold-name">Noah Markovich</span>
+                    <span className="bold-name">
+                      {activity.byMember ? activity.byMember.fullName : ' Noah Markovich'}
+                    </span>
                     {activity.txt}
                     {activity.createdAt && (
                       <div className="created-at">

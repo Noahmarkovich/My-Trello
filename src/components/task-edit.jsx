@@ -11,7 +11,8 @@ export function TaskEdit({
   task,
   onRemoveTask,
   setActiveBoard,
-  closeEdit
+  closeEdit,
+  user
 }) {
   const [newTask, setNewTask] = useState(boardService.getEmptyTask());
 
@@ -30,7 +31,8 @@ export function TaskEdit({
       const savedTask = savedBoard.groups[groupIdx].tasks[group.tasks.length];
       const activity = {
         ['txt']: `added this card to ${group.title}`,
-        ['task']: { id: savedTask.id, title: savedTask.title }
+        ['task']: { id: savedTask.id, title: savedTask.title },
+        ['byMember']: { _id: user._id, fullName: user.fullName, avatar: user.avatar }
       };
       const updatedBoard = await saveActivity(activity, boardId);
       setActiveBoard(updatedBoard);

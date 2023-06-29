@@ -3,7 +3,7 @@ import { GrClose } from 'react-icons/gr';
 import { boardService } from '../services/board.service';
 import { saveActivity, saveChecklist } from '../store/board.actions';
 
-export function CheckList({ board, currTask, setSidebarAction, currGroup, setActiveBoard }) {
+export function CheckList({ board, currTask, setSidebarAction, currGroup, setActiveBoard, user }) {
   const [checklistToEdit, setChecklistToEdit] = useState(boardService.getEmptyChecklist());
   // const [taskToEdit, setTaskToEdit] = useState(currTask);
 
@@ -18,7 +18,8 @@ export function CheckList({ board, currTask, setSidebarAction, currGroup, setAct
       await saveChecklist(checklistToEdit, currTask, currGroup, board._id);
       const activity = {
         ['txt']: `added ${checklistToEdit.title} to this card`,
-        ['task']: { id: currTask.id, title: currTask.title }
+        ['task']: { id: currTask.id, title: currTask.title },
+        ['byMember']: { _id: user._id, fullName: user.fullName, avatar: user.avatar }
       };
       const updatedBoard = await saveActivity(activity, board._id);
       setActiveBoard(updatedBoard);

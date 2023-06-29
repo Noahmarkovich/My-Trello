@@ -5,7 +5,9 @@ export const utilService = {
   debounce,
   randomPastTime,
   saveToStorage,
-  loadFromStorage
+  loadFromStorage,
+  randomColor,
+  makeAnAvatar
 };
 
 function makeId(length = 6) {
@@ -99,4 +101,19 @@ function loadFromStorage(key) {
   const data = localStorage.getItem(key);
 
   return data ? JSON.parse(data) : undefined;
+}
+
+function randomColor() {
+  var x = Math.floor(Math.random() * 256);
+  var y = 100 + Math.floor(Math.random() * 256);
+  var z = 50 + Math.floor(Math.random() * 256);
+
+  return 'rgb(' + x + ',' + y + ',' + z + ')';
+}
+
+function makeAnAvatar(fullName) {
+  const initials = fullName.split(' ')[0][0] + fullName.split(' ')[1][0];
+  const color = randomColor();
+
+  return { initials, color };
 }

@@ -1,15 +1,17 @@
 import logo from '../assets/img/logo-homepage.png';
 import { AiFillGithub } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
 
 export function HomePage() {
+  const navigate = useNavigate();
   const contentList = [
     {
       title: 'Boards',
-      txt: 'Merllo boards keep tasks organized and work moving forward. ln a glance, see everything from "things to do" to "aww yeah, we did it!"'
+      txt: 'Trello boards keep tasks organized and work moving forward. ln a glance, see everything from "things to do" to "aww yeah, we did it!"'
     },
     {
       title: 'Lists',
-      txt: "The different stages of a task. Start as simple as To Do, Doing or Done-or build a workflow custom fit to your team's needs. There's no wrong way to Merllo. "
+      txt: "The different stages of a task. Start as simple as To Do, Doing or Done-or build a workflow custom fit to your team's needs. There's no wrong way to Trello. "
     },
     {
       title: 'Cards',
@@ -35,7 +37,9 @@ export function HomePage() {
             <div className="text">
               <h1>Trello brings all your tasks, teammates, and tools together</h1>
               <p>Keep everything in the same place—even if your team isn&apos;t.</p>
-              <button className="hero-btn">Start now</button>
+              <button onClick={() => navigate('/login')} className="hero-btn">
+                Start now
+              </button>
             </div>
             <img
               className="hero-img"
@@ -66,17 +70,17 @@ export function HomePage() {
             <div className="paragraphs">
               {contentList.map((content, idx) => {
                 return (
-                  <div className="paragraph" key={idx}>
+                  <button className="paragraph" key={idx}>
                     <h5>{content.title}</h5>
                     <p>{content.txt}</p>
-                  </div>
+                  </button>
                 );
               })}
             </div>
           </div>
         </section>
         <footer>
-          trello clone project by{' '}
+          <small>trello clone project by </small>
           <a href="https://github.com/Noahmarkovich">
             <AiFillGithub />
           </a>

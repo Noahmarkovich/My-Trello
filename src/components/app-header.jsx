@@ -5,8 +5,10 @@ import { FiChevronDown } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import { CreateBoard } from './create-board';
 import { boardService } from '../services/board.service';
+import { useSelector } from 'react-redux';
 
 export function AppHeader() {
+  const user = useSelector((storeState) => storeState.userModule.user);
   const [isCreate, setIsCreate] = useState(false);
   const [activeBoard, setActiveBoard] = useState(null);
   const boardId = useLocation().pathname.split('/')[2];
@@ -54,8 +56,9 @@ export function AppHeader() {
   //         showErrorMsg('Cannot logout')
   //     }
   // }
+  console.log(user);
 
-  return pathname.pathname !== '/' ? (
+  return pathname.pathname !== '/' && pathname.pathname !== '/login' ? (
     <header
       style={
         activeBoard
@@ -89,6 +92,11 @@ export function AppHeader() {
         </button>
         {isCreate && <CreateBoard onClose={() => setIsCreate(false)} />}
       </nav>
+      {user && (
+        <div style={{ backgroundColor: user.avatar.color }} className="avatar">
+          {user.avatar ? user.avatar.initials : 'NM'}
+        </div>
+      )}
     </header>
   ) : (
     <div></div>

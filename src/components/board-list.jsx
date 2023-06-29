@@ -6,7 +6,7 @@ import { GroupPreviewTitle } from './board/group/group-preview-title';
 import { GroupTask } from './board/group/group-task';
 import { TaskEdit } from './task-edit';
 
-export function BoardList({ onRemoveGroup, groups, boardId, board, setActiveBoard }) {
+export function BoardList({ onRemoveGroup, groups, boardId, board, setActiveBoard, user }) {
   const navigate = useNavigate();
   const [newTaskGroupId, setNewTaskGroupId] = useState(null);
   const [, setTaskId] = useState(null);
@@ -125,6 +125,7 @@ export function BoardList({ onRemoveGroup, groups, boardId, board, setActiveBoar
               task={null}
               onRemoveTask={onRemoveTask}
               setActiveBoard={setActiveBoard}
+              user={user}
             />
           ) : (
             <div onClick={() => openAdd(group.id)} className="add-task">

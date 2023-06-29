@@ -21,6 +21,7 @@ export function TaskPreview() {
   const modalRef = useRef(null);
   useOnClickOutside(modalRef, closePreview);
   const boards = useSelector((storeState) => storeState.boardModule.boards);
+  const user = useSelector((storeState) => storeState.userModule.user);
   const { groupId, taskId } = useParams();
   const [currTask, setCurrTask] = useState(null);
   const [currGroup, setCurrGroup] = useState(null);
@@ -89,7 +90,8 @@ export function TaskPreview() {
       };
       activity = {
         ['txt']: `marked the due date incomplete`,
-        ['task']: { id: currTask.id, title: currTask.title }
+        ['task']: { id: currTask.id, title: currTask.title },
+        ['byMember']: { _id: user._id, fullName: user.fullName, avatar: user.avatar }
       };
       addTask(updatedTask, groupId, boardId._id);
     } else {
@@ -99,7 +101,8 @@ export function TaskPreview() {
       };
       activity = {
         ['txt']: `marked the due date complete`,
-        ['task']: { id: currTask.id, title: currTask.title }
+        ['task']: { id: currTask.id, title: currTask.title },
+        ['byMember']: { _id: user._id, fullName: user.fullName, avatar: user.avatar }
       };
     }
     try {
@@ -170,7 +173,7 @@ export function TaskPreview() {
               />
             )}
             {currBoard.activities.map((activity) => activity.task.id === taskId) && (
-              <TaskActivity board={currBoard} taskId={taskId} />
+              <TaskActivity board={currBoard} taskId={taskId} user={user} />
             )}
           </div>
           <TaskSideBar
@@ -178,6 +181,7 @@ export function TaskPreview() {
             currTask={currTask}
             currGroup={currGroup}
             setActiveBoard={setActiveBoard}
+            user={user}
           />
         </main>
       </div>

@@ -7,6 +7,7 @@ import { BsPerson } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 export function Workspaces() {
   const boards = useSelector((storeState) => storeState.boardModule.boards);
+
   const navigate = useNavigate();
   useEffect(() => {
     loadBoards();

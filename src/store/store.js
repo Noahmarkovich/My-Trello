@@ -1,8 +1,10 @@
 import { createStore, combineReducers } from 'redux';
 import { boardReducer } from './board.reducer.js';
+import { userReducer } from './user.reducer.js';
 
 const rootReducer = combineReducers({
-  boardModule: boardReducer
+  boardModule: boardReducer,
+  userModule: userReducer
 });
 
 const middleware = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__

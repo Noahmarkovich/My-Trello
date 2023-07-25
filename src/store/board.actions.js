@@ -19,7 +19,6 @@ export function getActionAddGroup(newGroup) {
 export async function loadBoards() {
   try {
     const boards = await boardService.query();
-    // console.log('Cars from DB:', boards);
     store.dispatch({
       type: SET_BOARD,
       boards

@@ -71,7 +71,6 @@ export function BoardPage() {
     }
   }
 
-  console.log(activeBoard);
   if (!activeBoard) {
     return <div>loading</div>;
   }

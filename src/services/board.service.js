@@ -1,4 +1,4 @@
-import { storageService } from './async-storage.service.js';
+// import { storageService } from './async-storage.service.js';
 import { httpService } from './http.service.js';
 import { utilService } from './util.service.js';
 // import { userService } from './user.service.js'
@@ -40,10 +40,9 @@ function getGroupIdx(board, groupId) {
   return board.groups.findIndex((group) => group.id === groupId);
 }
 
-async function query(filterBy = { txt: '' }) {
-  console.log(filterBy);
-  // return httpService.get(STORAGE_KEY, filterBy)
-  var board = await storageService.query(STORAGE_KEY);
+async function query() {
+  return httpService.get(STORAGE_KEY);
+  // var board = await storageService.query(STORAGE_KEY);
   // console.log(board['groups'][0]['tasks']);
   // if (filterBy.txt) {
   //     const regex = new RegExp(filterBy.txt, 'i')
@@ -53,12 +52,12 @@ async function query(filterBy = { txt: '' }) {
   //     cars = cars.filter(board => board.price <= filterBy.price)
   // }
 
-  return board;
+  // return board;
 }
 
 async function getById(boardId) {
-  return storageService.get(STORAGE_KEY, boardId);
-  // return httpService.get(`board/${carId}`)
+  // return storageService.get(STORAGE_KEY, boardId);
+  return httpService.get(`board/${boardId}`);
 }
 
 async function queryTask(taskId, groupId, boardId) {
@@ -71,18 +70,17 @@ async function queryTask(taskId, groupId, boardId) {
   return { task, group };
 }
 
-async function remove(carId) {
+async function remove(boardId) {
   // await storageService.remove(STORAGE_KEY, carId)
-  return httpService.delete(`board/${carId}`);
+  return httpService.delete(`board/${boardId}`);
 }
+
 async function removeGroup(groupId, boardId) {
   let board = await getById(boardId);
   const groupIdx = getGroupIdx(board, groupId);
   board.groups.splice(groupIdx, 1);
 
   return save(board);
-  // await storageService.remove(STORAGE_KEY, carId)
-  // return httpService.delete(`board/${carId}`)
 }
 
 async function markStarred(isStarred, boardId) {
@@ -105,8 +103,6 @@ async function removeTask(taskId, groupId, boardId) {
   board.groups[groupIdx].tasks.splice(taskIdx, 1);
 
   return save(board);
-  // await storageService.remove(STORAGE_KEY, carId)
-  // return httpService.delete(`board/${carId}`)
 }
 async function removeChecklist(checklist, taskId, groupId, boardId) {
   let board = await getById(boardId);
@@ -118,8 +114,6 @@ async function removeChecklist(checklist, taskId, groupId, boardId) {
   board.groups[groupIdx].tasks[taskIdx].checklists.splice(checklistIdx, 1);
 
   return save(board);
-  // await storageService.remove(STORAGE_KEY, carId)
-  // return httpService.delete(`board/${carId}`)
 }
 async function removeTodo(todoId, checklistId, taskId, groupId, boardId) {
   let board = await getById(boardId);
@@ -134,20 +128,18 @@ async function removeTodo(todoId, checklistId, taskId, groupId, boardId) {
   board.groups[groupIdx].tasks[taskIdx].checklists[checklistIdx].todos.splice(todoIdx, 1);
 
   return save(board);
-  // await storageService.remove(STORAGE_KEY, carId)
-  // return httpService.delete(`board/${carId}`)
 }
 async function save(board) {
   var savedBoard;
   if (board._id) {
-    savedBoard = await storageService.put(STORAGE_KEY, board);
-    // savedCar = await httpService.put(`board/${board._id}`, board)
+    savedBoard = await httpService.put(`board/${board._id}`, board);
   } else {
     // Later, owner is set by the backend
     // board.owner = userService.getLoggedinUser()
-    savedBoard = await storageService.post(STORAGE_KEY, board);
-    // savedCar = await httpService.post('board', board)
+    // savedBoard = await storageService.post(STORAGE_KEY, board);
+    savedBoard = await httpService.post('board', board);
   }
+  console.log(savedBoard, 'from frontend- service');
 
   return savedBoard;
 }
@@ -156,16 +148,10 @@ async function saveGroup(newGroup, boardId) {
   if (newGroup.id) {
     const groupIdx = board.groups.findIndex((group) => group.id === newGroup.id);
     board.groups.splice(groupIdx, 1, newGroup);
-    // savedGroup = await storageService.put(STORAGE_KEY, newGroup)
-    // savedCar = await httpService.put(`board/${board._id}`, board)
   } else {
-    // Later, owner is set by the backend
     newGroup.archivedAt = Date.now();
     newGroup.id = utilService.makeId();
     board.groups.push(newGroup);
-
-    // savedGroup = await storageService.postGroup(STORAGE_KEY, newGroup, 'groups')
-    // savedCar = await httpService.post('board', board)
   }
 
   return save(board);
@@ -176,20 +162,16 @@ async function saveTask(newTask, groupId, boardId) {
   if (newTask.id) {
     const taskIdx = board.groups[groupIdx].tasks.findIndex((task) => task.id === newTask.id);
     board.groups[groupIdx].tasks.splice(taskIdx, 1, newTask);
-    // savedCar = await httpService.put(`board/${board._id}`, board)
   } else {
     newTask.archivedAt = Date.now();
     newTask.id = utilService.makeId();
     board.groups[groupIdx].tasks.push(newTask);
-
-    // savedCar = await httpService.post('board', board)
   }
 
   return save(board);
 }
 async function switchPlace(taskIdx, groupIdx, currParams, boardId) {
   let board = await getById(boardId);
-  // console.log(board.groups[currParams.groupIdx]);
   board.groups[groupIdx].tasks.splice(
     taskIdx,
     0,
@@ -208,7 +190,6 @@ async function saveLabel(savedLabel, boardId) {
   } else {
     savedLabel.id = utilService.makeId();
     board.labels.push(savedLabel);
-    // savedCar = await httpService.post('board', board)
   }
 
   return save(board);
@@ -216,15 +197,9 @@ async function saveLabel(savedLabel, boardId) {
 async function saveActivity(savedActivity, boardId) {
   let board = await getById(boardId);
 
-  // if (savedLabel.id) {
-  //   const labelIdx = board.labels.findIndex((label) => label.id === savedLabel.id);
-  //   board.labels.splice(labelIdx, 1, savedLabel);
-  // } else {
   savedActivity.id = utilService.makeId();
   savedActivity.createdAt = Date.now();
   board.activities.unshift(savedActivity);
-  // savedCar = await httpService.post('board', board)
-  // }
 
   return save(board);
 }
@@ -256,14 +231,13 @@ async function saveTodo(currTodo, checkList, currTask, groupId, boardId) {
   );
   if (currTodo.id) {
     const todoIdx = checkList.todos.findIndex((todo) => todo.id === currTodo.id);
-    // board.groups[groupIdx].tasks.splice(taskIdx, 1, newTask)
+
     checkList.todos.splice(todoIdx, 1, currTodo);
   } else {
     currTodo.id = utilService.makeId();
     checkList.todos.push(currTodo);
   }
   board.groups[groupIdx].tasks[taskIdx].checklists.splice(checklistIdx, 1, checkList);
-  // board.groups[groupIdx].tasks.splice(taskIdx, 1, currTask)
 
   return save(board);
 }
@@ -324,7 +298,6 @@ function getEmptyActivity() {
 }
 function getEmptyBoard() {
   return {
-    _id: '',
     title: '',
     isStarred: false,
     archivedAt: '',
@@ -462,8 +435,8 @@ function _createBoards() {
         archivedAt: 1589983468418,
         createdBy: {
           _id: 'u101',
-          fullname: 'Abi Abambi',
-          imgUrl: 'http://some-img'
+          fullname: 'Noah Markovich',
+          avatar: { initials: 'NM', color: 'rgb(140, 88, 188)' }
         },
         style: {
           header: 'rgb(11, 80, 175)',
@@ -574,10 +547,8 @@ function _createBoards() {
                 dueDate: 16156215211,
                 byMember: {
                   _id: 'u101',
-                  username: 'Tal',
-                  fullname: 'Tal Tarablus',
-                  imgUrl:
-                    'http://res.cloudinary.com/shaishar9/image/upload/v1590850482/j1glw3c9jsoz2py0miol.jpg'
+                  fullname: 'Noah Markovich',
+                  avatar: { initials: 'NM', color: 'rgb(140, 88, 188)' }
                 },
                 style: {
                   bgColor: '#26de81'
@@ -594,8 +565,8 @@ function _createBoards() {
             createdAt: 154514,
             byMember: {
               _id: 'u101',
-              fullname: 'Abi Abambi',
-              imgUrl: 'http://some-img'
+              fullname: 'Noah Markovich',
+              avatar: { initials: 'NM', color: 'rgb(140, 88, 188)' }
             },
             task: {
               id: 'c101',

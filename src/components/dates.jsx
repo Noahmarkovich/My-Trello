@@ -1,13 +1,16 @@
 import { GrClose } from 'react-icons/gr';
 import Calendar from 'react-calendar';
 import { useRef, useState } from 'react';
+import { useOnClickOutside } from '../hooks/useOnClickOutside';
 // import 'react-calendar/dist/Calendar.css';
-export function Dates({ currTask, setSidebarAction, addDueDate, removeChecked }) {
+export function Dates({ currTask, setSidebarAction, addDueDate, removeChecked, style }) {
   const [value, onChange] = useState(currTask.dueDate ? new Date(currTask.dueDate) : new Date());
 
   const hour = useRef(value.getHours());
   const minutes = useRef(value.getMinutes());
   const [time, setTime] = useState(hour.current + ':' + minutes.current);
+  const actionRef = useRef(null);
+  useOnClickOutside(actionRef, () => setSidebarAction(null));
 
   function handleChange({ target }) {
     const { value } = target;
@@ -16,7 +19,7 @@ export function Dates({ currTask, setSidebarAction, addDueDate, removeChecked })
   }
 
   return (
-    <section className="dates">
+    <section ref={actionRef} style={style} className="dates">
       <div className="dates-header">
         <h2>Dates</h2>
         <button onClick={() => setSidebarAction(null)} className="exit-btn-clean">

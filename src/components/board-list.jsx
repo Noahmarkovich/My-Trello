@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
+import { useOnClickOutside } from '../hooks/useOnClickOutside';
 import { removeTask, switchPlace } from '../store/board.actions';
 import { GroupPreviewTitle } from './board/group/group-preview-title';
 import { GroupTask } from './board/group/group-task';
@@ -15,6 +16,8 @@ export function BoardList({ onRemoveGroup, groups, boardId, board, setActiveBoar
   const [isDragging, setIsDragging] = useState(false);
   const dragTask = useRef();
   const dragNode = useRef();
+  const menuRef = useRef(null);
+  useOnClickOutside(menuRef, () => closeActionMenu());
 
   function openAdd(groupId) {
     setIsMenuOpen(false);
@@ -24,6 +27,10 @@ export function BoardList({ onRemoveGroup, groups, boardId, board, setActiveBoar
   function openActionMenu(groupId) {
     newTaskGroupId === groupId ? setNewTaskGroupId(null) : setNewTaskGroupId(groupId);
     setIsMenuOpen(!isMenuOpen);
+  }
+  function closeActionMenu() {
+    setNewTaskGroupId(null);
+    setIsMenuOpen(false);
   }
 
   async function onRemoveTask(taskId, groupId, boardId) {
@@ -136,7 +143,7 @@ export function BoardList({ onRemoveGroup, groups, boardId, board, setActiveBoar
             </div>
           )}
           {isMenuOpen && group.id === newTaskGroupId && (
-            <div className="actions-menu">
+            <div ref={menuRef} className="actions-menu">
               <div className="title">List actions</div>
               <div onClick={(ev) => onRemoveGroup(ev, group.id)} className="action">
                 Delete list

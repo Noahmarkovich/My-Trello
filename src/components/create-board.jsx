@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { GrClose } from 'react-icons/gr';
+import { useOnClickOutside } from '../hooks/useOnClickOutside';
 import { boardService } from '../services/board.service';
 import { addBoard } from '../store/board.actions';
 
 export function CreateBoard({ onClose }) {
+  const createRef = useRef(null);
+  useOnClickOutside(createRef, onClose);
   const backgrounds = [
     {
       header: 'rgb(23, 66, 142)',
@@ -42,13 +45,14 @@ export function CreateBoard({ onClose }) {
     try {
       await addBoard(newBoard);
       setNewBoard(boardService.getEmptyBoard());
+      onClose();
     } catch (err) {
       console.log(err);
     }
   }
 
   return (
-    <section className="create-board">
+    <section ref={createRef} className="create-board">
       <div className="create-board-header">
         <h2>Create board</h2>
         <button onClick={onClose} className="exit-btn-clean">

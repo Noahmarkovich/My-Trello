@@ -47,13 +47,10 @@ export function LoginPage() {
   async function onLogin(ev) {
     ev.preventDefault();
     try {
-      const output = await login(credentials);
-      if (typeof output === 'object') {
-        navigate('/workspaces');
-      } else {
-        setErr(output);
-      }
+      await login(credentials);
+      navigate('/workspaces');
     } catch (err) {
+      setErr('Invalid email or password');
       console.log(err);
     }
   }

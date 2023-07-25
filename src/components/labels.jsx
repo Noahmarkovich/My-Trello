@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { addTask, saveLabel } from '../store/board.actions';
 import { Label } from './label';
@@ -8,12 +8,15 @@ import { MdArrowBackIosNew } from 'react-icons/md';
 import edit from '../assets/img/edit.svg';
 import { CreateLabel } from './create-label';
 import { boardService } from '../services/board.service';
+import { useOnClickOutside } from '../hooks/useOnClickOutside';
 
-export function Labels({ board, currTask, setSidebarAction, setActiveBoard }) {
+export function Labels({ board, currTask, setSidebarAction, setActiveBoard, style }) {
   const [taskToEdit, setTaskToEdit] = useState(currTask);
   const { groupId } = useParams();
   const [isCreateLabel, setIsCreateLabel] = useState(false);
   const [currLabel, setCurrLabel] = useState(null);
+  const actionRef = useRef(null);
+  useOnClickOutside(actionRef, () => setSidebarAction(null));
 
   useEffect(() => {
     onMarkLabel();
@@ -23,7 +26,7 @@ export function Labels({ board, currTask, setSidebarAction, setActiveBoard }) {
   async function onMarkLabel() {
     try {
       const updatedBoard = await addTask(taskToEdit, groupId, board._id);
-      console.log(updatedBoard);
+      // console.log(updatedBoard);
       setActiveBoard(updatedBoard);
     } catch (err) {
       console.log(err);
@@ -70,7 +73,7 @@ export function Labels({ board, currTask, setSidebarAction, setActiveBoard }) {
   }
 
   return (
-    <section className="labels">
+    <section ref={actionRef} style={style} className="labels">
       <div className="labels-header">
         {isCreateLabel && (
           <button onClick={() => setIsCreateLabel(false)} className="back-btn-clean">

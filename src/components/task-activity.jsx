@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { RxActivityLog } from 'react-icons/rx';
 
-export function TaskActivity({ board, taskId, user }) {
+export function TaskActivity({ board, taskId }) {
   const [isOnHide, setIsOnHide] = useState(false);
-
-  console.log(user);
 
   return (
     <section className="task-activity">

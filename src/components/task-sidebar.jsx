@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Labels } from './labels';
 
 import { TbCheckbox } from 'react-icons/tb';
@@ -15,6 +15,10 @@ const SideBarActions = {
 
 export function TaskSideBar({ board, currTask, currGroup, setActiveBoard, user }) {
   const [sidebarAction, setSidebarAction] = useState(null);
+  const [sidebarActionLocation, setSidebarActionLocation] = useState();
+  const labelsRef = useRef(null);
+  const datesRef = useRef(null);
+  const checklistRef = useRef(null);
 
   async function addDueDate(value) {
     const updatedTask = {
@@ -51,7 +55,20 @@ export function TaskSideBar({ board, currTask, currGroup, setActiveBoard, user }
   return (
     <section className="task-sidebar">
       <h1>Add to card</h1>
-      <button onClick={() => setSidebarAction(SideBarActions.Labels)} className="sidebar-btn">
+      <button
+        ref={labelsRef}
+        onClick={() => {
+          if (labelsRef.current) {
+            const taskRect = labelsRef.current.getBoundingClientRect();
+
+            setSidebarActionLocation({
+              top: taskRect.top,
+              left: taskRect.left
+            });
+          }
+          setSidebarAction(SideBarActions.Labels);
+        }}
+        className="sidebar-btn">
         <svg
           className="rotate"
           stroke="currentColor"
@@ -67,11 +84,37 @@ export function TaskSideBar({ board, currTask, currGroup, setActiveBoard, user }
         </svg>
         <span>Labels</span>
       </button>
-      <button onClick={() => setSidebarAction(SideBarActions.Checklist)} className="sidebar-btn">
+      <button
+        ref={checklistRef}
+        onClick={() => {
+          if (checklistRef.current) {
+            const taskRect = checklistRef.current.getBoundingClientRect();
+
+            setSidebarActionLocation({
+              top: taskRect.top,
+              left: taskRect.left
+            });
+          }
+          setSidebarAction(SideBarActions.Checklist);
+        }}
+        className="sidebar-btn">
         <TbCheckbox />
         <span>Checklist</span>
       </button>
-      <button onClick={() => setSidebarAction(SideBarActions.Dates)} className="sidebar-btn">
+      <button
+        ref={datesRef}
+        onClick={() => {
+          if (datesRef.current) {
+            const taskRect = datesRef.current.getBoundingClientRect();
+
+            setSidebarActionLocation({
+              top: taskRect.top,
+              left: taskRect.left
+            });
+          }
+          setSidebarAction(SideBarActions.Dates);
+        }}
+        className="sidebar-btn">
         <FaRegClock />
         <span>Dates</span>
       </button>
@@ -83,6 +126,7 @@ export function TaskSideBar({ board, currTask, currGroup, setActiveBoard, user }
           setSidebarAction={setSidebarAction}
           comesFrom={'sideBar'}
           setActiveBoard={setActiveBoard}
+          style={{ top: sidebarActionLocation.top - 16 }}
         />
       )}
       {sidebarAction === SideBarActions.Checklist && (
@@ -94,6 +138,7 @@ export function TaskSideBar({ board, currTask, currGroup, setActiveBoard, user }
           currGroup={currGroup}
           setActiveBoard={setActiveBoard}
           user={user}
+          style={{ top: sidebarActionLocation.top - 16 }}
         />
       )}
       {sidebarAction === SideBarActions.Dates && (
@@ -104,6 +149,7 @@ export function TaskSideBar({ board, currTask, currGroup, setActiveBoard, user }
           removeChecked={removeChecked}
           // onClose={() => setSidebarAction(null)}
           setActiveBoard={setActiveBoard}
+          style={{ top: sidebarActionLocation.top - 16 }}
         />
       )}
     </section>

@@ -2,23 +2,29 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import routes from '../routes';
 
 import { FiChevronDown } from 'react-icons/fi';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CreateBoard } from './create-board';
 import { boardService } from '../services/board.service';
 import { useSelector } from 'react-redux';
+import { useOnClickOutside } from '../hooks/useOnClickOutside';
+import { logout } from '../store/user.actions';
 
 export function AppHeader() {
-  const user = useSelector((storeState) => storeState.userModule.user);
   const [isCreate, setIsCreate] = useState(false);
-  const [activeBoard, setActiveBoard] = useState(null);
+  const [isOptionOpen, setIsOptionOpen] = useState(false);
+  const optionRef = useRef(null);
+  useOnClickOutside(optionRef, () => setIsOptionOpen(false));
+  const user = useSelector((storeState) => storeState.userModule.user);
   const boardId = useLocation().pathname.split('/')[2];
   const pathname = useLocation();
+  const [activeBoard, setActiveBoard] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (boardId) {
       loadCurrBoard();
     }
+    console.log('change');
   }, [boardId]);
 
   async function loadCurrBoard() {
@@ -48,15 +54,16 @@ export function AppHeader() {
   //         showErrorMsg('Cannot signup')
   //     }
   // }
-  // async function onLogout() {
-  //     try {
-  //         await logout()
-  //         showSuccessMsg(`Bye now`)
-  //     } catch(err) {
-  //         showErrorMsg('Cannot logout')
-  //     }
-  // }
-  console.log(user);
+  async function onLogout() {
+    try {
+      await logout();
+      setIsOptionOpen(false);
+      navigate('/login');
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  // console.log(pathname.pathname);
 
   return pathname.pathname !== '/' && pathname.pathname !== '/login' ? (
     <header
@@ -93,9 +100,34 @@ export function AppHeader() {
         {isCreate && <CreateBoard onClose={() => setIsCreate(false)} />}
       </nav>
       {user && (
-        <div style={{ backgroundColor: user.avatar.color }} className="avatar">
-          {user.avatar ? user.avatar.initials : 'NM'}
-        </div>
+        <section className="user-container">
+          <button
+            onClick={() => setIsOptionOpen(!isOptionOpen)}
+            style={{ backgroundColor: user.avatar.color }}
+            className="avatar">
+            {user.avatar ? user.avatar.initials : 'NM'}
+          </button>
+          {isOptionOpen && (
+            <div className="user-options" ref={optionRef}>
+              <h2 className="options-header">ACCOUNT</h2>
+              <div className="user-info">
+                <div style={{ backgroundColor: user.avatar.color }} className="avatar">
+                  {user.avatar ? user.avatar.initials : 'NM'}
+                </div>
+                <div>
+                  <h3>{user.fullName}</h3>
+                  <p>{user.email}</p>
+                </div>
+              </div>
+              <div className="option">
+                <a>Switch accounts</a>
+              </div>
+              <div className="option">
+                <a onClick={onLogout}>Log out</a>
+              </div>
+            </div>
+          )}
+        </section>
       )}
     </header>
   ) : (

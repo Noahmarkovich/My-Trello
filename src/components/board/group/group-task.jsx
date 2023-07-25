@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { MdOutlineModeEditOutline } from 'react-icons/md';
 import { TaskEdit } from '../../task-edit';
 import paragraph from '../../../assets/img/paragraph.svg';
@@ -21,7 +21,8 @@ export function GroupTask({
   checkClassName,
   setActiveBoard
 }) {
-  const [isEditMode, setIsEditMode] = useState(false);
+  const [editModeState, setEditModeState] = useState();
+  const taskRef = useRef(null);
 
   function checkIfDone() {
     const countDone = task.checklists.map((checklist) =>
@@ -59,6 +60,7 @@ export function GroupTask({
 
   return (
     <div
+      ref={taskRef}
       draggable
       onDragStart={onDragStart}
       onDragEnter={onDragEnter}
@@ -87,9 +89,9 @@ export function GroupTask({
           })}
         </div>
       )}
-      <div className={isEditMode && 'dark-screen'}>
-        {isEditMode ? (
-          <div className="edit-mode">
+      <div className={!!editModeState && 'dark-screen'}>
+        {editModeState ? (
+          <div className="edit-mode" style={{ top: editModeState.top, left: editModeState.left }}>
             <TaskEdit
               setNewTaskGroupId={setNewTaskGroupId}
               setTaskId={setTaskId}
@@ -98,18 +100,25 @@ export function GroupTask({
               task={task}
               onRemoveTask={onRemoveTask}
               setActiveBoard={setActiveBoard}
-              closeEdit={() => setIsEditMode(false)}
+              closeEdit={() => setEditModeState(false)}
             />
           </div>
         ) : (
           <span className="task-title">{task.title}</span>
         )}
       </div>
-      {!isEditMode && (
+      {!editModeState && (
         <button
           onClick={(ev) => {
             ev.stopPropagation();
-            setIsEditMode(true);
+            if (taskRef.current) {
+              const taskRect = taskRef.current.getBoundingClientRect();
+
+              setEditModeState({
+                top: taskRect.top,
+                left: taskRect.left
+              });
+            }
           }}
           className="edit">
           <MdOutlineModeEditOutline />

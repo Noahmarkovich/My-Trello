@@ -32,3 +32,16 @@ export async function login(credentials) {
     throw err;
   }
 }
+
+export async function logout() {
+  try {
+    await userService.logout();
+    store.dispatch({
+      type: SET_USER,
+      user: null
+    });
+  } catch (err) {
+    console.log('Cannot logout', err);
+    throw err;
+  }
+}

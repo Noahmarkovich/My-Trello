@@ -1,11 +1,21 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { GrClose } from 'react-icons/gr';
+import { useOnClickOutside } from '../hooks/useOnClickOutside';
 import { boardService } from '../services/board.service';
 import { saveActivity, saveChecklist } from '../store/board.actions';
 
-export function CheckList({ board, currTask, setSidebarAction, currGroup, setActiveBoard, user }) {
+export function CheckList({
+  board,
+  currTask,
+  setSidebarAction,
+  currGroup,
+  setActiveBoard,
+  user,
+  style
+}) {
   const [checklistToEdit, setChecklistToEdit] = useState(boardService.getEmptyChecklist());
-  // const [taskToEdit, setTaskToEdit] = useState(currTask);
+  const actionRef = useRef(null);
+  useOnClickOutside(actionRef, () => setSidebarAction(null));
 
   function handleChange({ target }) {
     const { value, name: field } = target;
@@ -29,7 +39,7 @@ export function CheckList({ board, currTask, setSidebarAction, currGroup, setAct
   }
 
   return (
-    <section className="check-list">
+    <section ref={actionRef} style={style} className="check-list">
       <div className="checklist-header">
         <h2>Add checklist</h2>
         <button onClick={() => setSidebarAction(null)} className="exit-btn-clean">

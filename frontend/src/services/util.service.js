@@ -7,7 +7,8 @@ export const utilService = {
   saveToStorage,
   loadFromStorage,
   randomColor,
-  makeAnAvatar
+  makeAnAvatar,
+  isLastVisited
 };
 
 function makeId(length = 6) {
@@ -116,4 +117,8 @@ function makeAnAvatar(fullName) {
   const color = randomColor();
 
   return { initials, color };
+}
+
+function isLastVisited(lastVisited) {
+  return Date.now() - lastVisited <= 3 * 1000 * 60 * 60 * 24;
 }

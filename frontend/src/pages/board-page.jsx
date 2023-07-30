@@ -24,6 +24,7 @@ export function BoardPage() {
   async function loadCurrBoard() {
     try {
       const currBoard = await boardService.getById(boardId);
+      console.log(currBoard);
       setActiveBoard(currBoard);
     } catch (err) {
       console.log(err);
@@ -90,7 +91,7 @@ export function BoardPage() {
             placeholder={activeBoard.title}
             value={activeBoard.title}
             onChange={handleChange}
-            style={{ width: activeBoard.title.length * 13 + 'px' }}
+            style={{ width: activeBoard.title.length * 18 }}
           />
         </form>
         <button onClick={onMarkStarred} className="clean-btn star">

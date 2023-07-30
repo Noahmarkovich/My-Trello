@@ -18,6 +18,7 @@ export function AppHeader() {
   const boardId = useLocation().pathname.split('/')[2];
   const pathname = useLocation();
   const [activeBoard, setActiveBoard] = useState(null);
+  const [logo, setLogo] = useState('https://a.trellocdn.com/prgb/assets/d947df93bc055849898e.gif');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,24 +37,6 @@ export function AppHeader() {
     }
   }
 
-  // const user = useSelector(storeState => storeState.userModule.user)
-
-  // async function onLogin(credentials) {
-  //     try {
-  //         const user = await login(credentials)
-  //         showSuccessMsg(`Welcome: ${user.fullname}`)
-  //     } catch(err) {
-  //         showErrorMsg('Cannot login')
-  //     }
-  // }
-  // async function onSignup(credentials) {
-  //     try {
-  //         const user = await signup(credentials)
-  //         showSuccessMsg(`Welcome new user: ${user.fullname}`)
-  //     } catch(err) {
-  //         showErrorMsg('Cannot signup')
-  //     }
-  // }
   async function onLogout() {
     try {
       await logout();
@@ -63,12 +46,12 @@ export function AppHeader() {
       console.log(err);
     }
   }
-  // console.log(pathname.pathname);
+  console.log(boardId);
 
   return pathname.pathname !== '/' && pathname.pathname !== '/login' ? (
     <header
       style={
-        activeBoard
+        boardId && activeBoard
           ? {
               backgroundColor: activeBoard.style.header
             }
@@ -78,14 +61,21 @@ export function AppHeader() {
       }
       className="app-header">
       <nav>
-        <img
-          onClick={() => {
-            navigate(`/`);
-            setActiveBoard(null);
-          }}
-          className="logo"
-          src="https://a.trellocdn.com/prgb/assets/d947df93bc055849898e.gif"
-        />
+        <div
+          onMouseOver={() => setLogo('https://trello.com/assets/87e1af770a49ce8e84e3.gif')}
+          onMouseLeave={() =>
+            setLogo('https://a.trellocdn.com/prgb/assets/d947df93bc055849898e.gif')
+          }
+          className="logo-container">
+          <img
+            onClick={() => {
+              navigate(`/`);
+              setActiveBoard(null);
+            }}
+            className="logo"
+            src={logo}
+          />
+        </div>
         {routes.map((route) => (
           <div className="nav-container" key={route.path}>
             <NavLink key={route.path} to={route.path}>
@@ -120,7 +110,7 @@ export function AppHeader() {
                 </div>
               </div>
               <div className="option">
-                <a>Switch accounts</a>
+                <a onClick={onLogout}>Switch accounts</a>
               </div>
               <div className="option">
                 <a onClick={onLogout}>Log out</a>

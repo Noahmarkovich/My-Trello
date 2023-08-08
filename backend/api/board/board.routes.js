@@ -21,6 +21,5 @@ router.get("/:id", getBoardById);
 router.post("/", addBoard);
 router.put("/:id", updateBoard);
 router.delete("/:id", removeBoard);
-// router.delete('/:id', requireAuth, requireAdmin, removeCar)
 
 module.exports = router;

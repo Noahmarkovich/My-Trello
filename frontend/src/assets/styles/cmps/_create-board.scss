@@ -1,13 +1,14 @@
 .create-board{
     width: 304px;
     position: absolute;
-    left: 205px;
+    left: 225px;
     top: 50px;
     background-color: var(--ds-surface-overlay, #ffffff);
     border-radius: 3px;
     box-shadow: var(--ds-shadow-overlay, 0 8px 16px -4px rgba(9, 30, 66, 0.25), 0 0 0 1px rgba(9, 30, 66, 0.08));
     margin-top: 8px;
     color: #172b4d;
+    z-index: 5;
 
     .create-board-header{
         

@@ -139,7 +139,7 @@ async function save(board) {
     // savedBoard = await storageService.post(STORAGE_KEY, board);
     savedBoard = await httpService.post('board', board);
   }
-  console.log(savedBoard, 'from frontend- service');
+  // console.log(savedBoard, 'from frontend- service');
 
   return savedBoard;
 }

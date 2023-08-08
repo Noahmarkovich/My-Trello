@@ -7,6 +7,11 @@ import { AddAnotherListButton } from '../components/board/add-another-list-butto
 import { GroupEdit } from '../components/group-edit.jsx';
 import { boardService } from '../services/board.service.js';
 import { loadBoards, removeGroup, updateBoard } from '../store/board.actions.js';
+import {
+  SOCKET_EMIT_SET_TOPIC,
+  SOCKET_EVENT_CHANGED_BOARD,
+  socketService
+} from '../services/socket.service.js';
 
 export function BoardPage() {
   const user = useSelector((storeState) => storeState.userModule.user);
@@ -14,17 +19,29 @@ export function BoardPage() {
   const { boardId } = useParams();
   const [activeBoard, setActiveBoard] = useState(null);
   const [isNewGroupOpen, setIsNewGroupOpen] = useState(false);
-  // const [currBoard, setCurrBoard] = useState(null);
+  const [isEditTitle, setIsEditTitle] = useState(false);
+  const [currBoard, setCurrBoard] = useState(null);
+
+  useEffect(() => {
+    socketService.emit(SOCKET_EMIT_SET_TOPIC, boardId);
+  }, []);
 
   useEffect(() => {
     loadBoards();
     loadCurrBoard();
+  }, [currBoard]);
+
+  useEffect(() => {
+    socketService.on(SOCKET_EVENT_CHANGED_BOARD, (savedBoard) => {
+      console.log('GOT from socket', savedBoard);
+      setCurrBoard(savedBoard);
+    });
   }, []);
 
   async function loadCurrBoard() {
     try {
       const currBoard = await boardService.getById(boardId);
-      console.log(currBoard);
+      // console.log(currBoard);
       setActiveBoard(currBoard);
     } catch (err) {
       console.log(err);
@@ -37,6 +54,7 @@ export function BoardPage() {
     try {
       const updatedBoard = await removeGroup(groupId, boardId);
       setActiveBoard(updatedBoard);
+      // store.dispatch(getActionUpdateBoard(updatedBoard));
     } catch (err) {
       console.log(err);
     }
@@ -83,17 +101,27 @@ export function BoardPage() {
       }}
       className="board-index">
       <div className="board-header">
-        <form onSubmit={(ev) => onUpdateTitle(ev)}>
-          <input
-            className="board-title"
-            type="text"
-            name="title"
-            placeholder={activeBoard.title}
-            value={activeBoard.title}
-            onChange={handleChange}
-            style={{ width: activeBoard.title.length * 18 }}
-          />
-        </form>
+        {isEditTitle ? (
+          <form
+            onSubmit={(ev) => {
+              onUpdateTitle(ev);
+              setIsEditTitle(false);
+            }}>
+            <input
+              className="board-title"
+              type="text"
+              name="title"
+              placeholder={activeBoard.title}
+              value={activeBoard.title}
+              onChange={handleChange}
+              style={{ width: activeBoard.title.length * 16 }}
+            />
+          </form>
+        ) : (
+          <div onClick={() => setIsEditTitle(true)} className="board-title">
+            {activeBoard.title}
+          </div>
+        )}
         <button onClick={onMarkStarred} className="clean-btn star">
           <HiOutlineStar className={activeBoard.isStarred ? 'star-icon full' : 'star-icon'} />
         </button>

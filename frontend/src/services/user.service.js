@@ -29,21 +29,11 @@ async function signup(userCred) {
 }
 
 async function login(userCred) {
-  // const users = await storageService.query('user');
-  // const users = await httpService.get('user');
-
-  // const user = users.find((user) => user.email === userCred.email);
   const user = await httpService.post('auth/login', userCred);
   console.log(user);
-  // if (user) {
-  //   // socketService.login(user._id)
-  //   // if (userCred.password === user.password) {
-  //   return saveLocalUser(user);
-  // } else {
-  //   return 'Invalid username or password';
-  // }
-
-  return user;
+  if (user) {
+    return saveLocalUser(user);
+  }
 }
 async function logout() {
   // sessionStorage.removeItem(STORAGE_KEY_LOGGEDIN_USER)

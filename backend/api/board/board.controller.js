@@ -1,6 +1,9 @@
 const boardService = require("./board.service.js");
+const socketService = require("../../services/socket.service");
+// const { broadcast } = require("../../services/socket.service.js");
 
 const logger = require("../../services/logger.service");
+const asyncLocalStorage = require("../../services/als.service.js");
 
 async function getBoards(req, res) {
   try {
@@ -47,7 +50,18 @@ async function updateBoard(req, res) {
   try {
     const board = req.body;
     const updateBoard = await boardService.update(board);
-    console.log(updateBoard, "frombackend");
+    // console.log(updateBoard, "frombackend");
+    const loggedinUser = asyncLocalStorage.getStore().loggedinUser || {
+      _id: utilService.makeId(),
+    };
+
+    socketService.broadcast({
+      type: "changed-board",
+      data: updateBoard,
+      room: updateBoard._id,
+      userId: loggedinUser?._id,
+    });
+
     res.json(updateBoard);
   } catch (err) {
     logger.error("Failed to update board", err);

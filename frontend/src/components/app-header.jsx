@@ -25,7 +25,6 @@ export function AppHeader() {
     if (boardId) {
       loadCurrBoard();
     }
-    console.log('change');
   }, [boardId]);
 
   async function loadCurrBoard() {
@@ -46,7 +45,6 @@ export function AppHeader() {
       console.log(err);
     }
   }
-  console.log(boardId);
 
   return pathname.pathname !== '/' && pathname.pathname !== '/login' ? (
     <header

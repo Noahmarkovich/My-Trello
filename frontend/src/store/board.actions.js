@@ -16,6 +16,10 @@ export function getActionAddGroup(newGroup) {
   };
 }
 
+export function getActionUpdateBoard(board) {
+  return { type: UPDATE_BOARD, board };
+}
+
 export async function loadBoards() {
   try {
     const boards = await boardService.query();

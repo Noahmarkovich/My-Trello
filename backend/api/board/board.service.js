@@ -74,41 +74,10 @@ async function update(board) {
   }
 }
 
-async function addCarMsg(carId, msg) {
-  try {
-    msg.id = utilService.makeId();
-    const collection = await dbService.getCollection("car");
-    await collection.updateOne(
-      { _id: ObjectId(carId) },
-      { $push: { msgs: msg } }
-    );
-    return msg;
-  } catch (err) {
-    logger.error(`cannot add car msg ${carId}`, err);
-    throw err;
-  }
-}
-
-async function removeCarMsg(carId, msgId) {
-  try {
-    const collection = await dbService.getCollection("car");
-    await collection.updateOne(
-      { _id: ObjectId(carId) },
-      { $pull: { msgs: { id: msgId } } }
-    );
-    return msgId;
-  } catch (err) {
-    logger.error(`cannot add car msg ${carId}`, err);
-    throw err;
-  }
-}
-
 module.exports = {
   remove,
   query,
   getById,
   add,
   update,
-  addCarMsg,
-  removeCarMsg,
 };

@@ -113,6 +113,7 @@ export function TaskPreview() {
       console.log(err);
     }
   }
+  // console.log(user);
 
   return (
     <section className="dark-screen">
@@ -170,6 +171,7 @@ export function TaskPreview() {
                 groupId={groupId}
                 boardId={currBoard._id}
                 setActiveBoard={setActiveBoard}
+                user={user}
               />
             )}
             {currBoard.activities.map((activity) => activity.task.id === taskId) && (

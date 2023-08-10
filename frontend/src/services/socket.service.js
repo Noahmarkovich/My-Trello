@@ -1,13 +1,8 @@
 import io from 'socket.io-client';
 import { userService } from './user.service';
 
-// export const SOCKET_EVENT_ADD_MSG = 'chat-add-msg';
-// export const SOCKET_EMIT_SEND_MSG = 'chat-send-msg';
 export const SOCKET_EMIT_SET_TOPIC = 'board-set-topic';
-// export const SOCKET_EMIT_USER_WATCH = 'user-watch';
-// export const SOCKET_EVENT_USER_UPDATED = 'user-updated';
 export const SOCKET_EVENT_CHANGED_BOARD = 'changed-board';
-// export const SOCKET_EVENT_REVIEW_ABOUT_YOU = 'review-about-you';
 
 const SOCKET_EMIT_LOGIN = 'set-user-socket';
 const SOCKET_EMIT_LOGOUT = 'unset-user-socket';

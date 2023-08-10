@@ -3,10 +3,12 @@ import { GrClose } from 'react-icons/gr';
 import { useOnClickOutside } from '../hooks/useOnClickOutside';
 import { boardService } from '../services/board.service';
 import { addBoard } from '../store/board.actions';
+import { useNavigate } from 'react-router-dom';
 
 export function CreateBoard({ onClose }) {
   const createRef = useRef(null);
   useOnClickOutside(createRef, onClose);
+  const navigate = useNavigate();
   const backgrounds = [
     {
       header: 'rgb(23, 66, 142)',
@@ -43,12 +45,14 @@ export function CreateBoard({ onClose }) {
   async function onAddBoard(ev) {
     ev.preventDefault();
     try {
-      await addBoard(newBoard);
+      const createdBoard = await addBoard(newBoard);
       setNewBoard(boardService.getEmptyBoard());
       onClose();
+      navigate(`/board/${createdBoard._id}`);
     } catch (err) {
       console.log(err);
     }
+    // console.log(newBoard);
   }
 
   return (

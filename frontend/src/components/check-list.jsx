@@ -37,6 +37,7 @@ export function CheckList({
       console.log(err);
     }
   }
+  console.log('hi');
 
   return (
     <section ref={actionRef} style={style} className="check-list">

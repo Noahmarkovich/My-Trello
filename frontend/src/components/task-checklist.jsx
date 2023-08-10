@@ -6,7 +6,7 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import { BsThreeDots } from 'react-icons/bs';
 import { saveActivity } from '../store/board.actions';
 
-export function TaskChecklist({ currTask, groupId, boardId, setActiveBoard }) {
+export function TaskChecklist({ currTask, groupId, boardId, setActiveBoard, user }) {
   // const [taskToEdit, setTaskToEdit] = useState(currTask);
   const [checkListId, setCheckListId] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -49,12 +49,14 @@ export function TaskChecklist({ currTask, groupId, boardId, setActiveBoard }) {
     if (updatedTask.checklists[checkListIdx].todos[todoIdx].isDone) {
       activity = {
         ['txt']: `completed ${updatedTask.checklists[checkListIdx].todos[todoIdx].title} on this card`,
-        ['task']: { id: currTask.id, title: currTask.title }
+        ['task']: { id: currTask.id, title: currTask.title },
+        ['byMember']: { _id: user._id, fullName: user.fullName, avatar: user.avatar }
       };
     } else {
       activity = {
         ['txt']: `marked ${updatedTask.checklists[checkListIdx].todos[todoIdx].title} incomplete on this card`,
-        ['task']: { id: currTask.id, title: currTask.title }
+        ['task']: { id: currTask.id, title: currTask.title },
+        ['byMember']: { _id: user._id, fullName: user.fullName, avatar: user.avatar }
       };
     }
     try {

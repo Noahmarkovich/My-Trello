@@ -59,6 +59,7 @@ export function Labels({ board, currTask, setSidebarAction, setActiveBoard, styl
     try {
       const updatedBoard = await saveLabel(currLabel, board._id);
       setActiveBoard(updatedBoard);
+      setIsCreateLabel(false);
       // if (taskToEdit.labelIds) {
       //   setTaskToEdit((prevTask) => ({
       //     ...prevTask,

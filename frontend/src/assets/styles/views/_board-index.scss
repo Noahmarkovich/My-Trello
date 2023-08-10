@@ -355,7 +355,7 @@
                 font-size: 16px;
                 margin-right: 5px;
             }
-
+            border: none;
             background-color: #ffffff3d;
             font-size: rem(14px);
             cursor: pointer;
@@ -363,6 +363,7 @@
             height: 32px;
             width: 272px;
             padding: 4px 12px;
+            padding-top: 8px;
             transition: background 85ms ease-in,
             opacity 40ms ease-in,
             border-color 85ms ease-in;

@@ -8,18 +8,14 @@
 @import "basics/helpers";
 @import "basics/layout";
 @import "basics/base";
-@import "basics/links";
 @import "basics/forms";
 
 
 // Views
-@import "views/about-us";
 @import "views/home-page";
 @import "views/board-index";
 @import "views/workspaces";
 @import "views/login-page";
-@import "views/review-app";
-@import "views/user-details";
 
 // Components
 @import "cmps/app-header";
@@ -38,6 +34,4 @@
 @import "cmps/label";
 @import "cmps/create-label";
 @import "cmps/board-preview";
-@import "cmps/user-msg";
-@import "cmps/shopping-cart";
 @import "cmps/create-board";

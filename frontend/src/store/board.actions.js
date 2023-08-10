@@ -1,14 +1,9 @@
 import { boardService } from '../services/board.service.js';
-import { ADD_GROUP, REMOVE_CAR, SET_BOARD, UPDATE_BOARD, ADD_BOARD } from './board.reducer.js';
+import { ADD_GROUP, SET_BOARD, UPDATE_BOARD, ADD_BOARD } from './board.reducer.js';
 import { store } from './store.js';
 
 // Action Creators:
-export function getActionRemoveCar(carId) {
-  return {
-    type: REMOVE_CAR,
-    carId
-  };
-}
+
 export function getActionAddGroup(newGroup) {
   return {
     type: ADD_GROUP,
@@ -35,11 +30,12 @@ export async function loadBoards() {
 export async function addBoard(newBoard) {
   try {
     const board = await boardService.save(newBoard);
-    console.log(board);
     store.dispatch({
       type: ADD_BOARD,
       board
     });
+
+    return board;
   } catch (err) {
     console.log('Cannot load board', err);
     throw err;
@@ -134,8 +130,7 @@ export async function removeTodo(todoId, checklistId, taskId, groupId, boardId) 
 export async function addGroup(newGroup, boardId) {
   try {
     const savedBoard = await boardService.saveGroup(newGroup, boardId);
-    // console.log('Added Group', savedGroup)
-    // board.groups.push(savedGroup)
+
     store.dispatch({
       type: UPDATE_BOARD,
       savedBoard

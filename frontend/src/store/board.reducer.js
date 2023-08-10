@@ -1,17 +1,10 @@
 export const SET_BOARD = 'SET_BOARD';
-export const REMOVE_CAR = 'REMOVE_CAR';
 export const ADD_BOARD = 'ADD_BOARD';
 export const ADD_GROUP = 'ADD_GROUP';
-export const ADD_TO_CART = 'ADD_TO_CART';
-export const CLEAR_CART = 'CLEAR_CART';
-export const UNDO_REMOVE_CAR = 'UNDO_REMOVE_CAR';
-export const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
 export const UPDATE_BOARD = 'UPDATE_BOARD';
 
 const initialState = {
-  boards: [],
-  cart: [],
-  lastRemovedCar: null
+  boards: []
 };
 
 export function boardReducer(state = initialState, action) {

@@ -17,14 +17,21 @@
             height: fit-content;
         }
     }
-    .complete-tag{
-        color:  #FFFFFF;
-        background-color:  #61BD4F;
+    .tag{
+        
         font-size: 12px;
         line-height: 16px;
         padding: 0 4px;
         border-radius: 2px;
 
+        &.complete{
+            color:  #FFFFFF;
+            background-color:  #61BD4F;
+        }
+        &.overdue{
+            color:  #ae2a19;
+            background-color:  #ffedeb;
+        }
     }
 
 }

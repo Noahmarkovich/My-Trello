@@ -89,7 +89,7 @@ export function GroupTask({
           })}
         </div>
       )}
-      <div className={!!editModeState && 'dark-screen'}>
+      <div className={editModeState ? 'dark-screen' : ''}>
         {editModeState ? (
           <div className="edit-mode" style={{ top: editModeState.top, left: editModeState.left }}>
             <TaskEdit

@@ -24,7 +24,10 @@ export function TaskDueDate({ currTask, handleDueDateChange }) {
               hour12: false
             })}
           </span>
-          {currTask.isComplete && <span className="complete-tag">complete</span>}
+          {currTask.isComplete && <span className="tag complete">complete</span>}
+          {!currTask.isComplete && currTask.dueDate < Date.now() && (
+            <span className="tag overdue">overdue</span>
+          )}
         </button>
       </div>
     </section>

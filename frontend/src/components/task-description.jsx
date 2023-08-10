@@ -10,7 +10,11 @@ export function TaskDescription({ currTask, onEditTask, handleChange }) {
         <img className="icon" src={paragraph} />
         <div>Description</div>
       </div>
-      <form onSubmit={(ev) => onEditTask(ev)}>
+      <form
+        onSubmit={(ev) => {
+          onEditTask(ev);
+          setIsButtonsShown(false);
+        }}>
         <textarea
           onFocus={() => setIsButtonsShown(true)}
           type="text"

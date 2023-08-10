@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { boardService } from '../services/board.service';
 import { saveTodo } from '../store/board.actions';
-// import { utilService } from "../services/util.service"
 
 export function CheckListEdit({
   taskToEdit,
@@ -27,7 +26,6 @@ export function CheckListEdit({
   }
 
   async function addTodo(ev) {
-    // console.log('hi');
     ev.preventDefault();
     if (!todoToEdit.title) {
       return;
@@ -44,7 +42,6 @@ export function CheckListEdit({
     }
   }
 
-  // console.log(todoToEdit);
   return (
     <section className="checklist-edit">
       <form onSubmit={(ev) => addTodo(ev)}>

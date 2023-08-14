@@ -137,11 +137,13 @@ export function BoardPage() {
           user={user}
         />
         {!isNewGroupOpen && (
-          <AddAnotherListButton
-            onClick={() => {
-              setIsNewGroupOpen(true);
-            }}
-          />
+          <div>
+            <AddAnotherListButton
+              onClick={() => {
+                setIsNewGroupOpen(true);
+              }}
+            />
+          </div>
         )}
         {isNewGroupOpen && (
           <GroupEdit

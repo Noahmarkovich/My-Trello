@@ -90,58 +90,65 @@ export function BoardList({ onRemoveGroup, groups, boardId, board, setActiveBoar
   return (
     <div className="board-list">
       {groups.map((group, groupIdx) => (
-        <div className="group-preview" key={group.id}>
-          <GroupPreviewTitle
-            boardId={boardId}
-            group={group}
-            openActionMenu={openActionMenu}
-            setActiveBoard={setActiveBoard}
-          />
-          {group.tasks.map((task, taskIdx) => (
-            <GroupTask
-              key={task.id}
-              onDragStart={(ev) => handelDragStart(ev, { groupIdx, taskIdx })}
-              // onDragEnd={handelDragEnd}
-              onDragEnter={isDragging ? (ev) => handelDragEnter(ev, { groupIdx, taskIdx }) : null}
-              onClick={(ev) => openPreview(ev, task.id, group.id)}
-              task={task}
+        <div className="preview-container" key={groupIdx}>
+          <div className="group-preview" key={group.id}>
+            <GroupPreviewTitle
               boardId={boardId}
-              setNewTaskGroupId={setNewTaskGroupId}
-              setTaskId={setTaskId}
-              board={board}
               group={group}
-              onRemoveTask={onRemoveTask}
-              shouldExpandLabel={isOpenSmallLabel}
-              onLabelClick={(ev) => {
-                ev.stopPropagation();
-                setIsOpenSmallLabel(!isOpenSmallLabel);
-              }}
-              labels={task?.labelIds
-                ?.map((labelId) => board.labels.find((label) => label.id === labelId))
-                .filter((label) => !!label)}
-              checkClassName={isDragging ? getStyles({ groupIdx, taskIdx }) : 'task'}
+              openActionMenu={openActionMenu}
               setActiveBoard={setActiveBoard}
             />
-          ))}
-          {newTaskGroupId === group.id && !isMenuOpen ? (
-            <TaskEdit
-              setNewTaskGroupId={setNewTaskGroupId}
-              setTaskId={setTaskId}
-              group={group}
-              boardId={boardId}
-              task={null}
-              onRemoveTask={onRemoveTask}
-              setActiveBoard={setActiveBoard}
-              user={user}
-            />
-          ) : (
-            <div onClick={() => openAdd(group.id)} className="add-task">
-              <span className="plus-icon">
-                <FiPlus />
-              </span>
-              <span>Add a card</span>
+            <div className="group-scroll">
+              {group.tasks.map((task, taskIdx) => (
+                <GroupTask
+                  key={task.id}
+                  onDragStart={(ev) => handelDragStart(ev, { groupIdx, taskIdx })}
+                  // onDragEnd={handelDragEnd}
+                  onDragEnter={
+                    isDragging ? (ev) => handelDragEnter(ev, { groupIdx, taskIdx }) : null
+                  }
+                  onClick={(ev) => openPreview(ev, task.id, group.id)}
+                  task={task}
+                  boardId={boardId}
+                  setNewTaskGroupId={setNewTaskGroupId}
+                  setTaskId={setTaskId}
+                  board={board}
+                  group={group}
+                  onRemoveTask={onRemoveTask}
+                  shouldExpandLabel={isOpenSmallLabel}
+                  onLabelClick={(ev) => {
+                    ev.stopPropagation();
+                    setIsOpenSmallLabel(!isOpenSmallLabel);
+                  }}
+                  labels={task?.labelIds
+                    ?.map((labelId) => board.labels.find((label) => label.id === labelId))
+                    .filter((label) => !!label)}
+                  checkClassName={isDragging ? getStyles({ groupIdx, taskIdx }) : 'task'}
+                  setActiveBoard={setActiveBoard}
+                />
+              ))}
             </div>
-          )}
+
+            {newTaskGroupId === group.id && !isMenuOpen ? (
+              <TaskEdit
+                setNewTaskGroupId={setNewTaskGroupId}
+                setTaskId={setTaskId}
+                group={group}
+                boardId={boardId}
+                task={null}
+                onRemoveTask={onRemoveTask}
+                setActiveBoard={setActiveBoard}
+                user={user}
+              />
+            ) : (
+              <div onClick={() => openAdd(group.id)} className="add-task">
+                <span className="plus-icon">
+                  <FiPlus />
+                </span>
+                <span>Add a card</span>
+              </div>
+            )}
+          </div>
           {isMenuOpen && group.id === newTaskGroupId && (
             <div ref={menuRef} className="actions-menu">
               <div className="title">List actions</div>

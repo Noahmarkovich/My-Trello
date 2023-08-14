@@ -24,18 +24,18 @@ export function HomePage() {
       <header className="home-page-header">
         <div className="logo-container">
           <img className="logo" src={logo} />
-          <h1>Trello</h1>
+          <h1>Nrello</h1>
         </div>
         <div className="login-btn-container">
           <button className="login-btn white">Log in</button>
-          <button className="login-btn blue">Get Trello for free</button>
+          <button className="login-btn blue">Get Nrello for free</button>
         </div>
       </header>
       <main className="main-homepage">
         <section className="hero">
           <div className="intro">
             <div className="text">
-              <h1>Trello brings all your tasks, teammates, and tools together</h1>
+              <h1>Nrello brings all your tasks, teammates, and tools together</h1>
               <p>Keep everything in the same place—even if your team isn&apos;t.</p>
               <button onClick={() => navigate('/login')} className="hero-btn">
                 Start now

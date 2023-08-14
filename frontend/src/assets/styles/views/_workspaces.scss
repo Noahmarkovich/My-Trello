@@ -1,6 +1,6 @@
+@media (min-width: 250px) {
 .workspaces{
-    padding-top: 40px;
-    max-width: 1000px;
+    padding: 40px 10px;
     margin: auto;
     display: flex;
     flex-direction: column;
@@ -20,8 +20,22 @@
     }
     .board-list{
         display: grid;
-         grid-template-columns: repeat(auto-fit, 200px);
+         grid-template-columns: repeat(auto-fit, 165px);
          gap: 10px;
         
     }
+}
+}
+@media (min-width: 600px) {
+.workspaces{
+    padding: 40px 0 0 0;
+    max-width: 1000px;
+
+
+
+    .board-list{
+         grid-template-columns: repeat(auto-fit, 200px);
+        
+    }
+}
 }

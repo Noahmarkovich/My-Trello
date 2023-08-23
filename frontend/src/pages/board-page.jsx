@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { HiOutlineStar } from 'react-icons/hi';
 import { useSelector } from 'react-redux';
 import { Outlet, useParams } from 'react-router-dom';
 import { BoardList } from '../components/board-list.jsx';
@@ -12,6 +11,8 @@ import {
   SOCKET_EVENT_CHANGED_BOARD,
   socketService
 } from '../services/socket.service.js';
+import { BoardHeader } from '../components/board/board-header.jsx';
+import { Loader } from '../components/loader.jsx';
 
 export function BoardPage() {
   const user = useSelector((storeState) => storeState.userModule.user);
@@ -41,7 +42,6 @@ export function BoardPage() {
   async function loadCurrBoard() {
     try {
       const currBoard = await boardService.getById(boardId);
-      // console.log(currBoard);
       setActiveBoard(currBoard);
     } catch (err) {
       console.log(err);
@@ -54,7 +54,6 @@ export function BoardPage() {
     try {
       const updatedBoard = await removeGroup(groupId, boardId);
       setActiveBoard(updatedBoard);
-      // store.dispatch(getActionUpdateBoard(updatedBoard));
     } catch (err) {
       console.log(err);
     }
@@ -63,16 +62,11 @@ export function BoardPage() {
   async function onMarkStarred() {
     try {
       const isStarred = activeBoard.isStarred;
-      // await markStarred(!isStarred, boardId);
       const board = await updateBoard('isStarred', !isStarred, boardId);
       setActiveBoard(board);
     } catch (err) {
       console.log(err);
     }
-  }
-
-  if (!boards || boards.length === 0) {
-    return <div>loading</div>;
   }
 
   function handleChange({ target }) {
@@ -90,8 +84,8 @@ export function BoardPage() {
     }
   }
 
-  if (!activeBoard) {
-    return <div>loading</div>;
+  if (!activeBoard || boards.length === 0) {
+    return <Loader height={'95vh'} />;
   }
 
   return (
@@ -100,32 +94,17 @@ export function BoardPage() {
         backgroundImage: activeBoard.style.background
       }}
       className="board-index">
-      <div className="board-header">
-        {isEditTitle ? (
-          <form
-            onSubmit={(ev) => {
-              onUpdateTitle(ev);
-              setIsEditTitle(false);
-            }}>
-            <input
-              className="board-title"
-              type="text"
-              name="title"
-              placeholder={activeBoard.title}
-              value={activeBoard.title}
-              onChange={handleChange}
-              style={{ width: activeBoard.title.length * 16 }}
-            />
-          </form>
-        ) : (
-          <div onClick={() => setIsEditTitle(true)} className="board-title">
-            {activeBoard.title}
-          </div>
-        )}
-        <button onClick={onMarkStarred} className="clean-btn star">
-          <HiOutlineStar className={activeBoard.isStarred ? 'star-icon full' : 'star-icon'} />
-        </button>
-      </div>
+      <BoardHeader
+        isEditTitle={isEditTitle}
+        onSubmitTitle={(ev) => {
+          onUpdateTitle(ev);
+          setIsEditTitle(false);
+        }}
+        activeBoard={activeBoard}
+        handleChange={handleChange}
+        clickEditTitle={() => setIsEditTitle(true)}
+        onMarkStarred={onMarkStarred}
+      />
       <main className="board-content">
         <BoardList
           onRemoveGroup={onRemoveGroup}

@@ -15,6 +15,7 @@ import { TaskChecklist } from './task-checklist';
 import { useOnClickOutside } from '../hooks/useOnClickOutside';
 import { TaskDueDate } from './task-due-date';
 import { TaskActivity } from './task-activity';
+import { Loader } from './loader';
 
 export function TaskPreview() {
   const navigate = useNavigate();
@@ -64,9 +65,6 @@ export function TaskPreview() {
     try {
       const updatedBoard = await addTask(currTask, currGroup.id, boardId);
       setActiveBoard(updatedBoard);
-      // setTaskId(null)
-      // setNewTask(boardService.getEmptyTask())
-      // setIsNewGroupOpen(false)
     } catch (err) {
       console.log(err);
     }
@@ -74,10 +72,6 @@ export function TaskPreview() {
 
   function closePreview() {
     navigate(`/board/${boardId}`);
-  }
-
-  if (!currTask || !currGroup) {
-    return <div>loading...</div>;
   }
 
   async function handleDueDateChange() {
@@ -113,79 +107,84 @@ export function TaskPreview() {
       console.log(err);
     }
   }
-  // console.log(user);
 
   return (
     <section className="dark-screen">
       <div className="task-preview" ref={modalRef}>
-        <section className="preview-header">
-          <img className="icon" src={groupTitle} />
-          <input type="text" name="title" placeholder={currTask.title} value={currTask.title} />
-          <button onClick={closePreview}>
-            <GrClose />
-          </button>
-        </section>
-        <p>
-          in list <span>{currGroup.title}</span>
-        </p>
-        {currTask.labelIds && (
-          <section className="label-preview">
-            <h2 className="labels-header">Labels</h2>
-            <div className="label">
-              {' '}
-              {currTask.labelIds.map((labelId) => {
-                const label = currBoard.labels.find((label) => label.id === labelId);
-
-                return <Label label={label} comesFrom={'preview'} key={label.id} />;
-              })}
-              <button onClick={() => setPreviewAction('label')} className="sidebar-btn">
-                <GoPlus />
+        {!currTask || !currGroup ? (
+          <Loader height={'70vh'} />
+        ) : (
+          <div>
+            <section className="preview-header">
+              <img className="icon" src={groupTitle} />
+              <input type="text" name="title" placeholder={currTask.title} value={currTask.title} />
+              <button onClick={closePreview}>
+                <GrClose />
               </button>
-            </div>
-            {previewAction === 'label' && (
-              <div className="labels-from-preview">
-                <Labels
-                  board={currBoard}
+            </section>
+            <p>
+              in list <span>{currGroup.title}</span>
+            </p>
+            {currTask.labelIds && (
+              <section className="label-preview">
+                <h2 className="labels-header">Labels</h2>
+                <div className="label">
+                  {' '}
+                  {currTask.labelIds.map((labelId) => {
+                    const label = currBoard.labels.find((label) => label.id === labelId);
+
+                    return <Label label={label} comesFrom={'preview'} key={label.id} />;
+                  })}
+                  <button onClick={() => setPreviewAction('label')} className="sidebar-btn">
+                    <GoPlus />
+                  </button>
+                </div>
+                {previewAction === 'label' && (
+                  <div className="labels-from-preview">
+                    <Labels
+                      board={currBoard}
+                      currTask={currTask}
+                      setSidebarAction={setPreviewAction}
+                      setCurrBoard={setCurrBoard}
+                      setActiveBoard={setActiveBoard}
+                    />
+                  </div>
+                )}
+              </section>
+            )}
+            <main className="main-task-preview">
+              <div className="middle">
+                {currTask.dueDate && (
+                  <TaskDueDate currTask={currTask} handleDueDateChange={handleDueDateChange} />
+                )}
+                <TaskDescription
                   currTask={currTask}
-                  setSidebarAction={setPreviewAction}
-                  setCurrBoard={setCurrBoard}
-                  setActiveBoard={setActiveBoard}
+                  onEditTask={onEditTask}
+                  handleChange={handleChange}
                 />
+                {currTask.checklists && (
+                  <TaskChecklist
+                    currTask={currTask}
+                    groupId={groupId}
+                    boardId={currBoard._id}
+                    setActiveBoard={setActiveBoard}
+                    user={user}
+                  />
+                )}
+                {currBoard.activities.map((activity) => activity.task.id === taskId) && (
+                  <TaskActivity board={currBoard} taskId={taskId} user={user} />
+                )}
               </div>
-            )}
-          </section>
-        )}
-        <main className="main-task-preview">
-          <div className="middle">
-            {currTask.dueDate && (
-              <TaskDueDate currTask={currTask} handleDueDateChange={handleDueDateChange} />
-            )}
-            <TaskDescription
-              currTask={currTask}
-              onEditTask={onEditTask}
-              handleChange={handleChange}
-            />
-            {currTask.checklists && (
-              <TaskChecklist
+              <TaskSideBar
+                board={currBoard}
                 currTask={currTask}
-                groupId={groupId}
-                boardId={currBoard._id}
+                currGroup={currGroup}
                 setActiveBoard={setActiveBoard}
                 user={user}
               />
-            )}
-            {currBoard.activities.map((activity) => activity.task.id === taskId) && (
-              <TaskActivity board={currBoard} taskId={taskId} user={user} />
-            )}
+            </main>
           </div>
-          <TaskSideBar
-            board={currBoard}
-            currTask={currTask}
-            currGroup={currGroup}
-            setActiveBoard={setActiveBoard}
-            user={user}
-          />
-        </main>
+        )}
       </div>
     </section>
   );

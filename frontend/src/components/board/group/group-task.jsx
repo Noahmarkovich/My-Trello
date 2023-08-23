@@ -51,9 +51,6 @@ export function GroupTask({
 
   function checkIfTodos(task) {
     if (task.checklists && task.checklists.length > 0) {
-      //   task.checklists.map((checklist) => {
-      //     return checklist.todos;
-      //   });
       return task.checklists.map((checklist) => checklist.todos.length > 0);
     }
   }

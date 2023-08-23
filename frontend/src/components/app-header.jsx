@@ -8,6 +8,7 @@ import { boardService } from '../services/board.service';
 import { useSelector } from 'react-redux';
 import { useOnClickOutside } from '../hooks/useOnClickOutside';
 import { logout } from '../store/user.actions';
+import { HeaderUserContainer } from './header-user-container';
 
 export function AppHeader() {
   const [isCreate, setIsCreate] = useState(false);
@@ -18,7 +19,7 @@ export function AppHeader() {
   const boardId = useLocation().pathname.split('/')[2];
   const pathname = useLocation();
   const [activeBoard, setActiveBoard] = useState(null);
-  const [logo, setLogo] = useState('https://a.trellocdn.com/prgb/assets/d947df93bc055849898e.gif');
+  const [logo, setLogo] = useState(require('../assets/img/header-static-logo.gif'));
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,19 +61,15 @@ export function AppHeader() {
       className="app-header">
       <nav>
         <div
-          onMouseOver={() => setLogo('https://trello.com/assets/87e1af770a49ce8e84e3.gif')}
-          onMouseLeave={() =>
-            setLogo('https://a.trellocdn.com/prgb/assets/d947df93bc055849898e.gif')
-          }
-          className="logo-container">
-          <img
-            onClick={() => {
-              navigate(`/`);
-              setActiveBoard(null);
-            }}
-            className="logo"
-            src={logo}
-          />
+          onMouseOver={() => setLogo(require('../assets/img/motion-logo.gif'))}
+          onMouseLeave={() => setLogo(require('../assets/img/header-static-logo.gif'))}
+          className="logo-container"
+          onClick={() => {
+            navigate(`/`);
+            setActiveBoard(null);
+          }}>
+          <img className="logo" src={logo} />
+          <h1>Nrello</h1>
         </div>
         {routes.map((route) => (
           <div className="nav-container" key={route.path}>
@@ -88,34 +85,13 @@ export function AppHeader() {
         {isCreate && <CreateBoard onClose={() => setIsCreate(false)} />}
       </nav>
       {user && (
-        <section className="user-container">
-          <button
-            onClick={() => setIsOptionOpen(!isOptionOpen)}
-            style={{ backgroundColor: user.avatar.color }}
-            className="avatar">
-            {user.avatar ? user.avatar.initials : 'NM'}
-          </button>
-          {isOptionOpen && (
-            <div className="user-options" ref={optionRef}>
-              <h2 className="options-header">ACCOUNT</h2>
-              <div className="user-info">
-                <div style={{ backgroundColor: user.avatar.color }} className="avatar">
-                  {user.avatar ? user.avatar.initials : 'NM'}
-                </div>
-                <div>
-                  <h3>{user.fullName}</h3>
-                  <p>{user.email}</p>
-                </div>
-              </div>
-              <div className="option">
-                <a onClick={onLogout}>Switch accounts</a>
-              </div>
-              <div className="option">
-                <a onClick={onLogout}>Log out</a>
-              </div>
-            </div>
-          )}
-        </section>
+        <HeaderUserContainer
+          user={user}
+          onClickUserOption={() => setIsOptionOpen(!isOptionOpen)}
+          isOptionOpen={isOptionOpen}
+          optionRef={optionRef}
+          onLogout={onLogout}
+        />
       )}
     </header>
   ) : (

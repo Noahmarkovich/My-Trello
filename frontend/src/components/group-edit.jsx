@@ -19,7 +19,6 @@ export function GroupEdit({ boardId, group, onClose, setActiveBoard }) {
       const updatedBoard = await addGroup(newGroup, boardId);
       setActiveBoard(updatedBoard);
       setNewGroup(boardService.getEmptyGroup());
-      // setIsNewGroupOpen(false)
     } catch (err) {
       console.log(err);
     }
@@ -30,8 +29,6 @@ export function GroupEdit({ boardId, group, onClose, setActiveBoard }) {
       const updatedBoard = await addGroup(newGroup, boardId);
       setActiveBoard(updatedBoard);
       onClose();
-      // setNewGroup(boardService.getEmptyGroup())
-      // setIsNewGroupOpen(false)
     } catch (err) {
       console.log(err);
     }

@@ -1,23 +1,35 @@
 import logo from '../assets/img/logo-homepage.png';
 import { AiFillGithub } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
+import heroImg from '../assets/img/hero-homepage.jpg';
+import { WaveHomepage } from '../components/svg/homepage-wave';
+import { useSelector } from 'react-redux';
 
 export function HomePage() {
+  const user = useSelector((storeState) => storeState.userModule.user);
   const navigate = useNavigate();
   const contentList = [
     {
       title: 'Boards',
-      txt: 'Trello boards keep tasks organized and work moving forward. ln a glance, see everything from "things to do" to "aww yeah, we did it!"'
+      txt: 'Nrello boards keep tasks organized and work moving forward. ln a glance, see everything from "things to do" to "aww yeah, we did it!"'
     },
     {
       title: 'Lists',
-      txt: "The different stages of a task. Start as simple as To Do, Doing or Done-or build a workflow custom fit to your team's needs. There's no wrong way to Trello. "
+      txt: "The different stages of a task. Start as simple as To Do, Doing or Done-or build a workflow custom fit to your team's needs. There's no wrong way to Nrello. "
     },
     {
       title: 'Cards',
       txt: 'Cards represent tasks and ideas and hold all the information to get the job done. As you make progress, move cards across lists to show their status.'
     }
   ];
+
+  function directTo() {
+    if (user) {
+      navigate('/workspaces');
+    } else {
+      navigate('/login');
+    }
+  }
 
   return (
     <section className="home-page">
@@ -27,8 +39,12 @@ export function HomePage() {
           <h1>Nrello</h1>
         </div>
         <div className="login-btn-container">
-          <button className="login-btn white">Log in</button>
-          <button className="login-btn blue">Get Nrello for free</button>
+          <button onClick={directTo} className="login-btn white">
+            Log in
+          </button>
+          <button onClick={directTo} className="login-btn blue">
+            Get Nrello for free
+          </button>
         </div>
       </header>
       <main className="main-homepage">
@@ -37,26 +53,13 @@ export function HomePage() {
             <div className="text">
               <h1>Nrello brings all your tasks, teammates, and tools together</h1>
               <p>Keep everything in the same place—even if your team isn&apos;t.</p>
-              <button onClick={() => navigate('/login')} className="hero-btn">
+              <button onClick={directTo} className="hero-btn">
                 Start now
               </button>
             </div>
-            <img
-              className="hero-img"
-              src="https://images.ctfassets.net/rz1oowkt5gyp/75rDABL8fyMtNLlUAtBxrg/c5e145977a86c41c47e17c69410c64f7/TrelloUICollage_4x.png?w=2280&amp;fm=webp"
-              alt="trello-hero"
-            />
+            <img className="hero-img" src={heroImg} alt="Nrello-hero" />
           </div>
-          <svg
-            className="shape-divider"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 1200 120"
-            preserveAspectRatio="none">
-            <path
-              d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z"
-              className="shape-fill"
-              fill="white"></path>
-          </svg>
+          <WaveHomepage />
         </section>
 
         <section className="content-container">

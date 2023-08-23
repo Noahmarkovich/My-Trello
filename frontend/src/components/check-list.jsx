@@ -24,6 +24,7 @@ export function CheckList({
 
   async function onAddChecklist(ev) {
     ev.preventDefault();
+    setSidebarAction(null);
     try {
       await saveChecklist(checklistToEdit, currTask, currGroup, board._id);
       const activity = {
@@ -37,7 +38,6 @@ export function CheckList({
       console.log(err);
     }
   }
-  console.log('hi');
 
   return (
     <section ref={actionRef} style={style} className="check-list">

@@ -1,84 +1,50 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { BoardPreview } from '../components/board-preview';
 import { loadBoards } from '../store/board.actions';
 import { AiOutlineStar, AiOutlineClockCircle } from 'react-icons/ai';
 import { BsPerson } from 'react-icons/bs';
-import { useNavigate } from 'react-router-dom';
 import { utilService } from '../services/util.service';
+import { Loader } from '../components/loader';
+import { BoardsList } from '../components/board/boards-list';
+
 export function Workspaces() {
   const boards = useSelector((storeState) => storeState.boardModule.boards);
+  const starredBoard = useMemo(() => boards.filter((board) => board.isStarred), [boards]);
+  const recentlyViewedBoards = useMemo(
+    () => boards.filter((board) => utilService.isLastVisited(board.lastVisited)),
+    [boards]
+  );
 
-  const navigate = useNavigate();
   useEffect(() => {
     loadBoards();
   }, []);
 
   if (!boards) {
-    return <div> loading</div>;
+    return <Loader height={'95vh'} />;
   }
 
   return (
     <section className="workspaces">
-      {boards.some((board) => board.isStarred) && (
-        <div>
-          <h1 className="board-type-header">
-            <AiOutlineStar className="board-title-icon" />
-            <span>Starred boards</span>
-          </h1>
-          <div className="board-list">
-            {boards.map((board) => {
-              if (board.isStarred) {
-                return (
-                  <BoardPreview
-                    onClick={() => navigate(`/board/${board._id}`)}
-                    key={board._id}
-                    board={board}
-                  />
-                );
-              }
-            })}
-          </div>
-        </div>
+      {starredBoard.length > 0 && (
+        <BoardsList
+          title="Starred boards"
+          icon={<AiOutlineStar className="board-title-icon" />}
+          boards={starredBoard}
+        />
       )}
-      {boards.some((board) => utilService.isLastVisited(board.lastVisited)) && (
-        <div>
-          <h1 className="board-type-header">
-            <AiOutlineClockCircle className="board-title-icon" />
-            <span>Recently viewed</span>
-          </h1>
-          <div className="board-list">
-            {boards.map((board) => {
-              if (utilService.isLastVisited(board.lastVisited)) {
-                return (
-                  <BoardPreview
-                    onClick={() => navigate(`/board/${board._id}`)}
-                    key={board._id}
-                    board={board}
-                  />
-                );
-              }
-            })}
-          </div>
-        </div>
+      {recentlyViewedBoards.length > 0 && (
+        // <div>
+        <BoardsList
+          title="Recently viewed"
+          icon={<AiOutlineClockCircle className="board-title-icon" />}
+          boards={recentlyViewedBoards}
+        />
       )}
-      <div>
-        <h1 className="board-type-header">
-          <BsPerson className="board-title-icon" />
-          <span>Your boards</span>
-        </h1>
-        <div className="board-list">
-          {boards.map((board) => {
-            return (
-              <BoardPreview
-                onClick={() => navigate(`/board/${board._id}`)}
-                key={board._id}
-                board={board}
-              />
-            );
-          })}
-        </div>
-      </div>
+      <BoardsList
+        title="Your boards"
+        icon={<BsPerson className="board-title-icon" />}
+        boards={boards}
+      />
     </section>
   );
 }

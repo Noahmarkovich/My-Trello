@@ -2,7 +2,6 @@ import { GrClose } from 'react-icons/gr';
 import Calendar from 'react-calendar';
 import { useRef, useState } from 'react';
 import { useOnClickOutside } from '../hooks/useOnClickOutside';
-// import 'react-calendar/dist/Calendar.css';
 export function Dates({ currTask, setSidebarAction, addDueDate, removeChecked, style }) {
   const [value, onChange] = useState(currTask.dueDate ? new Date(currTask.dueDate) : new Date());
 
@@ -15,7 +14,6 @@ export function Dates({ currTask, setSidebarAction, addDueDate, removeChecked, s
   function handleChange({ target }) {
     const { value } = target;
     setTime(value);
-    // setChecklistToEdit((prevChecklist) => ({ ...prevChecklist, [field]: value }));
   }
 
   return (
@@ -45,8 +43,6 @@ export function Dates({ currTask, setSidebarAction, addDueDate, removeChecked, s
             name="time"
             onChange={handleChange}
           />
-          {/* <span>{value.toLocaleDateString()}</span>
-          <span>{hour.current + ':' + minutes.current}</span> */}
         </div>
         <button onClick={() => addDueDate(value)} className="date-btn save">
           Save

@@ -7,10 +7,7 @@ const asyncLocalStorage = require("../../services/als.service.js");
 
 async function getBoards(req, res) {
   try {
-    logger.debug("Getting Cars");
-    // const filterBy = {
-    //   txt: req.query.txt || ''
-    // }
+    logger.debug("Getting boards");
     const boards = await boardService.query();
     res.json(boards);
   } catch (err) {

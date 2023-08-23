@@ -103,7 +103,6 @@ export function BoardList({ onRemoveGroup, groups, boardId, board, setActiveBoar
                 <GroupTask
                   key={task.id}
                   onDragStart={(ev) => handelDragStart(ev, { groupIdx, taskIdx })}
-                  // onDragEnd={handelDragEnd}
                   onDragEnter={
                     isDragging ? (ev) => handelDragEnter(ev, { groupIdx, taskIdx }) : null
                   }

@@ -70,6 +70,7 @@ export function CreateBoard({ onClose }) {
           }}
           className="background-preview">
           <img
+            // TODO: Take all resources from Trello and put it in your public folder
             src="https://a.trellocdn.com/prgb/dist/images/board-preview-skeleton.14cda5dc635d1f13bc48.svg"
             alt=""
           />

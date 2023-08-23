@@ -19,6 +19,7 @@
             display: flex;
             align-items: center;
             cursor: pointer;
+            gap: 8px;
             
             .logo{  
                 height: 1rem;
@@ -29,7 +30,12 @@
                 color: white;
                 border-radius: 0.2rem;
             }
-
+            
+            h1{
+                margin-bottom: 0;
+                font-weight: 700;
+                letter-spacing: 0.2px;
+            }
         }
 
         .create-btn{

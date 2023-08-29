@@ -4,12 +4,12 @@ import { loadBoards } from '../store/board.actions';
 import { AiOutlineStar, AiOutlineClockCircle } from 'react-icons/ai';
 import { BsPerson } from 'react-icons/bs';
 import { utilService } from '../services/util.service';
-import { Loader } from '../components/loader';
+import { Loader } from '../components/common/loader';
 import { BoardsList } from '../components/board/boards-list';
 
 export function Workspaces() {
   const boards = useSelector((storeState) => storeState.boardModule.boards);
-  const starredBoard = useMemo(() => boards.filter((board) => board.isStarred), [boards]);
+  const starredBoards = useMemo(() => boards.filter((board) => board.isStarred), [boards]);
   const recentlyViewedBoards = useMemo(
     () => boards.filter((board) => utilService.isLastVisited(board.lastVisited)),
     [boards]
@@ -25,15 +25,14 @@ export function Workspaces() {
 
   return (
     <section className="workspaces">
-      {starredBoard.length > 0 && (
+      {starredBoards.length > 0 && (
         <BoardsList
           title="Starred boards"
           icon={<AiOutlineStar className="board-title-icon" />}
-          boards={starredBoard}
+          boards={starredBoards}
         />
       )}
       {recentlyViewedBoards.length > 0 && (
-        // <div>
         <BoardsList
           title="Recently viewed"
           icon={<AiOutlineClockCircle className="board-title-icon" />}

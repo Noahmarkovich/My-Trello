@@ -15,7 +15,7 @@ import { TaskChecklist } from './task-checklist';
 import { useOnClickOutside } from '../hooks/useOnClickOutside';
 import { TaskDueDate } from './task-due-date';
 import { TaskActivity } from './task-activity';
-import { Loader } from './loader';
+import { Loader } from './common/loader';
 
 export function TaskPreview() {
   const navigate = useNavigate();
@@ -23,27 +23,17 @@ export function TaskPreview() {
   useOnClickOutside(modalRef, closePreview);
   const boards = useSelector((storeState) => storeState.boardModule.boards);
   const user = useSelector((storeState) => storeState.userModule.user);
+  const currBoard = useSelector((storeState) => storeState.boardModule.activeBoard);
   const { groupId, taskId } = useParams();
   const [currTask, setCurrTask] = useState(null);
   const [currGroup, setCurrGroup] = useState(null);
   const [previewAction, setPreviewAction] = useState(null);
   const { boardId } = useParams();
-  const [currBoard, setCurrBoard] = useState(null);
   const [setActiveBoard] = useOutletContext();
 
   useEffect(() => {
-    loadCurrBoard();
     loadTask(taskId, groupId, boardId);
   }, [boards]);
-
-  async function loadCurrBoard() {
-    try {
-      const currBoard = await boardService.getById(boardId);
-      setCurrBoard(currBoard);
-    } catch (err) {
-      console.log(err);
-    }
-  }
 
   async function loadTask(taskId, groupId) {
     try {
@@ -117,7 +107,15 @@ export function TaskPreview() {
           <div>
             <section className="preview-header">
               <img className="icon" src={groupTitle} />
-              <input type="text" name="title" placeholder={currTask.title} value={currTask.title} />
+              <form className="full-width" onSubmit={(ev) => onEditTask(ev)}>
+                <input
+                  type="text"
+                  name="title"
+                  placeholder={currTask.title}
+                  value={currTask.title}
+                  onChange={handleChange}
+                />
+              </form>
               <button onClick={closePreview}>
                 <GrClose />
               </button>
@@ -145,7 +143,6 @@ export function TaskPreview() {
                       board={currBoard}
                       currTask={currTask}
                       setSidebarAction={setPreviewAction}
-                      setCurrBoard={setCurrBoard}
                       setActiveBoard={setActiveBoard}
                     />
                   </div>

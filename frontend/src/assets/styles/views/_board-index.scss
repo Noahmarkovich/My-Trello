@@ -67,6 +67,28 @@
         overflow-y: hidden;
         height:86vh;
 
+        .group-edit {
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            background-color: #ebecf0;
+            border-radius: 3px;
+            font-size: rem(14px);
+            margin: 0 4px;
+            width: 272px;
+            padding: 1px 6px 0;
+            position: relative;
+            max-height: 98%;
+            overflow-y: hidden;
+            overflow-x:hidden;
+            
+            .buttons-container {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+            
+        }
     
         &::-webkit-scrollbar-track {
             background-color: rgba(40, 39, 39, 0.311);

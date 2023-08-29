@@ -1,72 +1,52 @@
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import routes from '../routes';
 
+import { useRef, useState } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
-import { useEffect, useRef, useState } from 'react';
-import { CreateBoard } from './create-board';
-import { boardService } from '../services/board.service';
 import { useSelector } from 'react-redux';
 import { useOnClickOutside } from '../hooks/useOnClickOutside';
+import { SET_ACTIVE_BOARD } from '../store/board.reducer';
 import { logout } from '../store/user.actions';
+import { CreateBoard } from './create-board';
 import { HeaderUserContainer } from './header-user-container';
+import { dispatchBoard } from '../store/board.actions';
 
 export function AppHeader() {
   const [isCreate, setIsCreate] = useState(false);
-  const [isOptionOpen, setIsOptionOpen] = useState(false);
-  const optionRef = useRef(null);
-  useOnClickOutside(optionRef, () => setIsOptionOpen(false));
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef(null);
+  useOnClickOutside(userMenuRef, () => setIsUserMenuOpen(false));
   const user = useSelector((storeState) => storeState.userModule.user);
-  const boardId = useLocation().pathname.split('/')[2];
-  const pathname = useLocation();
-  const [activeBoard, setActiveBoard] = useState(null);
+  const activeBoard = useSelector((storeState) => storeState.boardModule.activeBoard);
   const [logo, setLogo] = useState(require('../assets/img/header-static-logo.gif'));
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (boardId) {
-      loadCurrBoard();
-    }
-  }, [boardId]);
-
-  async function loadCurrBoard() {
-    try {
-      const currBoard = await boardService.getById(boardId);
-      setActiveBoard(currBoard);
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  // const dispatch = useDispatch();
 
   async function onLogout() {
     try {
       await logout();
-      setIsOptionOpen(false);
+      setIsUserMenuOpen(false);
       navigate('/login');
     } catch (err) {
       console.log(err);
     }
   }
 
-  return pathname.pathname !== '/' && pathname.pathname !== '/login' ? (
+  return (
     <header
-      style={
-        boardId && activeBoard
-          ? {
-              backgroundColor: activeBoard.style.header
-            }
-          : {
-              backgroundColor: ' hsl(215,90%,32.7%)'
-            }
-      }
+      style={{
+        backgroundColor: activeBoard?.style.header ?? 'hsl(215,90%,32.7%)'
+      }}
       className="app-header">
       <nav>
         <div
+          // TODO: Fix require
           onMouseOver={() => setLogo(require('../assets/img/motion-logo.gif'))}
           onMouseLeave={() => setLogo(require('../assets/img/header-static-logo.gif'))}
           className="logo-container"
           onClick={() => {
             navigate(`/`);
-            setActiveBoard(null);
+            dispatchBoard(SET_ACTIVE_BOARD, null);
           }}>
           <img className="logo" src={logo} />
           <h1>Nrello</h1>
@@ -87,14 +67,12 @@ export function AppHeader() {
       {user && (
         <HeaderUserContainer
           user={user}
-          onClickUserOption={() => setIsOptionOpen(!isOptionOpen)}
-          isOptionOpen={isOptionOpen}
-          optionRef={optionRef}
+          onClickUserOption={() => setIsUserMenuOpen(!isUserMenuOpen)}
+          isOptionOpen={isUserMenuOpen}
+          optionRef={userMenuRef}
           onLogout={onLogout}
         />
       )}
     </header>
-  ) : (
-    <div></div>
   );
 }

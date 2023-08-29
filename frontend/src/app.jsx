@@ -7,13 +7,16 @@ import { BoardPage } from './pages/board-page';
 import { HomePage } from './pages/home-page';
 import { LoginPage } from './pages/login-page';
 import { Workspaces } from './pages/workspaces';
+import { useShouldShowHeader } from './hooks/useShouldShowHeader';
 
 export function App() {
+  const shouldShowHeader = useShouldShowHeader();
+
   return (
     <div>
       <section>
         <main>
-          <AppHeader />
+          {shouldShowHeader && <AppHeader />}
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/workspaces" element={<Workspaces />} />

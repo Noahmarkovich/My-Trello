@@ -15,6 +15,13 @@ export function getActionUpdateBoard(board) {
   return { type: UPDATE_BOARD, board };
 }
 
+export function dispatchBoard(type, activeBoard) {
+  store.dispatch({
+    type,
+    activeBoard
+  });
+}
+
 export async function loadBoards() {
   try {
     const boards = await boardService.query();

@@ -5,44 +5,46 @@ import { BoardList } from '../components/board-list.jsx';
 import { AddAnotherListButton } from '../components/board/add-another-list-button.jsx';
 import { GroupEdit } from '../components/group-edit.jsx';
 import { boardService } from '../services/board.service.js';
-import { loadBoards, removeGroup, updateBoard } from '../store/board.actions.js';
+import { dispatchBoard, loadBoards, removeGroup, updateBoard } from '../store/board.actions.js';
 import {
   SOCKET_EMIT_SET_TOPIC,
   SOCKET_EVENT_CHANGED_BOARD,
   socketService
 } from '../services/socket.service.js';
 import { BoardHeader } from '../components/board/board-header.jsx';
-import { Loader } from '../components/loader.jsx';
+import { Loader } from '../components/common/loader.jsx';
+import { SET_ACTIVE_BOARD } from '../store/board.reducer.js';
 
 export function BoardPage() {
   const user = useSelector((storeState) => storeState.userModule.user);
-  const boards = useSelector((storeState) => storeState.boardModule.boards);
   const { boardId } = useParams();
-  const [activeBoard, setActiveBoard] = useState(null);
+  const activeBoard = useSelector((storeState) => storeState.boardModule.activeBoard);
   const [isNewGroupOpen, setIsNewGroupOpen] = useState(false);
   const [isEditTitle, setIsEditTitle] = useState(false);
-  const [currBoard, setCurrBoard] = useState(null);
-
-  useEffect(() => {
-    socketService.emit(SOCKET_EMIT_SET_TOPIC, boardId);
-  }, []);
 
   useEffect(() => {
     loadBoards();
-    loadCurrBoard();
-  }, [currBoard]);
+    loadCurrentBoard();
+    socketService.emit(SOCKET_EMIT_SET_TOPIC, boardId);
+
+    return () => dispatchBoard(SET_ACTIVE_BOARD, null);
+  }, []);
 
   useEffect(() => {
     socketService.on(SOCKET_EVENT_CHANGED_BOARD, (savedBoard) => {
       console.log('GOT from socket', savedBoard);
-      setCurrBoard(savedBoard);
+      dispatchBoard(SET_ACTIVE_BOARD, savedBoard);
     });
+
+    return () => {
+      socketService.off(SOCKET_EVENT_CHANGED_BOARD);
+    };
   }, []);
 
-  async function loadCurrBoard() {
+  async function loadCurrentBoard() {
     try {
-      const currBoard = await boardService.getById(boardId);
-      setActiveBoard(currBoard);
+      const activeBoard = await boardService.getById(boardId);
+      dispatchBoard(SET_ACTIVE_BOARD, activeBoard);
     } catch (err) {
       console.log(err);
     }
@@ -53,7 +55,7 @@ export function BoardPage() {
 
     try {
       const updatedBoard = await removeGroup(groupId, boardId);
-      setActiveBoard(updatedBoard);
+      dispatchBoard(SET_ACTIVE_BOARD, updatedBoard);
     } catch (err) {
       console.log(err);
     }
@@ -63,7 +65,7 @@ export function BoardPage() {
     try {
       const isStarred = activeBoard.isStarred;
       const board = await updateBoard('isStarred', !isStarred, boardId);
-      setActiveBoard(board);
+      dispatchBoard(SET_ACTIVE_BOARD, board);
     } catch (err) {
       console.log(err);
     }
@@ -71,7 +73,10 @@ export function BoardPage() {
 
   function handleChange({ target }) {
     const { value, name: field } = target;
-    setActiveBoard((prevBoard) => ({ ...prevBoard, [field]: value }));
+    dispatchBoard(SET_ACTIVE_BOARD, {
+      ...activeBoard,
+      [field]: value
+    });
   }
 
   async function onUpdateTitle(ev) {
@@ -84,7 +89,7 @@ export function BoardPage() {
     }
   }
 
-  if (!activeBoard || boards.length === 0) {
+  if (!activeBoard) {
     return <Loader height={'95vh'} />;
   }
 
@@ -112,10 +117,10 @@ export function BoardPage() {
           boardId={boardId}
           setIsNewGroupOpen={setIsNewGroupOpen}
           board={activeBoard}
-          setActiveBoard={setActiveBoard}
+          setActiveBoard={(board) => dispatchBoard(SET_ACTIVE_BOARD, board)}
           user={user}
         />
-        {!isNewGroupOpen && (
+        {!isNewGroupOpen ? (
           <div>
             <AddAnotherListButton
               onClick={() => {
@@ -123,17 +128,16 @@ export function BoardPage() {
               }}
             />
           </div>
-        )}
-        {isNewGroupOpen && (
+        ) : (
           <GroupEdit
             setIsNewGroupOpen={setIsNewGroupOpen}
             boardId={boardId}
             group={null}
             onClose={() => setIsNewGroupOpen(false)}
-            setActiveBoard={setActiveBoard}
+            setActiveBoard={(board) => dispatchBoard(SET_ACTIVE_BOARD, board)}
           />
         )}
-        <Outlet context={[setActiveBoard]} />
+        <Outlet context={[(board) => dispatchBoard(SET_ACTIVE_BOARD, board)]} />
       </main>
     </div>
   );

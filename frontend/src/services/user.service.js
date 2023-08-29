@@ -11,7 +11,8 @@ export const userService = {
   getLoggedinUser,
   signup,
   login,
-  logout
+  logout,
+  getNewCredentials
 };
 
 function getLoggedinUser() {
@@ -46,6 +47,15 @@ function saveLocalUser(user) {
   sessionStorage.setItem(STORAGE_KEY_LOGGEDIN_USER, JSON.stringify(user));
 
   return user;
+}
+
+function getNewCredentials() {
+  return {
+    email: '',
+    password: '',
+    fullName: '',
+    avatar: {}
+  };
 }
 
 function _createUsers() {

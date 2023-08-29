@@ -5,23 +5,24 @@ import heroImg from '../assets/img/hero-homepage.jpg';
 import { WaveHomepage } from '../components/svg/homepage-wave';
 import { useSelector } from 'react-redux';
 
+const contentList = [
+  {
+    title: 'Boards',
+    txt: 'Nrello boards keep tasks organized and work moving forward. ln a glance, see everything from "things to do" to "aww yeah, we did it!"'
+  },
+  {
+    title: 'Lists',
+    txt: "The different stages of a task. Start as simple as To Do, Doing or Done-or build a workflow custom fit to your team's needs. There's no wrong way to Nrello. "
+  },
+  {
+    title: 'Cards',
+    txt: 'Cards represent tasks and ideas and hold all the information to get the job done. As you make progress, move cards across lists to show their status.'
+  }
+];
+
 export function HomePage() {
   const user = useSelector((storeState) => storeState.userModule.user);
   const navigate = useNavigate();
-  const contentList = [
-    {
-      title: 'Boards',
-      txt: 'Nrello boards keep tasks organized and work moving forward. ln a glance, see everything from "things to do" to "aww yeah, we did it!"'
-    },
-    {
-      title: 'Lists',
-      txt: "The different stages of a task. Start as simple as To Do, Doing or Done-or build a workflow custom fit to your team's needs. There's no wrong way to Nrello. "
-    },
-    {
-      title: 'Cards',
-      txt: 'Cards represent tasks and ideas and hold all the information to get the job done. As you make progress, move cards across lists to show their status.'
-    }
-  ];
 
   function directTo() {
     if (user) {

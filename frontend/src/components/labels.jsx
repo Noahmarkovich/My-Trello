@@ -20,13 +20,11 @@ export function Labels({ board, currTask, setSidebarAction, setActiveBoard, styl
 
   useEffect(() => {
     onMarkLabel();
-    // addTask(taskToEdit, groupId, board._id);
   }, [taskToEdit]);
 
   async function onMarkLabel() {
     try {
       const updatedBoard = await addTask(taskToEdit, groupId, board._id);
-      // console.log(updatedBoard);
       setActiveBoard(updatedBoard);
     } catch (err) {
       console.log(err);

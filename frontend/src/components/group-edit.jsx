@@ -45,7 +45,7 @@ export function GroupEdit({ boardId, group, onClose, setActiveBoard }) {
   }
 
   return (
-    <div className="group-preview">
+    <div className="group-edit">
       <form
         onSubmit={(ev) => {
           group ? onEditGroup(ev) : onAddGroup(ev);

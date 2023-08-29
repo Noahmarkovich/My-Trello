@@ -6,17 +6,13 @@ import leftHero from '../assets/img/login-left-img.svg';
 import rightHero from '../assets/img/login-right-img.svg';
 import logo from '../assets/img/logo-homepage.png';
 import { LoginForm } from '../components/login/login-form';
+import { userService } from '../services/user.service';
 
 export function LoginPage() {
   const user = useSelector((storeState) => storeState.userModule.user);
-  const [credentials, setCredentials] = useState({
-    email: '',
-    password: '',
-    fullName: '',
-    avatar: {}
-  });
+  const [credentials, setCredentials] = useState(userService.getNewCredentials());
   const [isSignUp, setIsSignUp] = useState(true);
-  const [err, setErr] = useState(null);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,7 +48,7 @@ export function LoginPage() {
       await login(credentials);
       navigate('/workspaces');
     } catch (err) {
-      setErr('Invalid email or password');
+      setError('Invalid email or password');
       console.log(err);
     }
   }
@@ -73,18 +69,13 @@ export function LoginPage() {
           onLogin={onLogin}
           credentials={credentials}
           handleChange={handleChange}
-          err={err}
+          err={error}
         />
         <button
           className="clean-txt-btn"
           onClick={() => {
             isSignUp ? setIsSignUp(false) : setIsSignUp(true);
-            setCredentials({
-              email: '',
-              password: '',
-              fullName: '',
-              avatar: {}
-            });
+            setCredentials(userService.getNewCredentials());
           }}>
           {isSignUp ? 'Already have an account? Log in' : 'Create an account'}
         </button>

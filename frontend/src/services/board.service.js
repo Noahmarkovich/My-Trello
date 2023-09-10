@@ -1,10 +1,7 @@
-// import { storageService } from './async-storage.service.js';
 import { httpService } from './http.service.js';
 import { utilService } from './util.service.js';
-// import { userService } from './user.service.js'
 
-const STORAGE_KEY = 'board';
-_createBoards();
+const URL_BASE = 'board';
 
 export const boardService = {
   query,
@@ -12,7 +9,6 @@ export const boardService = {
   save,
   remove,
   getEmptyGroup,
-  addCarMsg,
   saveGroup,
   getEmptyTask,
   saveTask,
@@ -34,29 +30,16 @@ export const boardService = {
   updateBoard,
   getEmptyBoard
 };
-window.cs = boardService;
 
 function getGroupIdx(board, groupId) {
   return board.groups.findIndex((group) => group.id === groupId);
 }
 
 async function query() {
-  return httpService.get(STORAGE_KEY);
-  // var board = await storageService.query(STORAGE_KEY);
-  // console.log(board['groups'][0]['tasks']);
-  // if (filterBy.txt) {
-  //     const regex = new RegExp(filterBy.txt, 'i')
-  //     cars = cars.filter(board => regex.test(board.vendor) || regex.test(board.description))
-  // }
-  // if (filterBy.price) {
-  //     cars = cars.filter(board => board.price <= filterBy.price)
-  // }
-
-  // return board;
+  return httpService.get(URL_BASE);
 }
 
 async function getById(boardId) {
-  // return storageService.get(STORAGE_KEY, boardId);
   return httpService.get(`board/${boardId}`);
 }
 
@@ -65,13 +48,11 @@ async function queryTask(taskId, groupId, boardId) {
   const groupIdx = getGroupIdx(board, groupId);
   const group = board.groups[groupIdx];
   const task = board.groups[groupIdx].tasks.find((task) => task.id === taskId);
-  // console.log(task);
 
   return { task, group };
 }
 
 async function remove(boardId) {
-  // await storageService.remove(STORAGE_KEY, carId)
   return httpService.delete(`board/${boardId}`);
 }
 
@@ -130,16 +111,12 @@ async function removeTodo(todoId, checklistId, taskId, groupId, boardId) {
   return save(board);
 }
 async function save(board) {
-  var savedBoard;
+  let savedBoard;
   if (board._id) {
     savedBoard = await httpService.put(`board/${board._id}`, board);
   } else {
-    // Later, owner is set by the backend
-    // board.owner = userService.getLoggedinUser()
-    // savedBoard = await storageService.post(STORAGE_KEY, board);
     savedBoard = await httpService.post('board', board);
   }
-  // console.log(savedBoard, 'from frontend- service');
 
   return savedBoard;
 }
@@ -209,8 +186,7 @@ async function saveChecklist(checkList, currTask, currGroup, boardId) {
   const groupIdx = board.groups.findIndex((group) => group.id === currGroup.id);
   const taskIdx = board.groups[groupIdx].tasks.findIndex((task) => task.id === currTask.id);
   if (currTask.checklists && checkList.id) {
-    // const labelIdx = board.labels.findIndex(label => label.id === savedLabel.id)
-    // board.labels.splice(labelIdx, 1, savedLabel
+    // const labelIdx = board.labels.findIndex((label) => label.id === savedLabel.id);
   } else if (currTask.checklists) {
     checkList.id = utilService.makeId();
     currTask.checklists.push(checkList);
@@ -240,12 +216,6 @@ async function saveTodo(currTodo, checkList, currTask, groupId, boardId) {
   board.groups[groupIdx].tasks[taskIdx].checklists.splice(checklistIdx, 1, checkList);
 
   return save(board);
-}
-
-async function addCarMsg(carId, txt) {
-  const savedMsg = await httpService.post(`board/${carId}/msg`, { txt });
-
-  return savedMsg;
 }
 
 function getEmptyGroup() {
@@ -422,162 +392,4 @@ function newLabels() {
       colorLight: '#EDDBF4'
     }
   ];
-}
-
-function _createBoards() {
-  let boards = utilService.loadFromStorage(STORAGE_KEY);
-  if (!boards || boards.length === 0) {
-    boards = [
-      {
-        _id: 'b101',
-        title: 'Robot dev proj',
-        isStarred: false,
-        archivedAt: 1589983468418,
-        createdBy: {
-          _id: 'u101',
-          fullname: 'Noah Markovich',
-          avatar: { initials: 'NM', color: 'rgb(140, 88, 188)' }
-        },
-        style: {
-          header: 'rgb(11, 80, 175)',
-          background: "url('https://a.trellocdn.com/prgb/assets/d106776cb297f000b1f4.svg')"
-        },
-        labels: [
-          {
-            id: 'l101',
-            title: 'Done',
-            name: 'green',
-            colorDark: '#7BC86C',
-            colorLight: '#D6ECD2'
-          },
-          {
-            id: 'l102',
-            title: 'Progress',
-            name: 'yellow',
-            colorDark: '#F5DD29',
-            colorLight: '#FAF3C0'
-          },
-          {
-            id: 'l103',
-            title: '',
-            name: 'orange',
-            colorDark: '#FFAF3F',
-            colorLight: '#FCE6C6'
-          },
-          {
-            id: 'l104',
-            title: '',
-            name: 'red',
-            colorDark: '#EF7564',
-            colorLight: '#F5D3CE'
-          },
-          {
-            id: 'l105',
-            title: '',
-            name: 'purple',
-            colorDark: '#CD8DE5',
-            colorLight: '#EDDBF4'
-          }
-        ],
-        members: [
-          {
-            _id: 'u101',
-            fullname: 'Tal Tarablus',
-            imgUrl: 'https://www.google.com'
-          }
-        ],
-        groups: [
-          {
-            id: 'g101',
-            title: 'Group 1',
-            archivedAt: 1589983468418,
-            tasks: [
-              {
-                id: 'c101',
-                title: 'Replace logo'
-              },
-              {
-                id: 'c102',
-                title: 'Add Samples'
-              }
-            ],
-            style: {}
-          },
-          {
-            id: 'g102',
-            title: 'Group 2',
-            tasks: [
-              {
-                id: 'c103',
-                title: 'Do that',
-                archivedAt: 1589983468418
-              },
-              {
-                id: 'c104',
-                title: 'Help me',
-                description: 'description',
-                comments: [
-                  {
-                    id: 'ZdPnm',
-                    txt: 'also @yaronb please CR this',
-                    createdAt: 1590999817436,
-                    byMember: {
-                      _id: 'u101',
-                      fullname: 'Tal Tarablus',
-                      imgUrl:
-                        'http://res.cloudinary.com/shaishar9/image/upload/v1590850482/j1glw3c9jsoz2py0miol.jpg'
-                    }
-                  }
-                ],
-                checklists: [
-                  {
-                    id: 'YEhmF',
-                    title: 'Checklist',
-                    todos: [
-                      {
-                        id: '212jX',
-                        title: 'To Do 1',
-                        isDone: false
-                      }
-                    ]
-                  }
-                ],
-                memberIds: ['u101'],
-                labelIds: ['l101', 'l102'],
-                dueDate: 16156215211,
-                byMember: {
-                  _id: 'u101',
-                  fullname: 'Noah Markovich',
-                  avatar: { initials: 'NM', color: 'rgb(140, 88, 188)' }
-                },
-                style: {
-                  bgColor: '#26de81'
-                }
-              }
-            ],
-            style: {}
-          }
-        ],
-        activities: [
-          {
-            id: 'a101',
-            txt: 'Changed Color',
-            createdAt: 154514,
-            byMember: {
-              _id: 'u101',
-              fullname: 'Noah Markovich',
-              avatar: { initials: 'NM', color: 'rgb(140, 88, 188)' }
-            },
-            task: {
-              id: 'c101',
-              title: 'Replace Logo'
-            }
-          }
-        ],
-
-        cmpsOrder: ['status-picker', 'member-picker', 'date-picker']
-      }
-    ];
-    utilService.saveToStorage(STORAGE_KEY, boards);
-  }
 }

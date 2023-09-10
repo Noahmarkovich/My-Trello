@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { boardService } from '../services/board.service';
-import x from '../assets/img/x.svg';
-import { addTask, saveActivity } from '../store/board.actions';
+import { boardService } from '../../../services/board.service';
+import x from '../../../assets/img/x.svg';
+import { addTask, saveActivity } from '../../../store/board.actions';
 
 export function TaskEdit({
   setNewTaskGroupId,
@@ -37,7 +37,6 @@ export function TaskEdit({
       const updatedBoard = await saveActivity(activity, boardId);
       setActiveBoard(updatedBoard);
       setNewTask(boardService.getEmptyTask());
-      // setIsNewGroupOpen(false)
     } catch (err) {
       console.log(err);
     }
@@ -49,8 +48,6 @@ export function TaskEdit({
       setActiveBoard(updatedBoard);
       setTaskId(null);
       closeEdit();
-      // setNewTask(boardService.getEmptyTask())
-      // setIsNewGroupOpen(false)
     } catch (err) {
       console.log(err);
     }
@@ -67,7 +64,6 @@ export function TaskEdit({
   }
 
   return (
-    // <div className={newTask.id && 'dark-screen'}>
     <div className="task-edit">
       <form onSubmit={newTask.id ? onEditTask : onAddTask}>
         <div className="task-composer">
@@ -93,6 +89,5 @@ export function TaskEdit({
         </div>
       </form>
     </div>
-    // </div>
   );
 }

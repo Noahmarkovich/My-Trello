@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { HiDotsHorizontal } from 'react-icons/hi';
-import { GroupEdit } from '../../group-edit';
+import { GroupEdit } from './group-edit';
 
 export function GroupPreviewTitle({ boardId, group, openActionMenu, setActiveBoard }) {
   const [isEditMode, setIsEditMode] = useState(false);

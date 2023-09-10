@@ -1,13 +1,12 @@
 import { useState } from 'react';
-import { TbCheckbox } from 'react-icons/tb';
-import { addTask, removeChecklist, removeTodo } from '../store/board.actions';
+import { addTask, removeChecklist, removeTodo } from '../../../store/board.actions';
 import { CheckListEdit } from './checklist-edit';
 import ProgressBar from 'react-bootstrap/ProgressBar';
+import { saveActivity } from '../../../store/board.actions';
+import { TbCheckbox } from 'react-icons/tb';
 import { BsThreeDots } from 'react-icons/bs';
-import { saveActivity } from '../store/board.actions';
 
 export function TaskChecklist({ currTask, groupId, boardId, setActiveBoard, user }) {
-  // const [taskToEdit, setTaskToEdit] = useState(currTask);
   const [checkListId, setCheckListId] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [todoId, setTodoId] = useState(null);
@@ -69,7 +68,6 @@ export function TaskChecklist({ currTask, groupId, boardId, setActiveBoard, user
   }
 
   async function deleteChecklist(checklist) {
-    console.log(checklist);
     try {
       const activity = {
         ['txt']: `removed ${checklist.title} from this card`,
@@ -89,7 +87,6 @@ export function TaskChecklist({ currTask, groupId, boardId, setActiveBoard, user
     setActiveBoard(updatedBoard);
   }
 
-  // console.log(currTask);
   return (
     <section className="task-checklist">
       {currTask.checklists.map((checklist, checkListIdx) => (

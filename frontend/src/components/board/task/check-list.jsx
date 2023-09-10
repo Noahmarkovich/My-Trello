@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react';
 import { GrClose } from 'react-icons/gr';
-import { useOnClickOutside } from '../hooks/useOnClickOutside';
-import { boardService } from '../services/board.service';
-import { saveActivity, saveChecklist } from '../store/board.actions';
+import { useOnClickOutside } from '../../../hooks/useOnClickOutside';
+import { boardService } from '../../../services/board.service';
+import { saveActivity, saveChecklist } from '../../../store/board.actions';
 
 export function CheckList({
   board,

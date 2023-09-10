@@ -1,12 +1,12 @@
 import { useRef, useState } from 'react';
-import { Labels } from './labels';
+import { LabelList } from './labels';
 
 import { TbCheckbox } from 'react-icons/tb';
 import { FaRegClock } from 'react-icons/fa';
 import { CheckList } from './check-list';
 import { Dates } from './dates';
-import { addTask, saveActivity } from '../store/board.actions';
-import { LabelsTag } from './svg/labels-tag';
+import { addTask, saveActivity } from '../../../store/board.actions';
+import { LabelsTag } from '../../svg/labels-tag';
 
 const SideBarActions = {
   Labels: 'labels',
@@ -99,10 +99,10 @@ export function TaskSideBar({ board, currTask, currGroup, setActiveBoard, user }
         <span>Dates</span>
       </button>
       {sidebarAction === SideBarActions.Labels && (
-        <Labels
+        <LabelList
           board={board}
           currTask={currTask}
-          setSidebarAction={setSidebarAction}
+          onListClose={() => setSidebarAction(null)}
           comesFrom={'sideBar'}
           setActiveBoard={setActiveBoard}
           style={{ top: sidebarActionLocation.top - 16 }}

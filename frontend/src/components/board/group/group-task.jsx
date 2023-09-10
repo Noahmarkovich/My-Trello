@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { MdOutlineModeEditOutline } from 'react-icons/md';
-import { TaskEdit } from '../../task-edit';
+import { TaskEdit } from '../task/task-edit';
 import paragraph from '../../../assets/img/paragraph.svg';
 import { TbCheckbox } from 'react-icons/tb';
 import { FaRegClock } from 'react-icons/fa';

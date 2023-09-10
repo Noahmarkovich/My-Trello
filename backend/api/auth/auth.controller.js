@@ -5,7 +5,6 @@ async function login(req, res) {
   const { email, password } = req.body;
   try {
     const user = await authService.login(email, password);
-    console.log(user, "from controller");
     const loginToken = authService.getLoginToken(user);
     logger.info("User login: ", user);
     res.cookie("loginToken", loginToken, { sameSite: "None", secure: true });
@@ -41,7 +40,6 @@ async function logout(req, res) {
   try {
     res.clearCookie("loginToken");
     res.send({ msg: "Logged out successfully" });
-    console.log("logout");
   } catch (err) {
     res.status(500).send({ err: "Failed to logout" });
   }

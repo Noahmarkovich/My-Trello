@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { BoardPreview } from '../board-preview';
+import { BoardPreview } from './board-preview';
 
 export function BoardsList({ icon, title, boards }) {
   const navigate = useNavigate();

@@ -1,10 +1,10 @@
-var config
+require("dotenv").config();
 
-if (process.env.NODE_ENV === 'production') {
-  config = require('./prod')
-} else {
-  config = require('./dev')
-}
-config.isGuestMode = true
+const config = {
+  dbURL: process.env.DB_URL,
+  dbName: process.env.DB_NAME,
+};
 
-module.exports = config
+config.isGuestMode = true;
+
+module.exports = config;

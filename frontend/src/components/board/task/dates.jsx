@@ -1,7 +1,7 @@
 import { GrClose } from 'react-icons/gr';
 import Calendar from 'react-calendar';
 import { useRef, useState } from 'react';
-import { useOnClickOutside } from '../hooks/useOnClickOutside';
+import { useOnClickOutside } from '../../../hooks/useOnClickOutside';
 export function Dates({ currTask, setSidebarAction, addDueDate, removeChecked, style }) {
   const [value, onChange] = useState(currTask.dueDate ? new Date(currTask.dueDate) : new Date());
 

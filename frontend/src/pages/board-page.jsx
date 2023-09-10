@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Outlet, useParams } from 'react-router-dom';
-import { BoardList } from '../components/board-list.jsx';
+import { BoardList } from '../components/board/board-list';
 import { AddAnotherListButton } from '../components/board/add-another-list-button.jsx';
-import { GroupEdit } from '../components/group-edit.jsx';
+import { GroupEdit } from '../components/board/group/group-edit';
 import { boardService } from '../services/board.service.js';
 import { dispatchBoard, loadBoards, removeGroup, updateBoard } from '../store/board.actions.js';
 import {
@@ -32,7 +32,6 @@ export function BoardPage() {
 
   useEffect(() => {
     socketService.on(SOCKET_EVENT_CHANGED_BOARD, (savedBoard) => {
-      console.log('GOT from socket', savedBoard);
       dispatchBoard(SET_ACTIVE_BOARD, savedBoard);
     });
 
@@ -115,7 +114,6 @@ export function BoardPage() {
           onRemoveGroup={onRemoveGroup}
           groups={activeBoard.groups}
           boardId={boardId}
-          setIsNewGroupOpen={setIsNewGroupOpen}
           board={activeBoard}
           setActiveBoard={(board) => dispatchBoard(SET_ACTIVE_BOARD, board)}
           user={user}

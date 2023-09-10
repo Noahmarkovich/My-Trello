@@ -7,8 +7,8 @@ import { useSelector } from 'react-redux';
 import { useOnClickOutside } from '../hooks/useOnClickOutside';
 import { SET_ACTIVE_BOARD } from '../store/board.reducer';
 import { logout } from '../store/user.actions';
-import { CreateBoard } from './create-board';
-import { HeaderUserContainer } from './header-user-container';
+import { CreateBoard } from './board/create-board';
+import { HeaderUserContainer } from './user/header-user-container';
 import { dispatchBoard } from '../store/board.actions';
 
 export function AppHeader() {
@@ -20,7 +20,6 @@ export function AppHeader() {
   const activeBoard = useSelector((storeState) => storeState.boardModule.activeBoard);
   const [logo, setLogo] = useState(require('../assets/img/header-static-logo.gif'));
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
 
   async function onLogout() {
     try {
@@ -40,7 +39,6 @@ export function AppHeader() {
       className="app-header">
       <nav>
         <div
-          // TODO: Fix require
           onMouseOver={() => setLogo(require('../assets/img/motion-logo.gif'))}
           onMouseLeave={() => setLogo(require('../assets/img/header-static-logo.gif'))}
           className="logo-container"

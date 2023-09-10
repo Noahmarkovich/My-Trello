@@ -1,13 +1,12 @@
 const dbService = require("../../services/db.service");
 const logger = require("../../services/logger.service");
-const utilService = require("../../services/util.service");
 const ObjectId = require("mongodb").ObjectId;
 const fs = require("fs");
 
 async function query() {
   try {
     const collection = await dbService.getCollection("board");
-    var boards = await collection.find().toArray();
+    const boards = await collection.find().toArray();
     return boards;
   } catch (err) {
     logger.error("cannot find boards", err);

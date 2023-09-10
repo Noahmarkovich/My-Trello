@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import x from '../assets/img/x.svg';
-import { boardService } from '../services/board.service';
-import { addGroup } from '../store/board.actions';
+import x from '../../../assets/img/x.svg';
+import { boardService } from '../../../services/board.service';
+import { addGroup } from '../../../store/board.actions';
 
 export function GroupEdit({ boardId, group, onClose, setActiveBoard }) {
   const [newGroup, setNewGroup] = useState(boardService.getEmptyGroup());

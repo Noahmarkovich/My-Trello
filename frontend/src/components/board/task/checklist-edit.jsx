@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { boardService } from '../services/board.service';
-import { saveTodo } from '../store/board.actions';
+import { boardService } from '../../../services/board.service';
+import { saveTodo } from '../../../store/board.actions';
 
 export function CheckListEdit({
   taskToEdit,

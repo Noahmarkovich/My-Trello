@@ -3,7 +3,7 @@ import Axios from 'axios';
 // eslint-disable-next-line no-undef
 const BASE_URL = process.env.NODE_ENV === 'production' ? '/api/' : '//localhost:3030/api/';
 
-var axios = Axios.create({
+let axios = Axios.create({
   withCredentials: true
 });
 

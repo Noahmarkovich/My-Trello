@@ -1,10 +1,10 @@
 import { useRef, useState } from 'react';
 import { GrClose } from 'react-icons/gr';
-import { useOnClickOutside } from '../hooks/useOnClickOutside';
-import { boardService } from '../services/board.service';
-import { addBoard } from '../store/board.actions';
+import { useOnClickOutside } from '../../hooks/useOnClickOutside';
+import { boardService } from '../../services/board.service';
+import { addBoard } from '../../store/board.actions';
 import { useNavigate } from 'react-router-dom';
-import boardPreview from '../assets/img//board-preview.svg';
+import boardPreview from '../../assets/img//board-preview.svg';
 
 const backgrounds = [
   {

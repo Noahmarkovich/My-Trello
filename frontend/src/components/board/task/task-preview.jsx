@@ -1,21 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
-import { boardService } from '../services/board.service';
-import { addTask, saveActivity } from '../store/board.actions';
+import { boardService } from '../../../services/board.service';
+import { addTask, saveActivity } from '../../../store/board.actions';
 
-import groupTitle from '../assets/img/groupTitle.svg';
+import groupTitle from '../../../assets/img/groupTitle.svg';
 import { TaskDescription } from './task-description';
 import { GrClose } from 'react-icons/gr';
 import { GoPlus } from 'react-icons/go';
 import { TaskSideBar } from './task-sidebar';
 import { Label } from './label';
-import { Labels } from './labels';
+import { LabelList } from './labels';
 import { TaskChecklist } from './task-checklist';
-import { useOnClickOutside } from '../hooks/useOnClickOutside';
+import { useOnClickOutside } from '../../../hooks/useOnClickOutside';
 import { TaskDueDate } from './task-due-date';
 import { TaskActivity } from './task-activity';
-import { Loader } from './common/loader';
+import { Loader } from '../../common/loader';
 
 export function TaskPreview() {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ export function TaskPreview() {
   const { groupId, taskId } = useParams();
   const [currTask, setCurrTask] = useState(null);
   const [currGroup, setCurrGroup] = useState(null);
-  const [previewAction, setPreviewAction] = useState(null);
+  const [showLabelList, setShowLabelList] = useState(false);
   const { boardId } = useParams();
   const [setActiveBoard] = useOutletContext();
 
@@ -127,22 +127,21 @@ export function TaskPreview() {
               <section className="label-preview">
                 <h2 className="labels-header">Labels</h2>
                 <div className="label">
-                  {' '}
                   {currTask.labelIds.map((labelId) => {
                     const label = currBoard.labels.find((label) => label.id === labelId);
 
                     return <Label label={label} comesFrom={'preview'} key={label.id} />;
                   })}
-                  <button onClick={() => setPreviewAction('label')} className="sidebar-btn">
+                  <button onClick={() => setShowLabelList(true)} className="sidebar-btn">
                     <GoPlus />
                   </button>
                 </div>
-                {previewAction === 'label' && (
+                {showLabelList && (
                   <div className="labels-from-preview">
-                    <Labels
+                    <LabelList
                       board={currBoard}
                       currTask={currTask}
-                      setSidebarAction={setPreviewAction}
+                      onListClose={() => setShowLabelList(false)}
                       setActiveBoard={setActiveBoard}
                     />
                   </div>

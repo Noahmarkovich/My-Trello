@@ -12,15 +12,11 @@ module.exports = {
 };
 
 async function query() {
-  // const criteria = _buildCriteria(filterBy)
   try {
     const collection = await dbService.getCollection("user");
-    var users = await collection.find().toArray();
+    const users = await collection.find().toArray();
     users = users.map((user) => {
       delete user.password;
-      // user.createdAt = ObjectId(user._id).getTimestamp()
-      // Returning fake fresh data
-      // user.createdAt = Date.now() - (1000 * 60 * 60 * 24 * 3) // 3 days ago
       return user;
     });
     return users;
@@ -65,11 +61,9 @@ async function remove(userId) {
 
 async function update(user) {
   try {
-    // peek only updatable properties
     const userToSave = {
-      _id: ObjectId(user._id), // needed for the returnd obj
-      fullname: user.fullname,
-      score: user.score,
+      _id: ObjectId(user._id),
+      fullName: user.fullName,
     };
     const collection = await dbService.getCollection("user");
     await collection.updateOne({ _id: userToSave._id }, { $set: userToSave });
@@ -82,7 +76,6 @@ async function update(user) {
 
 async function add(user) {
   try {
-    // peek only updatable fields!
     const userToAdd = {
       email: user.email,
       password: user.password,

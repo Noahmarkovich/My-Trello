@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import paragraph from '../assets/img/paragraph.svg';
+import paragraph from '../../../assets/img/paragraph.svg';
 
 export function TaskDescription({ currTask, onEditTask, handleChange }) {
   const [isButtonsShown, setIsButtonsShown] = useState(false);

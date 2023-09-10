@@ -7,7 +7,7 @@ const initialState = {
 };
 
 export function userReducer(state = initialState, action) {
-  var newState = state;
+  let newState = state;
   switch (action.type) {
     case SET_USER:
       newState = { ...state, user: action.user };
@@ -15,9 +15,6 @@ export function userReducer(state = initialState, action) {
 
     default:
   }
-  // For debug:
-  // window.userState = newState
-  // console.log('State:', newState)
 
   return newState;
 }

@@ -1,22 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { addTask, saveLabel } from '../store/board.actions';
+import { addTask, saveLabel } from '../../../store/board.actions';
 import { Label } from './label';
 
 import { GrClose } from 'react-icons/gr';
 import { MdArrowBackIosNew } from 'react-icons/md';
-import edit from '../assets/img/edit.svg';
+import edit from '../../../assets/img/edit.svg';
 import { CreateLabel } from './create-label';
-import { boardService } from '../services/board.service';
-import { useOnClickOutside } from '../hooks/useOnClickOutside';
+import { boardService } from '../../../services/board.service';
+import { useOnClickOutside } from '../../../hooks/useOnClickOutside';
 
-export function Labels({ board, currTask, setSidebarAction, setActiveBoard, style }) {
+export function LabelList({ board, currTask, onListClose, setActiveBoard, style }) {
   const [taskToEdit, setTaskToEdit] = useState(currTask);
   const { groupId } = useParams();
   const [isCreateLabel, setIsCreateLabel] = useState(false);
   const [currLabel, setCurrLabel] = useState(null);
   const actionRef = useRef(null);
-  useOnClickOutside(actionRef, () => setSidebarAction(null));
+  useOnClickOutside(actionRef, () => onListClose());
 
   useEffect(() => {
     onMarkLabel();
@@ -36,10 +36,8 @@ export function Labels({ board, currTask, setSidebarAction, setActiveBoard, styl
 
     if (taskToEdit.labelIds && taskToEdit.labelIds.includes(id)) {
       const labels = taskToEdit.labelIds.filter((labelId) => labelId !== id);
-      // setTaskToEdit((prevTask)=> ({...prevTask, task}))
       setTaskToEdit((prevTask) => ({ ...prevTask, [field]: labels }));
     } else if (taskToEdit.labelIds) {
-      // setTaskToEdit(taskToEdit)
       setTaskToEdit((prevTask) => ({ ...prevTask, [field]: [...prevTask.labelIds, id] }));
     } else {
       setTaskToEdit((prevTask) => ({ ...prevTask, [field]: [id] }));
@@ -58,14 +56,6 @@ export function Labels({ board, currTask, setSidebarAction, setActiveBoard, styl
       const updatedBoard = await saveLabel(currLabel, board._id);
       setActiveBoard(updatedBoard);
       setIsCreateLabel(false);
-      // if (taskToEdit.labelIds) {
-      //   setTaskToEdit((prevTask) => ({
-      //     ...prevTask,
-      //     ['labelIds']: [...prevTask.labelIds, currLabel.id]
-      //   }));
-      // } else {
-      //   setTaskToEdit((prevTask) => ({ ...prevTask, ['labelIds']: [currLabel.id] }));
-      // }
     } catch (err) {
       console.log(err);
     }
@@ -80,7 +70,7 @@ export function Labels({ board, currTask, setSidebarAction, setActiveBoard, styl
           </button>
         )}
         <h2>{isCreateLabel ? 'Create label' : 'Labels'}</h2>
-        <button onClick={() => setSidebarAction(null)} className="exit-btn-clean">
+        <button onClick={() => onListClose()} className="exit-btn-clean">
           <GrClose className="exit" />
         </button>
       </div>
@@ -104,10 +94,6 @@ export function Labels({ board, currTask, setSidebarAction, setActiveBoard, styl
 
         {isCreateLabel ? (
           <ul className="create-labels">
-            {/* {board.labels.map(label =>
-                        <li onClick={() => setCurrLabel(label)} key={label.id} className="label-create">
-                            <CreateLabel label={label} />
-                        </li>)} */}
             {boardService.newLabels().map((label) => (
               <li onClick={() => setCurrLabel(label)} key={label.name} className="label-create">
                 <CreateLabel label={label} />

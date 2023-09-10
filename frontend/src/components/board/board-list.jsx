@@ -1,11 +1,11 @@
 import { useRef, useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { useOnClickOutside } from '../hooks/useOnClickOutside';
-import { removeTask, switchPlace } from '../store/board.actions';
-import { GroupPreviewTitle } from './board/group/group-preview-title';
-import { GroupTask } from './board/group/group-task';
-import { TaskEdit } from './task-edit';
+import { useOnClickOutside } from '../../hooks/useOnClickOutside';
+import { removeTask, switchPlace } from '../../store/board.actions';
+import { GroupPreviewTitle } from './group/group-preview-title';
+import { GroupTask } from './group/group-task';
+import { TaskEdit } from './task/task-edit';
 
 export function BoardList({ onRemoveGroup, groups, boardId, board, setActiveBoard, user }) {
   const navigate = useNavigate();
@@ -78,7 +78,7 @@ export function BoardList({ onRemoveGroup, groups, boardId, board, setActiveBoar
     }
   }
 
-  function getStyles(params) {
+  function getClassNames(params) {
     const currTask = dragTask.current;
     if (currTask.groupIdx === params.groupIdx && currTask.taskIdx === params.taskIdx) {
       return 'current-drag task';
@@ -122,7 +122,7 @@ export function BoardList({ onRemoveGroup, groups, boardId, board, setActiveBoar
                   labels={task?.labelIds
                     ?.map((labelId) => board.labels.find((label) => label.id === labelId))
                     .filter((label) => !!label)}
-                  checkClassName={isDragging ? getStyles({ groupIdx, taskIdx }) : 'task'}
+                  checkClassName={isDragging ? getClassNames({ groupIdx, taskIdx }) : 'task'}
                   setActiveBoard={setActiveBoard}
                 />
               ))}

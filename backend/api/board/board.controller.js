@@ -1,6 +1,5 @@
 const boardService = require("./board.service.js");
 const socketService = require("../../services/socket.service");
-// const { broadcast } = require("../../services/socket.service.js");
 
 const logger = require("../../services/logger.service");
 const asyncLocalStorage = require("../../services/als.service.js");
@@ -22,7 +21,6 @@ async function getBoardById(req, res) {
     const board = await boardService.getById(boardId);
     board["lastVisited"] = Date.now();
     const currBoard = await boardService.update(board);
-    // console.log(board);
     res.json(currBoard);
   } catch (err) {
     logger.error("Failed to get board", err);
@@ -31,15 +29,13 @@ async function getBoardById(req, res) {
 }
 
 async function addBoard(req, res) {
-  // const {loggedinUser} = req
-
   try {
     const board = req.body;
     const addedBoard = await boardService.add(board);
     res.json(addedBoard);
   } catch (err) {
-    logger.error("Failed to add car", err);
-    res.status(500).send({ err: "Failed to add car" });
+    logger.error("Failed to add board", err);
+    res.status(500).send({ err: "Failed to add board" });
   }
 }
 
@@ -47,7 +43,6 @@ async function updateBoard(req, res) {
   try {
     const board = req.body;
     const updateBoard = await boardService.update(board);
-    // console.log(updateBoard, "frombackend");
     const loggedinUser = asyncLocalStorage.getStore().loggedinUser || {
       _id: utilService.makeId(),
     };

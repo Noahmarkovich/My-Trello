@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router';
 
 import { AppHeader } from './components/app-header';
-import { TaskPreview } from './components/task-preview';
+import { TaskPreview } from './components/board/task/task-preview';
 import { BoardPage } from './pages/board-page';
 import { HomePage } from './pages/home-page';
 import { LoginPage } from './pages/login-page';

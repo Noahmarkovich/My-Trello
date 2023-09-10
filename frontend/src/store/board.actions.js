@@ -1,19 +1,6 @@
 import { boardService } from '../services/board.service.js';
-import { ADD_GROUP, SET_BOARD, UPDATE_BOARD, ADD_BOARD } from './board.reducer.js';
+import { SET_BOARD, UPDATE_BOARD, ADD_BOARD } from './board.reducer.js';
 import { store } from './store.js';
-
-// Action Creators:
-
-export function getActionAddGroup(newGroup) {
-  return {
-    type: ADD_GROUP,
-    newGroup
-  };
-}
-
-export function getActionUpdateBoard(board) {
-  return { type: UPDATE_BOARD, board };
-}
 
 export function dispatchBoard(type, activeBoard) {
   store.dispatch({
@@ -61,6 +48,7 @@ export async function markStarred(isStarred, boardId) {
     throw err;
   }
 }
+
 export async function updateBoard(field, value, boardId) {
   try {
     const savedBoard = await boardService.updateBoard(field, value, boardId);

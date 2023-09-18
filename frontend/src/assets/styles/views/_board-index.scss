@@ -13,12 +13,16 @@
     }
     .board-header {
 
+        display: flex;
         padding-left: 14px;
         margin-bottom: 15px;
         background-color: #0000003d;
+        padding: 12px 10px 12px 16px;
+        justify-content: space-between;
+
+        .title-container{
         display: flex;
         align-items: center;
-        padding: 12px 10px 12px 16px;
         gap: 5px;
 
     
@@ -60,6 +64,22 @@
             }
         }
     }
+
+    .board-header-options{
+        border: none;
+        background: none;
+        color: white;
+        font-size: 1.1rem;
+        cursor: pointer;
+        border-radius: 3px;
+        transition: 0.1s ease;
+        padding : 0 8px;
+
+        &:hover{
+            background-color: #A6C5E229;
+        }
+    }
+}
 
     .board-content {
         display: flex;

@@ -65,6 +65,7 @@ async function updateBoard(req, res) {
 async function removeBoard(req, res) {
   try {
     const boardId = req.params.id;
+    console.log(boardId);
     const removedId = await boardService.remove(boardId);
     res.send(removedId);
   } catch (err) {

@@ -1,5 +1,5 @@
 import { boardService } from '../services/board.service.js';
-import { SET_BOARD, UPDATE_BOARD, ADD_BOARD } from './board.reducer.js';
+import { SET_BOARD, UPDATE_BOARD, ADD_BOARD, REMOVE_BOARD } from './board.reducer.js';
 import { store } from './store.js';
 
 export function dispatchBoard(type, activeBoard) {
@@ -34,6 +34,18 @@ export async function addBoard(newBoard) {
     return board;
   } catch (err) {
     console.log('Cannot load board', err);
+    throw err;
+  }
+}
+export async function removeBoard(boardId) {
+  try {
+    await boardService.remove(boardId);
+    store.dispatch({
+      type: REMOVE_BOARD,
+      boardId
+    });
+  } catch (err) {
+    console.log('Cannot remove board', boardId, err);
     throw err;
   }
 }

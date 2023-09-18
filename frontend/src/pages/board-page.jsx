@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Outlet, useParams } from 'react-router-dom';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { BoardList } from '../components/board/board-list';
 import { AddAnotherListButton } from '../components/board/add-another-list-button.jsx';
 import { GroupEdit } from '../components/board/group/group-edit';
 import { boardService } from '../services/board.service.js';
-import { dispatchBoard, loadBoards, removeGroup, updateBoard } from '../store/board.actions.js';
+import {
+  dispatchBoard,
+  loadBoards,
+  removeBoard,
+  removeGroup,
+  updateBoard
+} from '../store/board.actions.js';
 import {
   SOCKET_EMIT_SET_TOPIC,
   SOCKET_EVENT_CHANGED_BOARD,
@@ -21,6 +27,7 @@ export function BoardPage() {
   const activeBoard = useSelector((storeState) => storeState.boardModule.activeBoard);
   const [isNewGroupOpen, setIsNewGroupOpen] = useState(false);
   const [isEditTitle, setIsEditTitle] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadBoards();
@@ -44,6 +51,15 @@ export function BoardPage() {
     try {
       const activeBoard = await boardService.getById(boardId);
       dispatchBoard(SET_ACTIVE_BOARD, activeBoard);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function onRemoveBoard() {
+    try {
+      await removeBoard(boardId);
+      navigate('/workspaces');
     } catch (err) {
       console.log(err);
     }
@@ -108,6 +124,7 @@ export function BoardPage() {
         handleChange={handleChange}
         clickEditTitle={() => setIsEditTitle(true)}
         onMarkStarred={onMarkStarred}
+        onRemoveBoard={onRemoveBoard}
       />
       <main className="board-content">
         <BoardList

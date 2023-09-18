@@ -44,7 +44,7 @@ async function getById(boardId) {
     const board = collection.findOne({ _id: ObjectId(boardId) });
     return board;
   } catch (err) {
-    logger.error(`while finding car ${boardId}`, err);
+    logger.error(`while finding board ${boardId}`, err);
     throw err;
   }
 }
@@ -52,7 +52,7 @@ async function getById(boardId) {
 async function remove(boardId) {
   try {
     const collection = await dbService.getCollection("board");
-    await collection.deleteOne({ _id: boardId });
+    await collection.deleteOne({ _id: ObjectId(boardId) });
     return boardId;
   } catch (err) {
     logger.error(`cannot remove board ${boardId}`, err);

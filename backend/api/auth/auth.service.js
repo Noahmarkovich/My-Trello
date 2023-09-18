@@ -14,6 +14,7 @@ module.exports = {
 async function login(email, password) {
   logger.debug(`auth.service - login with email: ${email}`);
   const user = await userService.getByEmail(email);
+  console.log(user);
   if (!user) return Promise.reject("Invalid username or password");
   const match = await bcrypt.compare(password, user.password);
   if (!match) return Promise.reject("Invalid username or password");

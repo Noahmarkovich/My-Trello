@@ -4,6 +4,7 @@ import { TaskEdit } from '../task/task-edit';
 import paragraph from '../../../assets/img/paragraph.svg';
 import { TbCheckbox } from 'react-icons/tb';
 import { FaRegClock } from 'react-icons/fa';
+import { Draggable } from 'react-beautiful-dnd';
 
 export function GroupTask({
   task,
@@ -16,10 +17,8 @@ export function GroupTask({
   labels,
   shouldExpandLabel,
   onLabelClick,
-  onDragStart,
-  onDragEnter,
-  checkClassName,
-  setActiveBoard
+  setActiveBoard,
+  taskIdx
 }) {
   const [editModeState, setEditModeState] = useState();
   const taskRef = useRef(null);
@@ -56,96 +55,104 @@ export function GroupTask({
   }
 
   return (
-    <div
-      ref={taskRef}
-      draggable
-      onDragStart={onDragStart}
-      onDragEnter={onDragEnter}
-      onClick={onClick}
-      className={checkClassName}
-      key={task.id}>
-      {labels && (
-        <div className="small-labels">
-          {labels.map((label) => {
-            return (
-              <button
-                key={label.id}
-                onClick={onLabelClick}
-                style={
-                  shouldExpandLabel
-                    ? { backgroundColor: `${label.colorLight}` }
-                    : { backgroundColor: `${label.colorDark}` }
-                }
-                className={`small-label ${shouldExpandLabel && 'open-small-label'}`}>
+    <Draggable key={task.id} index={taskIdx} draggableId={task.id}>
+      {(provided) => (
+        <div ref={taskRef}>
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            onClick={onClick}
+            className="task"
+            key={task.id}>
+            {labels && (
+              <div className="small-labels">
+                {labels.map((label) => {
+                  return (
+                    <button
+                      key={label.id}
+                      onClick={onLabelClick}
+                      style={
+                        shouldExpandLabel
+                          ? { backgroundColor: `${label.colorLight}` }
+                          : { backgroundColor: `${label.colorDark}` }
+                      }
+                      className={`small-label ${shouldExpandLabel && 'open-small-label'}`}>
+                      <div
+                        className="inner-color"
+                        style={{ backgroundColor: `${label.colorDark}` }}></div>
+                      {label.title}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            <div className={editModeState ? 'dark-screen' : ''}>
+              {editModeState ? (
                 <div
-                  className="inner-color"
-                  style={{ backgroundColor: `${label.colorDark}` }}></div>
-                {label.title}
+                  className="edit-mode"
+                  style={{ top: editModeState.top, left: editModeState.left }}>
+                  <TaskEdit
+                    setNewTaskGroupId={setNewTaskGroupId}
+                    setTaskId={setTaskId}
+                    group={group}
+                    boardId={boardId}
+                    task={task}
+                    onRemoveTask={onRemoveTask}
+                    setActiveBoard={setActiveBoard}
+                    closeEdit={() => setEditModeState(false)}
+                  />
+                </div>
+              ) : (
+                <span className="task-title">{task.title}</span>
+              )}
+            </div>
+            {!editModeState && (
+              <button
+                onClick={(ev) => {
+                  ev.stopPropagation();
+                  if (taskRef.current) {
+                    const taskRect = taskRef.current.getBoundingClientRect();
+
+                    setEditModeState({
+                      top: taskRect.top - 10,
+                      left: taskRect.left
+                    });
+                  }
+                }}
+                className="edit">
+                <MdOutlineModeEditOutline />
               </button>
-            );
-          })}
+            )}
+            <div className="group-icons">
+              {task.dueDate && (
+                <div
+                  className={task.isComplete ? 'checklist-preview complete' : 'checklist-preview'}>
+                  <FaRegClock />
+                  <span>
+                    {new Date(task.dueDate).toLocaleDateString(undefined, {
+                      month: 'short',
+                      day: 'numeric'
+                    })}
+                  </span>
+                </div>
+              )}
+              {task.description && <img className="icon description-img" src={paragraph} />}
+              {checkIfTodos(task) && (
+                <div
+                  className={
+                    checkIfDone()[0].done === checkIfDone()[0].total && checkIfDone()[0].done !== 0
+                      ? 'checklist-preview complete'
+                      : 'checklist-preview'
+                  }>
+                  <TbCheckbox className="checklist-icon" />
+                  <span>{checkIfDone()[0].done + '/' + checkIfDone()[0].total}</span>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
-      <div className={editModeState ? 'dark-screen' : ''}>
-        {editModeState ? (
-          <div className="edit-mode" style={{ top: editModeState.top, left: editModeState.left }}>
-            <TaskEdit
-              setNewTaskGroupId={setNewTaskGroupId}
-              setTaskId={setTaskId}
-              group={group}
-              boardId={boardId}
-              task={task}
-              onRemoveTask={onRemoveTask}
-              setActiveBoard={setActiveBoard}
-              closeEdit={() => setEditModeState(false)}
-            />
-          </div>
-        ) : (
-          <span className="task-title">{task.title}</span>
-        )}
-      </div>
-      {!editModeState && (
-        <button
-          onClick={(ev) => {
-            ev.stopPropagation();
-            if (taskRef.current) {
-              const taskRect = taskRef.current.getBoundingClientRect();
-
-              setEditModeState({
-                top: taskRect.top,
-                left: taskRect.left
-              });
-            }
-          }}
-          className="edit">
-          <MdOutlineModeEditOutline />
-        </button>
-      )}
-      <div className="group-icons">
-        {task.dueDate && (
-          <div className={task.isComplete ? 'checklist-preview complete' : 'checklist-preview'}>
-            <FaRegClock />
-            <span>
-              {new Date(task.dueDate).toLocaleDateString(undefined, {
-                month: 'short',
-                day: 'numeric'
-              })}
-            </span>
-          </div>
-        )}
-        {task.description && <img className="icon description-img" src={paragraph} />}
-        {checkIfTodos(task) && (
-          <div
-            className={
-              checkIfDone()[0].done === checkIfDone()[0].total && checkIfDone()[0].done !== 0
-                ? 'checklist-preview complete'
-                : 'checklist-preview'
-            }>
-            <TbCheckbox className="checklist-icon" />
-            <span>{checkIfDone()[0].done + '/' + checkIfDone()[0].total}</span>
-          </div>
-        )}
-      </div>
-    </div>
+    </Draggable>
   );
 }

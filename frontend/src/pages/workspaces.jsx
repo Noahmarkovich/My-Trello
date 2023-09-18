@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { loadBoards } from '../store/board.actions';
 import { AiOutlineStar, AiOutlineClockCircle } from 'react-icons/ai';
@@ -9,6 +9,7 @@ import { BoardsList } from '../components/board/boards-list';
 
 export function Workspaces() {
   const boards = useSelector((storeState) => storeState.boardModule.boards);
+  const [filteredBoards, setFilteredBoards] = useState();
   const starredBoards = useMemo(() => boards.filter((board) => board.isStarred), [boards]);
   const recentlyViewedBoards = useMemo(
     () => boards.filter((board) => utilService.isLastVisited(board.lastVisited)),
@@ -16,10 +17,19 @@ export function Workspaces() {
   );
 
   useEffect(() => {
-    loadBoards();
+    loadingBoards();
   }, []);
 
-  if (!boards) {
+  async function loadingBoards() {
+    try {
+      const filteredBoards = await loadBoards();
+      setFilteredBoards(filteredBoards);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  if (!filteredBoards) {
     return <Loader height={'95vh'} />;
   }
 

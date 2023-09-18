@@ -10,12 +10,6 @@ const http = require("http").createServer(app);
 app.use(cookieParser());
 app.use(express.json());
 
-console.log({
-  dbURL: process.env.DB_URL,
-  dbName: process.env.DB_NAME,
-  env: process.env.NODE_ENV,
-});
-
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.resolve(__dirname, "public")));
 } else {

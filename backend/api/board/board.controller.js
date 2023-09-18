@@ -31,6 +31,8 @@ async function getBoardById(req, res) {
 async function addBoard(req, res) {
   try {
     const board = req.body;
+    const loggedinUser = asyncLocalStorage.getStore().loggedinUser;
+    board["createdBy"] = loggedinUser;
     const addedBoard = await boardService.add(board);
     res.json(addedBoard);
   } catch (err) {
@@ -46,7 +48,6 @@ async function updateBoard(req, res) {
     const loggedinUser = asyncLocalStorage.getStore().loggedinUser || {
       _id: utilService.makeId(),
     };
-
     socketService.broadcast({
       type: "changed-board",
       data: updateBoard,

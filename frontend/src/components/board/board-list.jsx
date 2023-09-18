@@ -6,6 +6,7 @@ import { removeTask, switchPlace } from '../../store/board.actions';
 import { GroupPreviewTitle } from './group/group-preview-title';
 import { GroupTask } from './group/group-task';
 import { TaskEdit } from './task/task-edit';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 export function BoardList({ onRemoveGroup, groups, boardId, board, setActiveBoard, user }) {
   const navigate = useNavigate();
@@ -13,9 +14,7 @@ export function BoardList({ onRemoveGroup, groups, boardId, board, setActiveBoar
   const [, setTaskId] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isOpenSmallLabel, setIsOpenSmallLabel] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const dragTask = useRef();
-  const dragNode = useRef();
+
   const menuRef = useRef(null);
   useOnClickOutside(menuRef, () => closeActionMenu());
 
@@ -46,118 +45,102 @@ export function BoardList({ onRemoveGroup, groups, boardId, board, setActiveBoar
     navigate(`/board/${boardId}/${groupId}/${taskId}`);
   }
 
-  function handelDragStart(ev, params) {
-    dragTask.current = params;
-    dragNode.current = ev.target;
-    dragNode.current.addEventListener('dragend', handelDragEnd);
-    setTimeout(() => {
-      setIsDragging(true);
-    }, 0);
-  }
-  function handelDragEnd() {
-    setIsDragging(false);
-    dragNode.current.removeEventListener('dragend', handelDragEnd);
-    dragTask.current = null;
-    dragNode.current = null;
-  }
-
-  async function handelDragEnter(ev, params) {
-    if (ev.target !== dragNode.current) {
-      try {
-        const updatedBoard = await switchPlace(
-          params.taskIdx,
-          params.groupIdx,
-          dragTask.current,
-          boardId
-        );
-        setActiveBoard(updatedBoard);
-        dragTask.current = params;
-      } catch (err) {
-        console.log(err);
-      }
+  async function handleDragEnd({ destination, source, type }) {
+    if (!destination) {
+      return;
     }
-  }
-
-  function getClassNames(params) {
-    const currTask = dragTask.current;
-    if (currTask.groupIdx === params.groupIdx && currTask.taskIdx === params.taskIdx) {
-      return 'current-drag task';
+    if (type !== 'group') {
+      return;
     }
-
-    return 'task';
+    try {
+      const updatedBoard = await switchPlace(
+        source.index,
+        source.droppableId,
+        destination,
+        boardId
+      );
+      setActiveBoard(updatedBoard);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (
     <div className="board-list">
-      {groups.map((group, groupIdx) => (
-        <div className="preview-container" key={groupIdx}>
-          <div className="group-preview" key={group.id}>
-            <GroupPreviewTitle
-              boardId={boardId}
-              group={group}
-              openActionMenu={openActionMenu}
-              setActiveBoard={setActiveBoard}
-            />
-            <div className="group-scroll">
-              {group.tasks.map((task, taskIdx) => (
-                <GroupTask
-                  key={task.id}
-                  onDragStart={(ev) => handelDragStart(ev, { groupIdx, taskIdx })}
-                  onDragEnter={
-                    isDragging ? (ev) => handelDragEnter(ev, { groupIdx, taskIdx }) : null
-                  }
-                  onClick={(ev) => openPreview(ev, task.id, group.id)}
-                  task={task}
-                  boardId={boardId}
+      <DragDropContext onDragEnd={handleDragEnd}>
+        {groups.map((group, groupIdx) => (
+          <div className="preview-container" key={groupIdx}>
+            <div className="group-preview" key={group.id}>
+              <GroupPreviewTitle
+                boardId={boardId}
+                group={group}
+                openActionMenu={openActionMenu}
+                setActiveBoard={setActiveBoard}
+              />
+              <Droppable droppableId={group.id} type="group">
+                {(provided) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    className="group-scroll">
+                    {group.tasks.map((task, taskIdx) => (
+                      <GroupTask
+                        key={task.id}
+                        taskIdx={taskIdx}
+                        onClick={(ev) => openPreview(ev, task.id, group.id)}
+                        task={task}
+                        boardId={boardId}
+                        setNewTaskGroupId={setNewTaskGroupId}
+                        setTaskId={setTaskId}
+                        board={board}
+                        group={group}
+                        onRemoveTask={onRemoveTask}
+                        shouldExpandLabel={isOpenSmallLabel}
+                        onLabelClick={(ev) => {
+                          ev.stopPropagation();
+                          setIsOpenSmallLabel(!isOpenSmallLabel);
+                        }}
+                        labels={task?.labelIds
+                          ?.map((labelId) => board.labels.find((label) => label.id === labelId))
+                          .filter((label) => !!label)}
+                        setActiveBoard={setActiveBoard}
+                      />
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+              {newTaskGroupId === group.id && !isMenuOpen ? (
+                <TaskEdit
                   setNewTaskGroupId={setNewTaskGroupId}
                   setTaskId={setTaskId}
-                  board={board}
                   group={group}
+                  boardId={boardId}
+                  task={null}
                   onRemoveTask={onRemoveTask}
-                  shouldExpandLabel={isOpenSmallLabel}
-                  onLabelClick={(ev) => {
-                    ev.stopPropagation();
-                    setIsOpenSmallLabel(!isOpenSmallLabel);
-                  }}
-                  labels={task?.labelIds
-                    ?.map((labelId) => board.labels.find((label) => label.id === labelId))
-                    .filter((label) => !!label)}
-                  checkClassName={isDragging ? getClassNames({ groupIdx, taskIdx }) : 'task'}
                   setActiveBoard={setActiveBoard}
+                  user={user}
                 />
-              ))}
+              ) : (
+                <div onClick={() => openAdd(group.id)} className="add-task">
+                  <span className="plus-icon">
+                    <FiPlus />
+                  </span>
+                  <span>Add a card</span>
+                </div>
+              )}
             </div>
-
-            {newTaskGroupId === group.id && !isMenuOpen ? (
-              <TaskEdit
-                setNewTaskGroupId={setNewTaskGroupId}
-                setTaskId={setTaskId}
-                group={group}
-                boardId={boardId}
-                task={null}
-                onRemoveTask={onRemoveTask}
-                setActiveBoard={setActiveBoard}
-                user={user}
-              />
-            ) : (
-              <div onClick={() => openAdd(group.id)} className="add-task">
-                <span className="plus-icon">
-                  <FiPlus />
-                </span>
-                <span>Add a card</span>
+            {isMenuOpen && group.id === newTaskGroupId && (
+              <div ref={menuRef} className="actions-menu">
+                <div className="title">List actions</div>
+                <div onClick={(ev) => onRemoveGroup(ev, group.id)} className="action">
+                  Delete list
+                </div>
               </div>
             )}
           </div>
-          {isMenuOpen && group.id === newTaskGroupId && (
-            <div ref={menuRef} className="actions-menu">
-              <div className="title">List actions</div>
-              <div onClick={(ev) => onRemoveGroup(ev, group.id)} className="action">
-                Delete list
-              </div>
-            </div>
-          )}
-        </div>
-      ))}
+        ))}
+      </DragDropContext>
     </div>
   );
 }

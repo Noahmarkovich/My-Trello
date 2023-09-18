@@ -60,7 +60,7 @@ export function AppHeader() {
         <button onClick={() => setIsCreate(true)} className="gray-btn create-btn">
           Create
         </button>
-        {isCreate && <CreateBoard onClose={() => setIsCreate(false)} />}
+        {isCreate && <CreateBoard onClose={() => setIsCreate(false)} user={user} />}
       </nav>
       {user && (
         <HeaderUserContainer

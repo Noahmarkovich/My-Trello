@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { boardService } from '../../../services/board.service';
 import x from '../../../assets/img/x.svg';
 import { addTask, saveActivity } from '../../../store/board.actions';
+import { useOnClickOutside } from '../../../hooks/useOnClickOutside';
+import { BsFillTrash3Fill } from 'react-icons/bs';
 
 export function TaskEdit({
   setNewTaskGroupId,
@@ -15,6 +17,8 @@ export function TaskEdit({
   user
 }) {
   const [newTask, setNewTask] = useState(boardService.getEmptyTask());
+  const editRef = useRef(null);
+  useOnClickOutside(editRef, closeEdit);
 
   useEffect(() => {
     if (!task) {
@@ -64,7 +68,7 @@ export function TaskEdit({
   }
 
   return (
-    <div className="task-edit">
+    <div className="task-edit" ref={editRef}>
       <form onSubmit={newTask.id ? onEditTask : onAddTask}>
         <div className="task-composer">
           <textarea
@@ -88,6 +92,17 @@ export function TaskEdit({
           )}
         </div>
       </form>
+      {newTask.id && (
+        <button
+          onClick={(ev) => {
+            ev.stopPropagation();
+            onRemoveTask(newTask.id, group.id, boardId);
+          }}
+          className="remove-task-btn">
+          <BsFillTrash3Fill />
+          <span>Delete card</span>
+        </button>
+      )}
     </div>
   );
 }

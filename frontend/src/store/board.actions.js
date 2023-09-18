@@ -16,6 +16,8 @@ export async function loadBoards() {
       type: SET_BOARD,
       boards
     });
+
+    return boards;
   } catch (err) {
     console.log('Cannot load board', err);
     throw err;

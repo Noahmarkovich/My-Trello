@@ -147,12 +147,14 @@ async function saveTask(newTask, groupId, boardId) {
 
   return save(board);
 }
-async function switchPlace(taskIdx, groupIdx, currParams, boardId) {
+async function switchPlace(taskIdx, groupId, currParams, boardId) {
   let board = await getById(boardId);
-  board.groups[groupIdx].tasks.splice(
-    taskIdx,
+  const groupIdx = getGroupIdx(board, groupId);
+  const [removed] = board.groups[groupIdx].tasks.splice(taskIdx, 1);
+  board.groups[getGroupIdx(board, currParams.droppableId)].tasks.splice(
+    currParams.index,
     0,
-    board.groups[currParams.groupIdx].tasks.splice(currParams.taskIdx, 1)[0]
+    removed
   );
 
   return save(board);

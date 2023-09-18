@@ -12,9 +12,6 @@
             z-index: 10;
         }
 
-        // form {
-        //     position: relative;
-        // }
         .task-composer {
 
             padding: 6px 8px 2px;
@@ -68,6 +65,31 @@
             }
 
 
+        }
+
+        .remove-task-btn{
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: #0009;
+            border-radius: 3px;
+            color: #c7d1db;
+            padding: 6px 12px 6px 10px;
+            border: none;
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 14px;
+            position: absolute;
+            top: 10px;
+            left: 270px;
+            width: max-content;
+            cursor: pointer;
+            transition: transform 85ms ease-in;
+
+
+            &:hover{
+                transform: translateX(5px);
+            }
+            
         }
     }
 }

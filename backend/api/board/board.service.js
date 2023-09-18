@@ -1,12 +1,36 @@
 const dbService = require("../../services/db.service");
 const logger = require("../../services/logger.service");
+const asyncLocalStorage = require("../../services/als.service.js");
+
 const ObjectId = require("mongodb").ObjectId;
 const fs = require("fs");
 
 async function query() {
   try {
+    const loggedinUser = asyncLocalStorage.getStore().loggedinUser;
     const collection = await dbService.getCollection("board");
-    const boards = await collection.find().toArray();
+    let boards;
+    console.log(loggedinUser._id);
+    if (loggedinUser._id === "65030aa092fc590fa4547a47") {
+      boards = await collection.find().toArray();
+    } else if (loggedinUser._id.length < 5) {
+      boards = await collection
+        .find({
+          $or: [
+            { "createdBy._id": loggedinUser._id },
+            { "members._id": loggedinUser._id },
+          ],
+        })
+        .toArray();
+    } else {
+      boards = await collection.find({
+        $or: [
+          { "createdBy._id": ObjectId(loggedinUser._id) },
+          { "members._id": ObjectId(loggedinUser._id) },
+        ],
+      });
+    }
+
     return boards;
   } catch (err) {
     logger.error("cannot find boards", err);

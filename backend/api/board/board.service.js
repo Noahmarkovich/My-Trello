@@ -13,7 +13,7 @@ async function query() {
     console.log(loggedinUser._id);
     if (loggedinUser._id === "65030aa092fc590fa4547a47") {
       boards = await collection.find().toArray();
-    } else if (loggedinUser._id.length < 5) {
+    } else {
       boards = await collection
         .find({
           $or: [
@@ -22,13 +22,6 @@ async function query() {
           ],
         })
         .toArray();
-    } else {
-      boards = await collection.find({
-        $or: [
-          { "createdBy._id": ObjectId(loggedinUser._id) },
-          { "members._id": ObjectId(loggedinUser._id) },
-        ],
-      });
     }
 
     return boards;

@@ -10,9 +10,13 @@ import { BoardsList } from '../components/board/boards-list';
 export function Workspaces() {
   const boards = useSelector((storeState) => storeState.boardModule.boards);
   const [filteredBoards, setFilteredBoards] = useState();
-  const starredBoards = useMemo(() => boards.filter((board) => board.isStarred), [boards]);
+  const starredBoards = useMemo(
+    () => boards.length > 0 && boards.filter((board) => board.isStarred),
+    [boards]
+  );
   const recentlyViewedBoards = useMemo(
-    () => boards.filter((board) => utilService.isLastVisited(board.lastVisited)),
+    () =>
+      boards.length > 0 && boards.filter((board) => utilService.isLastVisited(board.lastVisited)),
     [boards]
   );
 
@@ -29,7 +33,7 @@ export function Workspaces() {
     }
   }
 
-  if (!filteredBoards) {
+  if (!filteredBoards || filteredBoards.typeof === 'array') {
     return <Loader height={'95vh'} />;
   }
 
